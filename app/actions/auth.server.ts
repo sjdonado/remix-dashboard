@@ -1,9 +1,15 @@
-import { createCookieSessionStorage } from "@remix-run/node";
 import { eq } from "drizzle-orm";
+
+import { createCookieSessionStorage } from "@remix-run/node";
 import { Authenticator, AuthorizationError } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
+
+import Password from "~/utils/password";
+
 import { db } from "~/db/config.server";
 import { users } from "~/db/schema.server";
+
+import { SESSION_SECRET } from "~/config/env";
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -11,7 +17,7 @@ export const sessionStorage = createCookieSessionStorage({
     httpOnly: true,
     path: "/",
     sameSite: "lax",
-    secrets: [process.env.SESSION_SECRET!],
+    secrets: [SESSION_SECRET],
     secure: process.env.NODE_ENV === "production",
   },
 });
@@ -25,7 +31,7 @@ auth.use(
 
     const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
 
-    if (!(user && await Bun.password.verify(password, user.password))) {
+    if (!(user && await Password.compare(password, user.password))) {
       throw new AuthorizationError("Invalid credentials");
     }
 
