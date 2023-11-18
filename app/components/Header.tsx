@@ -9,11 +9,11 @@ import {
 } from '@heroicons/react/24/outline';
 
 interface HeaderProps {
-  email: string;
+  username: string;
   toggleSidebar: () => void;
 }
 
-export default function Header({ email, toggleSidebar }: HeaderProps) {
+export default function Header({ username, toggleSidebar }: HeaderProps) {
   return (
     <header className="sticky top-0 bg-white shadow z-30">
       <div className="px-4 flex items-center justify-between h-16">
@@ -30,7 +30,7 @@ export default function Header({ email, toggleSidebar }: HeaderProps) {
           </button>
           <div className="dropdown">
             <label tabIndex={0} className="btn border-none">
-              {email}
+              {username}
               <ChevronDownIcon className="h-4 w-4" />
             </label>
             <ul

@@ -20,8 +20,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "email": {
-          "name": "email",
+        "username": {
+          "name": "username",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true

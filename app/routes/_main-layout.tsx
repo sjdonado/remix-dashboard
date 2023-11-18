@@ -9,16 +9,16 @@ import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const email = await auth.isAuthenticated(request, {
+  const username = await auth.isAuthenticated(request, {
     failureRedirect: '/login',
   });
 
-  return json({ email });
+  return json({ username });
 };
 
 export default function MainLayout() {
   const navigation = useNavigation();
-  const { email } = useLoaderData<typeof loader>();
+  const { username } = useLoaderData<typeof loader>();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -29,7 +29,7 @@ export default function MainLayout() {
     <div className="flex h-screen">
       <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <div className="flex flex-col flex-1 overflow-hidden">
-        <Header email={email} toggleSidebar={toggleSidebar} />
+        <Header username={username} toggleSidebar={toggleSidebar} />
         <main
           className={`flex-1 p-4 bg-gray-100
             ${
