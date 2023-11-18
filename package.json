@@ -11,6 +11,7 @@
     "db:migrations": "drizzle-kit generate:pg --out ./app/db/migrations --schema ./app/db/schema.server.ts"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.18",
     "@remix-run/css-bundle": "^2.2.0",
     "@remix-run/node": "^2.2.0",
     "@remix-run/react": "^2.2.0",
