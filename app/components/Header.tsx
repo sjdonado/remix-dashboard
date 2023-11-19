@@ -1,71 +1,64 @@
-import { Form } from '@remix-run/react';
+import { Form, useLocation } from '@remix-run/react';
 import { Link } from 'react-router-dom';
 
-import {
-  Bars3Icon,
-  BellIcon,
-  ChevronDownIcon,
-  UserCircleIcon,
-} from '@heroicons/react/24/outline';
+import { Bars3Icon, BellIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
 interface HeaderProps {
   username: string;
-  toggleSidebar: () => void;
 }
 
-export default function Header({ username, toggleSidebar }: HeaderProps) {
+export default function Header({ username }: HeaderProps) {
+  const location = useLocation();
+  const pageTitle = location.pathname.split('/').pop() || 'home';
+  const pageTitleCapitalized = pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1);
+
   return (
-    <header className="sticky top-0 bg-white shadow z-30">
-      <div className="px-4 flex items-center justify-between h-16">
-        <button
-          className="text-gray-500 md:hidden focus:outline-none"
-          onClick={toggleSidebar}
-        >
-          <Bars3Icon className="h-6 w-6" />
+    <header className="sticky top-0 flex items-center justify-between h-16 mx-6">
+      <label htmlFor="my-drawer-2" className="btn btn-ghost drawer-button md:hidden">
+        <Bars3Icon className="h-6 w-6" />
+      </label>
+      <h1 className="text-xl font-semibold">{pageTitleCapitalized}</h1>
+      <div className="flex items-center">
+        <button className="text-gray-500 mr-2">
+          <BellIcon className="h-6 w-6" />
         </button>
-        <h1 className="font-semibold">App</h1>
-        <div className="flex items-center">
-          <button className="text-gray-500 mr-2">
-            <BellIcon className="h-6 w-6" />
-          </button>
-          <div className="dropdown">
-            <label tabIndex={0} className="btn border-none">
-              {username}
-              <ChevronDownIcon className="h-4 w-4" />
-            </label>
-            <ul
-              tabIndex={0}
-              className="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-52 right-0 mt-1 p-2"
+        <div className="dropdown">
+          <label tabIndex={0} className="btn btn-ghost">
+            {username}
+            <ChevronDownIcon className="h-4 w-4" />
+          </label>
+          <ul
+            tabIndex={0}
+            className="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-52 right-0 mt-1 p-2"
+          >
+            <li>
+              <Link
+                to="/profile"
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                role="menuitem"
+              >
+                My Profile
+              </Link>
+            </li>
+            <Form
+              method="post"
+              action="/logout"
+              onSubmit={event => {
+                const response = confirm(
+                  'Are you sure you want to log out? You will be redirected to the login page.'
+                );
+                if (!response) {
+                  event.preventDefault();
+                }
+              }}
             >
               <li>
-                <Link
-                  to="/profile"
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  role="menuitem"
-                >
-                  My Profile
-                </Link>
+                <button type="submit" role="menuitem">
+                  Logout
+                </button>
               </li>
-              <Form
-                method="post"
-                action="/logout"
-                onSubmit={event => {
-                  const response = confirm(
-                    'Are you sure you want to log out? You will be redirected to the login page.'
-                  );
-                  if (!response) {
-                    event.preventDefault();
-                  }
-                }}
-              >
-                <li>
-                  <button type="submit" role="menuitem">
-                    Logout
-                  </button>
-                </li>
-              </Form>
-            </ul>
-          </div>
+            </Form>
+          </ul>
         </div>
       </div>
     </header>
