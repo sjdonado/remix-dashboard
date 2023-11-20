@@ -2,7 +2,7 @@ import { pgEnum, pgTable, serial, text, varchar } from 'drizzle-orm/pg-core';
 
 export const userRoles = pgEnum('roles', ['admin', 'teacher', 'student']);
 
-export const users = pgTable('users', {
+export const usersTable = pgTable('users', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),
   username: varchar('username').notNull(),

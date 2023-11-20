@@ -7,7 +7,7 @@ import { FormStrategy } from 'remix-auth-form';
 import Password from '~/utils/password';
 
 import { db } from '~/db/config.server';
-import { users } from '~/db/schema';
+import { usersTable } from '~/db/schema';
 
 import { SESSION_SECRET } from '~/config/env';
 import type { UserSession } from './schemas/user';
@@ -32,8 +32,8 @@ auth.use(
 
     const [user] = await db
       .select()
-      .from(users)
-      .where(eq(users.username, username))
+      .from(usersTable)
+      .where(eq(usersTable.username, username))
       .limit(1);
 
     console.log(user);
