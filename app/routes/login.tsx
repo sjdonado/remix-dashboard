@@ -6,7 +6,7 @@ import { AuthorizationError } from 'remix-auth';
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
 
-import { auth } from '~/actions/auth.server';
+import { auth } from '~/session.server';
 
 import { UserLoginSchema } from '~/schemas/user';
 import { FormInput } from '~/components/FormInput';
@@ -18,9 +18,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     await request.clone().formData() // only if FormStrategy is used otherwise request.formData() is ok
   );
 
-  if (data.error) {
-    return validationError(data.error);
-  }
+  if (data.error) return validationError(data.error);
 
   try {
     await auth.authenticate('form', request, {
@@ -28,6 +26,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       throwOnError: true,
     });
   } catch (err) {
+    if (err instanceof Response) return err;
+
     if (err instanceof AuthorizationError) {
       return validationError({
         fieldErrors: {
@@ -37,8 +37,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         formId: data.formId,
       });
     }
-
-    return err;
+    return json({ error: 'Something went wrong' }, { status: 500 });
   }
 };
 
@@ -51,7 +50,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-600">
-      <div className="card w-96 bg-base-100 shadow-xl">
+      <div className="card w-96 bg-base-100 shadow-xl m-4">
         <div className="card-body">
           <h2 className="card-title mb-4">Login</h2>
           <ValidatedForm validator={validator} method="post">
@@ -67,7 +66,6 @@ export default function Login() {
               type="password"
               placeholder="Your password"
             />
-            {/* {loginError && <div className="text-red-500 mt-2 text-center">{loginError.message}</div>} */}
             <button className="btn btn-accent mt-4 w-full" type="submit">
               Login
             </button>

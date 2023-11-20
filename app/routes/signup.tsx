@@ -7,11 +7,12 @@ import { withZod } from '@remix-validated-form/with-zod';
 
 import Password from '~/utils/password';
 
-import { auth } from '~/actions/auth.server';
+import { auth } from '~/session.server';
 
 import { UserSignupSchema } from '~/schemas/user';
+
 import { db } from '~/db/config.server';
-import { users } from '~/db/schema.server';
+import { users } from '~/db/schema';
 
 import { FormInput } from '~/components/FormInput';
 
@@ -29,7 +30,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const password = await Password.hash(fieldValues.data.password);
 
   try {
-    await db.insert(users).values({ name, username, password }).execute();
+    await db.insert(users).values({ name, username, password });
   } catch (error) {
     if (
       error instanceof Error &&
@@ -61,7 +62,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function Signup() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-600">
-      <div className="card w-96 bg-base-100 shadow-xl">
+      <div className="card w-96 bg-base-100 shadow-xl m-4">
         <div className="card-body">
           <h2 className="card-title mb-4">Signup</h2>
           <ValidatedForm validator={validator} method="post">

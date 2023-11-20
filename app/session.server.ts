@@ -7,9 +7,10 @@ import { FormStrategy } from 'remix-auth-form';
 import Password from '~/utils/password';
 
 import { db } from '~/db/config.server';
-import { users } from '~/db/schema.server';
+import { users } from '~/db/schema';
 
 import { SESSION_SECRET } from '~/config/env';
+import type { UserSession } from './schemas/user';
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -35,10 +36,17 @@ auth.use(
       .where(eq(users.username, username))
       .limit(1);
 
+    console.log(user);
+
     if (!(user && (await Password.compare(password, user.password)))) {
       throw new AuthorizationError('Invalid credentials');
     }
 
-    return username;
+    const userSession: UserSession = {
+      username: user.username,
+      role: user.role,
+    };
+
+    return JSON.stringify(userSession);
   })
 );

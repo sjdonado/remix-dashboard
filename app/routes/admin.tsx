@@ -2,26 +2,28 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useNavigation } from '@remix-run/react';
 
-import { auth } from '~/actions/auth.server';
-import Header from '~/components/Header';
+import type { UserSession } from '~/schemas/user';
 
+import { auth } from '~/session.server';
+
+import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const username = await auth.isAuthenticated(request, {
+  const userSession = await auth.isAuthenticated(request, {
     failureRedirect: '/login',
   });
 
-  return json({ username });
+  return json(JSON.parse(userSession) satisfies UserSession);
 };
 
 export default function AdminLayout() {
   const navigation = useNavigation();
-  const { username } = useLoaderData<typeof loader>();
+  const { username, role } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex h-screen">
-      <Sidebar>
+      <Sidebar sessionRole={role}>
         <Header username={username} />
         <main
           className={`flex-1 p-4

@@ -1,9 +1,14 @@
 import { NavLink } from '@remix-run/react';
 import { HomeIcon, InboxIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
-export default function Sidebar({ children }: { children: React.ReactNode }) {
+interface SidebarProps {
+  sessionRole: string;
+  children: React.ReactNode;
+}
+
+export default function Sidebar({ sessionRole, children }: SidebarProps) {
   return (
-    <div className="drawer lg:drawer-open">
+    <div className="drawer md:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-side z-10">
         <div className="w-80 min-h-full bg-base-200 text-base-content">
@@ -22,7 +27,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
               <ul>
                 <li>
                   <NavLink
-                    to="/"
+                    to={`/${sessionRole}/home`}
                     className={({ isActive, isPending }) =>
                       `flex items-center p-3 rounded-md ${
                         isActive
@@ -39,7 +44,7 @@ export default function Sidebar({ children }: { children: React.ReactNode }) {
                 </li>
                 <li>
                   <NavLink
-                    to="/inbox"
+                    to={`/${sessionRole}/inbox`}
                     className={({ isActive, isPending }) =>
                       `flex items-center p-3 rounded-md ${
                         isActive

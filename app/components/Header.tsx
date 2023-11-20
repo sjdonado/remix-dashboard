@@ -9,7 +9,7 @@ interface HeaderProps {
 
 export default function Header({ username }: HeaderProps) {
   const location = useLocation();
-  const pageTitle = location.pathname.split('/').pop() || 'home';
+  const pageTitle = location.pathname.split('/').pop()!;
   const pageTitleCapitalized = pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1);
 
   return (
