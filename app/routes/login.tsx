@@ -49,7 +49,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function Login() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-600">
+    <div className="min-h-screen flex items-center justify-center bg-indigo-600">
       <div className="card w-96 bg-base-100 shadow-xl m-4">
         <div className="card-body">
           <h2 className="card-title mb-4">Login</h2>

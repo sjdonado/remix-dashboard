@@ -1,7 +1,13 @@
 import { Form, useLocation } from '@remix-run/react';
 import { Link } from 'react-router-dom';
 
-import { Bars3Icon, BellIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowLeftOnRectangleIcon,
+  Bars3Icon,
+  BellIcon,
+  ChevronDownIcon,
+  UserIcon,
+} from '@heroicons/react/24/outline';
 
 interface HeaderProps {
   username: string;
@@ -13,12 +19,12 @@ export default function Header({ username }: HeaderProps) {
   const pageTitleCapitalized = pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1);
 
   return (
-    <header className="sticky top-0 flex items-center justify-between h-16 mx-6">
-      <label htmlFor="my-drawer-2" className="btn btn-ghost drawer-button md:hidden">
+    <header className="navbar flex items-center justify-between h-24 px-4 md:px-12">
+      <label htmlFor="header" className="btn btn-ghost drawer-button md:hidden">
         <Bars3Icon className="h-6 w-6" />
       </label>
-      <h1 className="text-xl font-semibold">{pageTitleCapitalized}</h1>
-      <div className="flex items-center">
+      <h1 className="text-xl md:text-3xl font-semibold">{pageTitleCapitalized}</h1>
+      <div className="flex items-center justify-center">
         <button className="text-gray-500 mr-2">
           <BellIcon className="h-6 w-6" />
         </button>
@@ -29,14 +35,16 @@ export default function Header({ username }: HeaderProps) {
           </label>
           <ul
             tabIndex={0}
-            className="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-52 right-0 mt-1 p-2"
+            className="dropdown-content z-[1] menu shadow-lg bg-base-100 
+              rounded-box w-52 right-0 mt-1 p-2"
           >
             <li>
               <Link
                 to="/profile"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                className="flex items-center justify-start block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-200"
                 role="menuitem"
               >
+                <UserIcon className="w-6 h-6" />
                 My Profile
               </Link>
             </li>
@@ -53,7 +61,12 @@ export default function Header({ username }: HeaderProps) {
               }}
             >
               <li>
-                <button type="submit" role="menuitem">
+                <button
+                  type="submit"
+                  role="menuitem"
+                  className="flex items-center justify-start block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-200"
+                >
+                  <ArrowLeftOnRectangleIcon className="w-6 h-6" />
                   Logout
                 </button>
               </li>
