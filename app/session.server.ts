@@ -41,8 +41,6 @@ auth.use(
       .where(eq(usersTable.username, username))
       .limit(1);
 
-    console.log(user);
-
     if (!(user && (await Password.compare(password, user.password)))) {
       throw new AuthorizationError('Invalid credentials');
     }

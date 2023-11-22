@@ -38,7 +38,7 @@ const seedUsers = async (db: PostgresJsDatabase) => {
     .onConflictDoNothing()
     .returning();
 
-  console.log(result);
+  console.log('[seedUsers]', result);
 };
 
 const main = async () => {

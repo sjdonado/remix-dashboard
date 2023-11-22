@@ -84,9 +84,7 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
           </ul>
         </div>
       </div>
-      <div className="drawer-content flex flex-col flex-1 overflow-hidden">
-        {children}
-      </div>
+      <div className="drawer-content">{children}</div>
     </div>
   );
 }

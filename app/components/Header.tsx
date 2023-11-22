@@ -8,7 +8,6 @@ import {
   UserIcon,
 } from '@heroicons/react/24/outline';
 
-import { useLocation } from '@remix-run/react';
 import { Link } from 'react-router-dom';
 
 import { DialogModalButton } from './ConfirmationDialog';
@@ -18,19 +17,14 @@ interface HeaderProps {
 }
 
 export default function Header({ username }: HeaderProps) {
-  const location = useLocation();
-  const pageTitle = location.pathname.split('/').pop()!;
-  const pageTitleCapitalized = pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1);
-
   return (
-    <header className="navbar flex items-center justify-between h-24 px-4 md:px-12">
+    <header className="navbar flex items-center justify-between h-12 px-4 md:px-12 md:justify-end">
       <label
         htmlFor="header"
         className="btn btn-ghost rounded-lg drawer-button md:hidden"
       >
         <Bars3Icon className="h-6 w-6" />
       </label>
-      <h1 className="text-xl md:text-3xl font-semibold">{pageTitleCapitalized}</h1>
       <div className="flex items-center justify-center gap-1">
         <label className="btn btn-ghost rounded-lg swap swap-rotate text-content">
           <input type="checkbox" className="theme-controller" value="dark" />

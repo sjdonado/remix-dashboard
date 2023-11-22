@@ -8,6 +8,7 @@ interface TableProps {
 
 export function TableContainer({ totalPages, currentPage, children }: TableProps) {
   if (totalPages === 0) return <p className="text-center m-4">No results</p>;
+
   return (
     <div className="flex flex-col gap-4">
       <div className="inline-block min-w-full align-middle">
@@ -21,11 +22,7 @@ export function TableContainer({ totalPages, currentPage, children }: TableProps
 }
 
 export function MobileTable({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="md:hidden max-h-[calc(100vh-200px)] overflow-y-scroll">
-      {children}
-    </div>
-  );
+  return <div className="md:hidden">{children}</div>;
 }
 
 export function ResponsiveTable({

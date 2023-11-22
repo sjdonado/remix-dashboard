@@ -23,13 +23,11 @@ export default function Pagination({ totalPages, currentPage }: PaginationProps)
 
   return (
     <div className="inline-flex mb-4 mx-4">
-      {totalPages > 7 && (
-        <PaginationArrow
-          direction="left"
-          href={createPageURL(currentPage - 1)}
-          isDisabled={currentPage <= 1}
-        />
-      )}
+      <PaginationArrow
+        direction="left"
+        href={createPageURL(currentPage - 1)}
+        isDisabled={currentPage <= 1}
+      />
 
       <div className="flex -space-x-px">
         {allPages.map((page, index) => {
@@ -52,13 +50,11 @@ export default function Pagination({ totalPages, currentPage }: PaginationProps)
         })}
       </div>
 
-      {totalPages > 7 && (
-        <PaginationArrow
-          direction="right"
-          href={createPageURL(currentPage + 1)}
-          isDisabled={currentPage >= totalPages}
-        />
-      )}
+      <PaginationArrow
+        direction="right"
+        href={createPageURL(currentPage + 1)}
+        isDisabled={currentPage >= totalPages}
+      />
     </div>
   );
 }
@@ -103,8 +99,8 @@ function PaginationArrow({
   const className = clsx('flex h-8 w-10 items-center justify-center rounded-lg border', {
     'pointer-events-none text-content': isDisabled,
     'hover:bg-base-200': !isDisabled,
-    'mr-2 md:mr-4': direction === 'left',
-    'ml-2 md:ml-4': direction === 'right',
+    'mr-2 md:mr-2': direction === 'left',
+    'ml-2 md:ml-2': direction === 'right',
   });
 
   const icon =

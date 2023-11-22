@@ -28,16 +28,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function AdminLayout() {
   const navigation = useNavigation();
 
-  const {
-    userSession: { username, role },
-  } = useLoaderData<typeof loader>();
+  const { userSession } = useLoaderData<typeof loader>();
 
   const isLoading = navigation.state === 'loading';
 
   return (
     <div className="flex h-screen">
-      <Sidebar userSessionRole={role}>
-        <Header username={username} />
+      <Sidebar userSessionRole={userSession.role}>
+        <Header username={userSession.username} />
         {isLoading ? (
           <div className="absolute top-0 left-64 right-0 bottom-0 flex items-center justify-center h-full transition-opacity delay-200 sm:left-72">
             <span className="absolute loading loading-dots loading-lg"></span>
