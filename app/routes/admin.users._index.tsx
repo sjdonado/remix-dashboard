@@ -103,7 +103,7 @@ export default function UsersPage() {
                 </div>
                 <div className="flex justify-end gap-2">
                   <UpdateUserBtnLink id={user.id} />
-                  <DeleteUserBtnLink id={user.id} />
+                  <DeleteUserBtnLink id={user.id} name={user.name} />
                 </div>
               </div>
             </div>
@@ -138,7 +138,7 @@ export default function UsersPage() {
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex justify-end gap-3">
                   <UpdateUserBtnLink id={user.id} />
-                  <DeleteUserBtnLink id={user.id} />
+                  <DeleteUserBtnLink id={user.id} name={user.name} />
                 </div>
               </td>
             </tr>

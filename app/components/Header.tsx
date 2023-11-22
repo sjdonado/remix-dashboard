@@ -1,6 +1,3 @@
-import { Form, useLocation } from '@remix-run/react';
-import { Link } from 'react-router-dom';
-
 import {
   ArrowLeftOnRectangleIcon,
   Bars3Icon,
@@ -10,6 +7,11 @@ import {
   SunIcon,
   UserIcon,
 } from '@heroicons/react/24/outline';
+
+import { useLocation } from '@remix-run/react';
+import { Link } from 'react-router-dom';
+
+import { DialogModalButton } from './ConfirmationDialog';
 
 interface HeaderProps {
   username: string;
@@ -58,29 +60,18 @@ export default function Header({ username }: HeaderProps) {
                 My Profile
               </Link>
             </li>
-            <Form
-              method="post"
-              action="/logout"
-              onSubmit={event => {
-                const response = confirm(
-                  'Are you sure you want to log out? You will be redirected to the login page.'
-                );
-                if (!response) {
-                  event.preventDefault();
-                }
-              }}
-            >
-              <li>
-                <button
-                  type="submit"
-                  role="menuitem"
-                  className="flex items-center justify-start block rounded-lg px-4 py-2 text-sm text-content hover:bg-content-200 transition-colors"
-                >
-                  <ArrowLeftOnRectangleIcon className="w-6 h-6" />
-                  Logout
-                </button>
-              </li>
-            </Form>
+            <li>
+              <DialogModalButton
+                title="Logout"
+                description="Are you sure you want to log out? You will be redirected to the login page."
+                button="Logout"
+                action="/logout"
+                className="flex items-center justify-start block rounded-lg px-4 py-2 text-sm text-content hover:bg-content-200 transition-colors"
+              >
+                <ArrowLeftOnRectangleIcon className="w-6 h-6" />
+                Logout
+              </DialogModalButton>
+            </li>
           </ul>
         </div>
       </div>

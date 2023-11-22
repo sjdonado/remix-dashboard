@@ -29,6 +29,7 @@
     "remix-auth": "^3.6.0",
     "remix-auth-form": "^1.4.0",
     "remix-hook-form": "^3.0.4",
+    "remix-utils": "^7.1.0",
     "remix-validated-form": "^5.1.5",
     "use-debounce": "^10.0.0",
     "uuid": "^9.0.1",

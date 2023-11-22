@@ -1,6 +1,7 @@
 import { Link, useSearchParams } from '@remix-run/react';
 
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { DialogModalButton } from '../ConfirmationDialog';
 
 export function CreateUserBtnLink() {
   return (
@@ -27,13 +28,19 @@ export function UpdateUserBtnLink({ id }: { id: string }) {
   );
 }
 
-export function DeleteUserBtnLink({ id }: { id: string }) {
+export function DeleteUserBtnLink({ id, name }: { id: string; name: string }) {
+  const [searchParams] = useSearchParams();
+
   return (
-    <form method="post" action={`/admin/users/${id}/delete`}>
-      <button className="rounded-lg border p-2 hover:bg-base-200">
-        <span className="sr-only">Delete</span>
-        <TrashIcon className="w-5" />
-      </button>
-    </form>
+    <DialogModalButton
+      title="Delete User"
+      description={`Are you sure you want to delete this user: ${name}?`}
+      button="Delete"
+      action={`/admin/users/${id}/delete?${searchParams.toString()}`}
+      className="rounded-lg border p-2 hover:bg-base-200"
+    >
+      <span className="sr-only">Delete</span>
+      <TrashIcon className="w-5" />
+    </DialogModalButton>
   );
 }
