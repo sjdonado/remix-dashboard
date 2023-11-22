@@ -30,9 +30,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .from(usersTable)
       .where(
         query
-          ? sql`(${usersTable.name} ilike ${`%${query}%`} or ${
-              usersTable.username
-            } ilike ${`%${query}%`} )`
+          ? sql`(${usersTable.name} ilike ${`%${query}%`} 
+            or ${usersTable.username} ilike ${`%${query}%`} )`
           : undefined
       )
   );
@@ -79,7 +78,7 @@ export default function UsersPage() {
         <MobileTable>
           {users?.map(user => (
             <div key={user.id} className="mb-2 w-full rounded-md bg-base-100 p-4">
-              <div className="flex items-center justify-between border-b pb-4">
+              <div className="flex items-center justify-between border-b pb-4 gap-4">
                 <div>
                   <div className="mb-2 flex items-center">
                     {/* <Image */}
@@ -91,15 +90,17 @@ export default function UsersPage() {
                     {/* /> */}
                     <p>{user.name}</p>
                   </div>
-                  <p className="text-sm text-content">{user.username}</p>
+                  <p className="text-sm text-gray-500">{user.username}</p>
                 </div>
                 <span className="text-sm font-medium">{user.role}</span>
                 {/* <InvoiceStatus status={invoice.status} /> */}
               </div>
               <div className="flex w-full items-center justify-between pt-4">
                 <div>
+                  <p className="text-sm min-w-fit">
+                    Created at {formatDateToLocal(user.createdAt)}
+                  </p>
                   {/* <p className="text-xl font-medium">{formatCurrency(invoice.amount)}</p> */}
-                  <p className="text-sm">{formatDateToLocal(user.createdAt)}</p>
                 </div>
                 <div className="flex justify-end gap-2">
                   <UpdateUserBtnLink id={user.id} />

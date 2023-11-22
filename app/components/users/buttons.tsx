@@ -10,7 +10,7 @@ export function CreateUserBtnLink() {
       className="flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-white hover:bg-primary/50"
     >
       <span className="hidden md:block">Create User</span>
-      <PlusIcon className="h-5 md:ml-4" />
+      <PlusIcon className="h-5" />
     </Link>
   );
 }
@@ -34,7 +34,7 @@ export function DeleteUserBtnLink({ id, name }: { id: string; name: string }) {
   return (
     <DialogModalButton
       title="Delete User"
-      description={`Are you sure you want to delete this user: ${name}?`}
+      description={`Are you sure you want to delete ${name}?`}
       button="Delete"
       action={`/admin/users/${id}/delete?${searchParams.toString()}`}
       className="rounded-lg border p-2 hover:bg-base-200"

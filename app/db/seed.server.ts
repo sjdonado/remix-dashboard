@@ -9,7 +9,7 @@ import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { drizzle } from 'drizzle-orm/postgres-js';
 
 import type { User } from '~/schemas/user';
-import { userRoles, usersTable } from './schema';
+import { postsTable, userRoles, usersTable } from './schema';
 
 import Password from '~/utils/password';
 
@@ -38,14 +38,41 @@ const seedUsers = async (db: PostgresJsDatabase) => {
     .onConflictDoNothing()
     .returning();
 
-  console.log('[seedUsers]', result);
+  return result;
+};
+
+const seedPosts = async (db: PostgresJsDatabase, users: User[]) => {
+  const data = [];
+
+  for (const user of users) {
+    for (let i = 0; i < 10; i++) {
+      data.push({
+        id: uuidv4(),
+        authorId: user.id,
+        title: faker.lorem.sentence(),
+        content: faker.lorem.paragraphs(),
+      });
+    }
+  }
+
+  const result = await db
+    .insert(postsTable)
+    .values(data)
+    .onConflictDoNothing()
+    .returning();
+
+  return result;
 };
 
 const main = async () => {
   const client = postgres(DATABASE_URL);
   const db = drizzle(client);
 
-  await Promise.all([seedUsers(db)]);
+  const users = await seedUsers(db);
+  const posts = await seedPosts(db, users);
+
+  console.log('[seedUsers] first 10:', users.slice(0, 10));
+  console.log('[seedPosts] first 10:', posts.slice(0, 10));
 
   await client.end();
 };

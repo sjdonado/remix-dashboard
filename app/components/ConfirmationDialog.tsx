@@ -40,8 +40,8 @@ interface DialogModalButtonProps {
   description: string;
   button: string;
   action: string;
-  children: React.ReactNode;
   className?: string;
+  children: React.ReactNode;
 }
 
 export function DialogModalButton({
@@ -49,8 +49,8 @@ export function DialogModalButton({
   description,
   button,
   action,
-  children,
   className,
+  children,
 }: DialogModalButtonProps) {
   const dialog = useRef<HTMLDialogElement>();
 

@@ -33,11 +33,11 @@ export function ResponsiveTable({
   children: React.ReactNode;
 }) {
   return (
-    <table className="hidden min-w-full text-content md:table">
-      <thead className="rounded-lg text-left text-sm font-normal">
+    <table className="hidden min-w-full md:table">
+      <thead className="rounded-lg text-left">
         <tr>
           {headers.map(header => (
-            <th key={header} scope="col" className="px-4 py-5 font-medium text-content">
+            <th key={header} scope="col" className="px-4 py-5 text-sm">
               {header}
             </th>
           ))}

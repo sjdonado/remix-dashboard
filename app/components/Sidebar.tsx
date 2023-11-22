@@ -46,7 +46,7 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
             </li>
             <li className="bg-base-200/40 rounded-lg">
               <NavLink
-                to={`/${userSessionRole}/inbox`}
+                to={`/${userSessionRole}/posts`}
                 className={({ isActive, isPending }) =>
                   clsx(
                     'flex items-center p-3 rounded-lg hover:bg-primary/40 hover:text-primary transition-colors',
@@ -58,7 +58,7 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
                 }
               >
                 <InboxIcon className="w-6 h-6 mr-2" />
-                <span className="text-sm font-medium">Inbox</span>
+                <span className="text-sm font-medium">Posts</span>
               </NavLink>
             </li>
             {userSessionRole === userRoles.enumValues[0] && (

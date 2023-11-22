@@ -20,7 +20,7 @@ export const Select: FC<SelectProps> = ({ name, label, icon, ...rest }) => {
       <div className="relative">
         <select
           className={clsx(
-            'peer block w-full rounded-md border border-base-200 py-2 pl-10 text-sm outline-2 placeholder:text-content',
+            'peer select select-sm input-bordered rounded-md w-full !pl-9',
             error && 'input-error'
           )}
           {...rest}
