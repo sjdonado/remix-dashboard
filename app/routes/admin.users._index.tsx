@@ -58,8 +58,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   ]);
 
   return json({
-    users: users as UserSerialized[],
     totalPages: Math.ceil(Number(count) / PAGE_SIZE),
+    users: users as UserSerialized[],
   });
 };
 
@@ -67,7 +67,7 @@ export default function UsersPage() {
   const { users, totalPages } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
 
-  const currentPage = Number(searchParams.get('page') ?? 1);
+  let currentPage = Number(searchParams.get('page') ?? 1);
 
   return (
     <div className="flex flex-col gap-4">

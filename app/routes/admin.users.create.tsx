@@ -8,7 +8,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import type { ActionFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { useNavigate } from '@remix-run/react';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
@@ -18,10 +18,12 @@ import { db } from '~/db/config.server';
 import { userRoles, usersTable } from '~/db/schema';
 import { UserCreateSchema } from '~/schemas/user';
 
+import Password from '~/utils/password';
+import { duplicateUsernameError } from '~/errors/form.server';
+
 import { Input } from '~/components/forms/Input';
 import { Select } from '~/components/forms/Select';
-
-import Password from '~/utils/password';
+import { PostgresError } from 'postgres';
 
 const validator = withZod(UserCreateSchema);
 
@@ -38,7 +40,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     await db.insert(usersTable).values({ id: uuidv4(), name, username, role, password });
   } catch (error) {
-    return json({ error: 'Something went wrong' }, { status: 500 });
+    if (error instanceof PostgresError) {
+      const validationError = duplicateUsernameError(error, fieldValues);
+      if (validationError) return validationError;
+    }
+
+    throw error;
   }
 
   return redirect('/admin/users');

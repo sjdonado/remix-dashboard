@@ -22,12 +22,14 @@ export default function Pagination({ totalPages, currentPage }: PaginationProps)
   const allPages = generatePagination(currentPage, totalPages);
 
   return (
-    <div className="inline-flex mb-4">
-      <PaginationArrow
-        direction="left"
-        href={createPageURL(currentPage - 1)}
-        isDisabled={currentPage <= 1}
-      />
+    <div className="inline-flex mb-4 mx-4">
+      {totalPages > 7 && (
+        <PaginationArrow
+          direction="left"
+          href={createPageURL(currentPage - 1)}
+          isDisabled={currentPage <= 1}
+        />
+      )}
 
       <div className="flex -space-x-px">
         {allPages.map((page, index) => {
@@ -50,11 +52,13 @@ export default function Pagination({ totalPages, currentPage }: PaginationProps)
         })}
       </div>
 
-      <PaginationArrow
-        direction="right"
-        href={createPageURL(currentPage + 1)}
-        isDisabled={currentPage >= totalPages}
-      />
+      {totalPages > 7 && (
+        <PaginationArrow
+          direction="right"
+          href={createPageURL(currentPage + 1)}
+          isDisabled={currentPage >= totalPages}
+        />
+      )}
     </div>
   );
 }

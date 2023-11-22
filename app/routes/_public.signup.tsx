@@ -6,19 +6,21 @@ import {
 } from '@heroicons/react/24/outline';
 
 import type { ActionFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import { Link } from '@remix-run/react';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
 
-import Password from '~/utils/password';
-
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
 import { UserSignupSchema } from '~/schemas/user';
 
+import Password from '~/utils/password';
+import { duplicateUsernameError } from '~/errors/form.server';
+
 import { Input } from '~/components/forms/Input';
+import { PostgresError } from 'postgres';
 
 const validator = withZod(UserSignupSchema);
 
@@ -35,22 +37,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     await db.insert(usersTable).values({ id: uuidv4(), name, username, password });
   } catch (error) {
-    if (
-      error instanceof Error &&
-      error.message === 'UNIQUE constraint failed: usersTable.username'
-    ) {
-      return validationError(
-        {
-          fieldErrors: {
-            username: 'This username is already taken',
-          },
-          formId: fieldValues.formId,
-        },
-        fieldValues.data
-      );
+    if (error instanceof PostgresError) {
+      const validationError = duplicateUsernameError(error, fieldValues);
+      if (validationError) return validationError;
     }
 
-    return json({ error: 'Something went wrong' }, { status: 500 });
+    throw error;
   }
 
   return redirect('/login');

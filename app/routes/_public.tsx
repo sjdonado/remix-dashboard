@@ -1,9 +1,11 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
-import AppLogo from '~/components/AppLogo';
 
 import { auth } from '~/session.server';
+
+import AppLogo from '~/components/AppLogo';
+import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await auth.isAuthenticated(request, { successRedirect: '/' });
@@ -22,4 +24,8 @@ export default function Login() {
       </div>
     </div>
   );
+}
+
+export function ErrorBoundary() {
+  return <CustomErrorBoundary />;
 }

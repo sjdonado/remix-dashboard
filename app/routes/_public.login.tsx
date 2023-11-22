@@ -1,7 +1,6 @@
 import { LockClosedIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 
 import type { ActionFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Link } from '@remix-run/react';
 import { AuthorizationError } from 'remix-auth';
 
@@ -40,7 +39,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         formId: data.formId,
       });
     }
-    return json({ error: 'Something went wrong' }, { status: 500 });
+
+    throw err;
   }
 };
 
