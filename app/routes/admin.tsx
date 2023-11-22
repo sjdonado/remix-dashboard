@@ -18,7 +18,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 
   const userSession = JSON.parse(data) satisfies UserSession;
-  if (userSession.role !== userRoles.enumValues[0]) {
+  if (userSession?.role !== userRoles.enumValues[0]) {
     redirect('/');
   }
 

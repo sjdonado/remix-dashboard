@@ -22,15 +22,15 @@ export const UserSerialized = UserSchema.pick({
   createdAt: true,
 });
 
-export const UserLoginSchema = UserSchema.omit({
-  id: true,
-  name: true,
-  role: true,
+export const UserLoginSchema = UserSchema.pick({
+  username: true,
+  password: true,
 });
 
-export const UserSignupSchema = UserSchema.omit({
-  id: true,
-  role: true,
+export const UserSignupSchema = UserSchema.pick({
+  name: true,
+  username: true,
+  password: true,
 })
   .extend({
     confirmPassword: z.string().min(1, { message: 'Confirm Password is required' }),

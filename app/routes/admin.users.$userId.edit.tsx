@@ -63,13 +63,13 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   return json({ user });
 };
 
-export default function EditUser() {
+export default function EditUserPage() {
   const navigate = useNavigate();
   const { user } = useLoaderData<typeof loader>();
 
   return (
     <ValidatedForm validator={validator} method="post">
-      <div className="rounded-md bg-gray-50 p-4 md:p-6">
+      <div className="rounded-lg bg-base-200/30 p-4 md:p-6">
         <Input
           name="name"
           label="Name"
@@ -77,7 +77,7 @@ export default function EditUser() {
           placeholder="Your name"
           defaultValue={user.name}
           icon={
-            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-content" />
           }
         />
         <Input
@@ -87,7 +87,7 @@ export default function EditUser() {
           placeholder="Your username"
           defaultValue={user.username}
           icon={
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-content" />
           }
         />
         <Select
@@ -96,7 +96,7 @@ export default function EditUser() {
           label="Choose role"
           defaultValue={user.role}
           icon={
-            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-content" />
           }
         >
           <option value="" disabled>
@@ -111,14 +111,14 @@ export default function EditUser() {
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <button
-          className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+          className="flex h-10 items-center rounded-lg bg-base-200 px-4 text-sm font-medium text-content hover:bg-base-200/50"
           onClick={() => navigate(-1)}
           type="button"
         >
           Cancel
         </button>
         <button
-          className="flex h-10 items-center rounded-lg bg-indigo-600 px-4 text-sm font-medium text-white transition-colors hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 active:bg-indigo-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50"
+          className="flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-medium text-white hover:bg-primary/50"
           type="submit"
         >
           Edit User

@@ -71,11 +71,11 @@ function PaginationNumber({
   isActive: boolean;
 }) {
   const className = clsx('flex h-8 w-10 items-center justify-center text-sm border', {
-    'rounded-l-md': position === 'first' || position === 'single',
-    'rounded-r-md': position === 'last' || position === 'single',
-    'bg-indigo-600 border-indigo-600 text-white': isActive,
-    'hover:bg-gray-100': !isActive && position !== 'middle',
-    'text-gray-300': position === 'middle',
+    'rounded-l-lg': position === 'first' || position === 'single',
+    'rounded-r-lg': position === 'last' || position === 'single',
+    'bg-primary border-primary text-white': isActive,
+    'hover:bg-base-200': !isActive && position !== 'middle',
+    'text-content': position === 'middle',
   });
 
   return isActive || position === 'middle' ? (
@@ -96,9 +96,9 @@ function PaginationArrow({
   direction: 'left' | 'right';
   isDisabled?: boolean;
 }) {
-  const className = clsx('flex h-8 w-10 items-center justify-center rounded-md border', {
-    'pointer-events-none text-gray-300': isDisabled,
-    'hover:bg-gray-100': !isDisabled,
+  const className = clsx('flex h-8 w-10 items-center justify-center rounded-lg border', {
+    'pointer-events-none text-content': isDisabled,
+    'hover:bg-base-200': !isDisabled,
     'mr-2 md:mr-4': direction === 'left',
     'ml-2 md:ml-4': direction === 'right',
   });

@@ -22,33 +22,39 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="flex flex-col w-64 min-h-full bg-white text-base-content p-4 sm:w-72">
-          <div className="flex shrink-0 items-end rounded-lg bg-indigo-600 p-4 mb-2 h-44">
+        <div className="flex flex-col w-64 min-h-full bg-base-100 text-base-content p-4 sm:w-72">
+          <div className="flex shrink-0 items-end rounded-lg bg-primary p-4 mb-2 h-44">
             <AppLogo />
           </div>
           <ul className="flex-1 flex flex-col gap-2">
-            <li className="bg-gray-100 rounded-md">
+            <li className="bg-base-200/40 rounded-lg">
               <NavLink
                 to={`/${userSessionRole}/home`}
                 className={({ isActive, isPending }) =>
-                  clsx('flex items-center p-3 rounded-md hover:bg-indigo-200', {
-                    'active bg-indigo-100 text-indigo-600': isActive,
-                    'pending cursor-not-allowed': isPending,
-                  })
+                  clsx(
+                    'flex items-center p-3 rounded-lg hover:bg-primary/40 hover:text-primary transition-colors',
+                    {
+                      'active bg-primary-100 text-primary': isActive,
+                      'pending cursor-not-allowed': isPending,
+                    }
+                  )
                 }
               >
                 <HomeIcon className="w-6 h-6 mr-2" />
                 <span className="text-sm font-medium">Home</span>
               </NavLink>
             </li>
-            <li className="bg-gray-100 rounded-md">
+            <li className="bg-base-200/40 rounded-lg">
               <NavLink
                 to={`/${userSessionRole}/inbox`}
                 className={({ isActive, isPending }) =>
-                  clsx('flex items-center p-3 rounded-md hover:bg-indigo-200', {
-                    'active bg-indigo-100 text-indigo-600': isActive,
-                    'pending cursor-not-allowed': isPending,
-                  })
+                  clsx(
+                    'flex items-center p-3 rounded-lg hover:bg-primary/40 hover:text-primary transition-colors',
+                    {
+                      'active bg-primary-100 text-primary': isActive,
+                      'pending cursor-not-allowed': isPending,
+                    }
+                  )
                 }
               >
                 <InboxIcon className="w-6 h-6 mr-2" />
@@ -56,14 +62,17 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
               </NavLink>
             </li>
             {userSessionRole === userRoles.enumValues[0] && (
-              <li className="bg-gray-100 rounded-md">
+              <li className="bg-base-200/40 rounded-lg">
                 <NavLink
                   to={`/${userSessionRole}/users`}
                   className={({ isActive, isPending }) =>
-                    clsx('flex items-center p-3 rounded-md hover:bg-indigo-200', {
-                      'active bg-indigo-100 text-indigo-600': isActive,
-                      'pending cursor-not-allowed': isPending,
-                    })
+                    clsx(
+                      'flex items-center p-3 rounded-lg hover:bg-primary/40 hover:text-primary transition-colors',
+                      {
+                        'active bg-primary-100 text-primary': isActive,
+                        'pending cursor-not-allowed': isPending,
+                      }
+                    )
                   }
                 >
                   <UsersIcon className="w-6 h-6 mr-2" />
@@ -71,7 +80,7 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
                 </NavLink>
               </li>
             )}
-            <li className="flex-1 bg-gray-100 rounded-md"></li>
+            <li className="flex-1 bg-base-200/40 rounded-lg"></li>
           </ul>
         </div>
       </div>

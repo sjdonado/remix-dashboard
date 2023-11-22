@@ -11,7 +11,7 @@ export function TableContainer({ totalPages, currentPage, children }: TableProps
   return (
     <div className="flex flex-col gap-4">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">{children}</div>
+        <div className="rounded-lg bg-base-200/50 p-2 md:pt-0">{children}</div>
       </div>
       <div className="flex-1 flex justify-center">
         <Pagination totalPages={totalPages} currentPage={currentPage} />
@@ -36,11 +36,11 @@ export function ResponsiveTable({
   children: React.ReactNode;
 }) {
   return (
-    <table className="hidden min-w-full text-gray-900 md:table">
+    <table className="hidden min-w-full text-content md:table">
       <thead className="rounded-lg text-left text-sm font-normal">
         <tr>
           {headers.map(header => (
-            <th key={header} scope="col" className="px-4 py-5 font-medium text-gray-700">
+            <th key={header} scope="col" className="px-4 py-5 font-medium text-content">
               {header}
             </th>
           ))}
@@ -49,7 +49,7 @@ export function ResponsiveTable({
           </th>
         </tr>
       </thead>
-      <tbody className="bg-white">{children}</tbody>
+      <tbody className="bg-base-100">{children}</tbody>
     </table>
   );
 }
