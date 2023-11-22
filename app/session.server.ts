@@ -31,7 +31,12 @@ auth.use(
     const password = form.get('password')!.toString();
 
     const [user] = await db
-      .select()
+      .select({
+        id: usersTable.id,
+        username: usersTable.username,
+        password: usersTable.password,
+        role: usersTable.role,
+      })
       .from(usersTable)
       .where(eq(usersTable.username, username))
       .limit(1);
@@ -43,6 +48,7 @@ auth.use(
     }
 
     const userSession: UserSession = {
+      id: user.id,
       username: user.username,
       role: user.role,
     };

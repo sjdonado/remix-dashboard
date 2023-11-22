@@ -30,6 +30,8 @@
     "remix-auth-form": "^1.4.0",
     "remix-hook-form": "^3.0.4",
     "remix-validated-form": "^5.1.5",
+    "use-debounce": "^10.0.0",
+    "uuid": "^9.0.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -38,6 +40,7 @@
     "@remix-run/eslint-config": "^2.2.0",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "@types/uuid": "^9.0.7",
     "dotfiles": "^0.8.0",
     "drizzle-kit": "^0.20.1",
     "eslint": "^8.38.0",

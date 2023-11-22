@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import type { ActionFunctionArgs, LoaderFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Link } from '@remix-run/react';
@@ -9,12 +11,11 @@ import Password from '~/utils/password';
 
 import { auth } from '~/session.server';
 
-import { UserSignupSchema } from '~/schemas/user';
-
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
+import { UserSignupSchema } from '~/schemas/user';
 
-import { FormInput } from '~/components/FormInput';
+import { Input } from '~/components/forms/Input';
 
 const validator = withZod(UserSignupSchema);
 
@@ -30,7 +31,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const password = await Password.hash(fieldValues.data.password);
 
   try {
-    await db.insert(usersTable).values({ name, username, password });
+    await db.insert(usersTable).values({ id: uuidv4(), name, username, password });
   } catch (error) {
     if (
       error instanceof Error &&
@@ -66,20 +67,20 @@ export default function Signup() {
         <div className="card-body">
           <h2 className="card-title mb-4">Signup</h2>
           <ValidatedForm validator={validator} method="post">
-            <FormInput
+            <Input
               name="username"
               label="Username"
               type="username"
               placeholder="Your username"
             />
-            <FormInput name="name" label="Name" type="text" placeholder="Your name" />
-            <FormInput
+            <Input name="name" label="Name" type="text" placeholder="Your name" />
+            <Input
               name="password"
               label="Password"
               type="password"
               placeholder="Your password"
             />
-            <FormInput
+            <Input
               name="confirmPassword"
               label="Confirm Password"
               type="password"

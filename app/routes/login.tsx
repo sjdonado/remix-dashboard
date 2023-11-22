@@ -9,7 +9,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 import { auth } from '~/session.server';
 
 import { UserLoginSchema } from '~/schemas/user';
-import { FormInput } from '~/components/FormInput';
+import { Input } from '~/components/forms/Input';
 
 const validator = withZod(UserLoginSchema);
 
@@ -54,13 +54,13 @@ export default function Login() {
         <div className="card-body">
           <h2 className="card-title mb-4">Login</h2>
           <ValidatedForm validator={validator} method="post">
-            <FormInput
+            <Input
               name="username"
               label="Username"
               type="username"
               placeholder="Your username"
             />
-            <FormInput
+            <Input
               name="password"
               label="Password"
               type="password"

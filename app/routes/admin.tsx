@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import { Outlet, useLoaderData, useNavigation } from '@remix-run/react';
 
 import type { UserSession } from '~/schemas/user';
@@ -10,19 +10,28 @@ import { auth } from '~/session.server';
 
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
+import { userRoles } from '~/db/schema';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userSession = await auth.isAuthenticated(request, {
+  const data = await auth.isAuthenticated(request, {
     failureRedirect: '/login',
   });
 
-  return json(JSON.parse(userSession) satisfies UserSession);
+  const userSession = JSON.parse(data) satisfies UserSession;
+  if (userSession.role !== userRoles.enumValues[0]) {
+    redirect('/');
+  }
+
+  return json({ userSession });
 };
 
 export default function AdminLayout() {
   const navigation = useNavigation();
 
-  const { username, role } = useLoaderData<typeof loader>();
+  const {
+    userSession: { username, role },
+  } = useLoaderData<typeof loader>();
+
   const isLoading = navigation.state === 'loading';
 
   return (
