@@ -36,7 +36,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   return json({ assignment });
 };
 
-export default function AssignmentPage() {
+export default function ShowAssignmentPage() {
   const { assignment } = useLoaderData<typeof loader>();
   const author = assignment.author!;
 
