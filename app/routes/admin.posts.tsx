@@ -16,11 +16,11 @@ export default function AdminPostsLayout() {
             href: '/admin/posts',
             active: pageTitle === 'posts',
           },
-          ...(pageTitle === 'create'
+          ...(pageTitle === 'new'
             ? [
                 {
-                  label: 'Create Post',
-                  href: '/admin/posts/create',
+                  label: 'New Post',
+                  href: '/admin/posts/new',
                   active: true,
                 },
               ]

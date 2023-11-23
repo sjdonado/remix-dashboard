@@ -10,12 +10,14 @@ import type { UserSerialized } from '~/schemas/user';
 import { formatDateToLocal } from '~/utils/date';
 import { PAGE_SIZE } from '~/config/constants';
 
-import { MobileTable, ResponsiveTable, TableContainer } from '~/components/Table';
 import {
-  CreateUserBtnLink,
-  DeleteUserBtnLink,
-  UpdateUserBtnLink,
-} from '~/components/users/buttons';
+  CreateBtnLink,
+  DeleteBtnLink,
+  MobileTable,
+  ResponsiveTable,
+  TableContainer,
+  UpdateBtnLink,
+} from '~/components/Table';
 import Search from '~/components/Search';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -72,7 +74,7 @@ export default function UsersPage() {
     <div className="flex flex-col gap-4">
       <div className="mt-4 flex items-center justify-between gap-2">
         <Search placeholder="Search users..." />
-        <CreateUserBtnLink />
+        <CreateBtnLink to="create" title="Create User" />
       </div>
       <TableContainer totalPages={totalPages} currentPage={currentPage}>
         <MobileTable>
@@ -103,8 +105,12 @@ export default function UsersPage() {
                   {/* <p className="text-xl font-medium">{formatCurrency(invoice.amount)}</p> */}
                 </div>
                 <div className="flex justify-end gap-2">
-                  <UpdateUserBtnLink id={user.id} />
-                  <DeleteUserBtnLink id={user.id} name={user.name} />
+                  <UpdateBtnLink to={`${user.id}/edit`} />
+                  <DeleteBtnLink
+                    to={`${user.id}/delete`}
+                    title="Delete User"
+                    recordName={user.name}
+                  />
                 </div>
               </div>
             </div>
@@ -138,8 +144,12 @@ export default function UsersPage() {
               </td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex justify-end gap-3">
-                  <UpdateUserBtnLink id={user.id} />
-                  <DeleteUserBtnLink id={user.id} name={user.name} />
+                  <UpdateBtnLink to={`${user.id}/edit`} />
+                  <DeleteBtnLink
+                    to={`${user.id}/delete`}
+                    title="Delete User"
+                    recordName={user.name}
+                  />
                 </div>
               </td>
             </tr>

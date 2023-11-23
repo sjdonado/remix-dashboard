@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData, useSearchParams } from '@remix-run/react';
+import { Link, useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { asc, desc, sql, eq } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core/alias';
@@ -12,12 +12,14 @@ import type { PostSerialized } from '~/schemas/post';
 import { formatDateToLocal } from '~/utils/date';
 import { PAGE_SIZE } from '~/config/constants';
 
-import { MobileTable, ResponsiveTable, TableContainer } from '~/components/Table';
-// import {
-//   CreatePostBtnLink,
-//   DeletePostBtnLink,
-//   UpdatePostBtnLink,
-// } from '~/components/posts/buttons';
+import {
+  CreateBtnLink,
+  DeleteBtnLink,
+  MobileTable,
+  ResponsiveTable,
+  TableContainer,
+  UpdateBtnLink,
+} from '~/components/Table';
 import Search from '~/components/Search';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -82,7 +84,7 @@ export default function PostsPage() {
     <div className="flex flex-col gap-4">
       <div className="mt-4 flex items-center justify-between gap-2">
         <Search placeholder="Search posts..." />
-        {/* <CreatePostBtnLink /> */}
+        <CreateBtnLink to="new" title="New Post" />
       </div>
       <TableContainer totalPages={totalPages} currentPage={currentPage}>
         <MobileTable>
@@ -104,8 +106,12 @@ export default function PostsPage() {
                   <p className="text-sm line-clamp-3">{post.content}</p>
                 </div>
                 <div className="flex justify-end gap-2">
-                  {/* <UpdatePostBtnLink id={user.id} /> */}
-                  {/* <DeletePostBtnLink id={user.id} name={user.name} /> */}
+                  <UpdateBtnLink to={`${post.id}/edit`} />
+                  <DeleteBtnLink
+                    to={`${post.id}/delete`}
+                    title="Delete Post"
+                    recordName={post.title}
+                  />
                 </div>
               </div>
             </div>
@@ -129,8 +135,12 @@ export default function PostsPage() {
               </td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex justify-end gap-3">
-                  {/* <UpdatePostBtnLink id={user.id} /> */}
-                  {/* <DeletePostBtnLink id={user.id} name={user.name} /> */}
+                  <UpdateBtnLink to={`${post.id}/edit`} />
+                  <DeleteBtnLink
+                    to={`${post.id}/delete`}
+                    title="Delete Post"
+                    recordName={post.title}
+                  />
                 </div>
               </td>
             </tr>

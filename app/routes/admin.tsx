@@ -13,29 +13,26 @@ import Sidebar from '~/components/Sidebar';
 import { userRoles } from '~/db/schema';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const data = await auth.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
+  const data = await auth.isAuthenticated(request, { failureRedirect: '/login' });
+  const { username, role } = JSON.parse(data) satisfies UserSession;
 
-  const userSession = JSON.parse(data) satisfies UserSession;
-  if (userSession?.role !== userRoles.enumValues[0]) {
+  if (role !== userRoles.enumValues[0]) {
     redirect('/');
   }
 
-  return json({ userSession });
+  return json({ username, role });
 };
 
 export default function AdminLayout() {
   const navigation = useNavigation();
-
-  const { userSession } = useLoaderData<typeof loader>();
+  const { username, role } = useLoaderData<typeof loader>();
 
   const isLoading = navigation.state === 'loading';
 
   return (
     <div className="flex h-screen">
-      <Sidebar userSessionRole={userSession.role}>
-        <Header username={userSession.username} />
+      <Sidebar userSessionRole={role}>
+        <Header username={username} />
         {isLoading ? (
           <div className="absolute top-0 left-64 right-0 bottom-0 flex items-center justify-center h-full transition-opacity delay-200 sm:left-72">
             <span className="absolute loading loading-dots loading-lg"></span>

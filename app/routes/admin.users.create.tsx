@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { PostgresError } from 'postgres';
 
 import {
   IdentificationIcon,
@@ -23,7 +24,6 @@ import { duplicateUsernameError } from '~/errors/form.server';
 
 import { Input } from '~/components/forms/Input';
 import { Select } from '~/components/forms/Select';
-import { PostgresError } from 'postgres';
 
 const validator = withZod(UserCreateSchema);
 

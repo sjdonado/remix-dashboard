@@ -1,4 +1,9 @@
+import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+
+import { Link, useSearchParams } from '@remix-run/react';
+
 import Pagination from './Pagination';
+import { DialogModalButton } from './ConfirmationDialog';
 
 interface TableProps {
   totalPages: number;
@@ -48,5 +53,55 @@ export function ResponsiveTable({
       </thead>
       <tbody className="bg-base-100">{children}</tbody>
     </table>
+  );
+}
+
+export function CreateBtnLink({ to, title }: { to: string; title: string }) {
+  return (
+    <Link
+      to={to}
+      className="flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-white hover:bg-primary/50"
+    >
+      <span className="hidden md:block">{title}</span>
+      <PlusIcon className="h-5" />
+    </Link>
+  );
+}
+
+export function UpdateBtnLink({ to }: { to: string }) {
+  const [searchParams] = useSearchParams();
+
+  return (
+    <Link
+      to={`${to}?${searchParams.toString()}`}
+      className="rounded-lg border p-2 hover:bg-base-200"
+    >
+      <PencilIcon className="w-5" />
+    </Link>
+  );
+}
+
+export function DeleteBtnLink({
+  to,
+  title,
+  recordName,
+}: {
+  to: string;
+  title: string;
+  recordName: string;
+}) {
+  const [searchParams] = useSearchParams();
+
+  return (
+    <DialogModalButton
+      title="Delete User"
+      description={`Are you sure you want to delete ${recordName}?`}
+      button="Delete"
+      action={`${to}?${searchParams.toString()}`}
+      className="rounded-lg border p-2 hover:bg-base-200"
+    >
+      <span className="sr-only">{title}</span>
+      <TrashIcon className="w-5" />
+    </DialogModalButton>
   );
 }
