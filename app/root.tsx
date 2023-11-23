@@ -9,6 +9,8 @@ import {
 
 import '~/tailwind.css';
 
+import LoadingBar from './components/LoadingBar';
+
 export default function App() {
   return (
     <html lang="en">
@@ -19,6 +21,7 @@ export default function App() {
         <Links />
       </head>
       <body>
+        <LoadingBar />
         <Outlet />
         <ScrollRestoration />
         <LiveReload />
