@@ -1,7 +1,8 @@
 import invariant from 'tiny-invariant';
 import { eq } from 'drizzle-orm';
+import { redirectWithSuccess } from 'remix-toast';
 
-import { redirect, type ActionFunctionArgs } from '@remix-run/node';
+import { type ActionFunctionArgs } from '@remix-run/node';
 
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
@@ -12,5 +13,8 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   await db.delete(usersTable).where(eq(usersTable.id, params.userId));
 
-  return redirect(`/users?${searchParams.toString()}`);
+  return redirectWithSuccess(
+    `/users?${searchParams.toString()}`,
+    'User deleted successfully'
+  );
 };

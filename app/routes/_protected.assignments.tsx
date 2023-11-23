@@ -8,7 +8,6 @@ import { userRoles } from '~/db/schema';
 import type { UserSession } from '~/schemas/user';
 
 import { auth } from '~/session.server';
-import { isUUID } from '~/utils/route';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const data = await auth.isAuthenticated(request, { failureRedirect: '/login' });
@@ -24,7 +23,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function AssignmentsLayout() {
   const location = useLocation();
-  const pageTitle = location.pathname.split('/').pop()!;
+  const pathName = location.pathname.split('/');
+
+  const pageTitle = pathName.pop()!;
+  const uuid = pathName.pop()!;
 
   return (
     <div className="flex flex-col gap-2">
@@ -35,11 +37,11 @@ export default function AssignmentsLayout() {
             href: '/assignments',
             active: pageTitle === 'assignments',
           },
-          ...(isUUID(pageTitle)
+          ...(pageTitle === 'show'
             ? [
                 {
-                  label: 'View Details',
-                  href: `/assignments/${pageTitle}`,
+                  label: 'Show Details',
+                  href: `/assignments/${uuid}/show`,
                   active: true,
                 },
               ]
@@ -57,7 +59,7 @@ export default function AssignmentsLayout() {
             ? [
                 {
                   label: 'Edit',
-                  href: '/assignments/edit',
+                  href: `/assignments/${uuid}/edit`,
                   active: true,
                 },
               ]

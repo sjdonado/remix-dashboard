@@ -97,7 +97,7 @@ export default function AssignmentsPage() {
                   <div className="mb-2 flex items-center">
                     <p>{assignment.title}</p>
                   </div>
-                  <div className="mb-2 flex items-center gap-2">
+                  <div className="mb-2 flex items-center">
                     <Avatar
                       name={assignment.author.name}
                       round
@@ -116,7 +116,7 @@ export default function AssignmentsPage() {
                   <p className="text-sm line-clamp-3">{assignment.content}</p>
                 </div>
                 <div className="flex justify-end gap-2">
-                  <ShowBtnLink to={`${assignment.id}`} />
+                  <ShowBtnLink to={`${assignment.id}/show`} />
                   <UpdateBtnLink to={`${assignment.id}/edit`} />
                   <DeleteBtnLink
                     to={`${assignment.id}/delete`}
@@ -156,7 +156,7 @@ export default function AssignmentsPage() {
               </td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex justify-end gap-2">
-                  <ShowBtnLink to={`${assignment.id}`} />
+                  <ShowBtnLink to={`${assignment.id}/show`} />
                   <UpdateBtnLink to={`${assignment.id}/edit`} />
                   <DeleteBtnLink
                     to={`${assignment.id}/delete`}

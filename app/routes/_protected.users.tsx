@@ -23,7 +23,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function UsersLayout() {
   const location = useLocation();
-  const pageTitle = location.pathname.split('/').pop()!;
+  const pathName = location.pathname.split('/');
+
+  const pageTitle = pathName.pop()!;
+  const uuid = pathName.pop()!;
 
   return (
     <div className="flex flex-col gap-2">
@@ -47,7 +50,7 @@ export default function UsersLayout() {
             ? [
                 {
                   label: 'Edit',
-                  href: '/users/edit',
+                  href: `/users/${uuid}/edit`,
                   active: true,
                 },
               ]
