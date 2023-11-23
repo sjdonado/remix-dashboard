@@ -8,6 +8,7 @@ import { userRoles } from '~/db/schema';
 import type { UserSession } from '~/schemas/user';
 
 import { auth } from '~/session.server';
+import { isUUID } from '~/utils/route';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const data = await auth.isAuthenticated(request, { failureRedirect: '/login' });
@@ -34,6 +35,15 @@ export default function AssignmentsLayout() {
             href: '/assignments',
             active: pageTitle === 'assignments',
           },
+          ...(isUUID(pageTitle)
+            ? [
+                {
+                  label: 'View Details',
+                  href: `/assignments/${pageTitle}`,
+                  active: true,
+                },
+              ]
+            : []),
           ...(pageTitle === 'new'
             ? [
                 {

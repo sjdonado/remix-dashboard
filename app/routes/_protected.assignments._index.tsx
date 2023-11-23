@@ -1,3 +1,5 @@
+import Avatar from 'react-avatar';
+
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
@@ -95,7 +97,15 @@ export default function AssignmentsPage() {
                   <div className="mb-2 flex items-center">
                     <p>{assignment.title}</p>
                   </div>
-                  <p className="text-sm text-gray-500">{assignment.author.name}</p>
+                  <div className="mb-2 flex items-center gap-2">
+                    <Avatar
+                      name={assignment.author.name}
+                      round
+                      size="32"
+                      alt={assignment.author.name}
+                    />
+                    <p className="text-sm text-gray-500">{assignment.author.name}</p>
+                  </div>
                 </div>
                 <span className="text-xs min-w-fit">
                   {formatDateToLocal(assignment.createdAt)}
@@ -127,7 +137,17 @@ export default function AssignmentsPage() {
               <td className="flex-1">
                 <p className="line-clamp-2">{assignment.title}</p>
               </td>
-              <td className="flex-1 whitespace-nowrap">{assignment.author.name}</td>
+              <td className="flex-1 whitespace-nowrap">
+                <div className="flex items-center gap-2">
+                  <Avatar
+                    name={assignment.author.name}
+                    round
+                    size="32"
+                    alt={assignment.author.name}
+                  />
+                  <p>{assignment.author.name}</p>
+                </div>
+              </td>
               <td className="flex-1">
                 <p className="line-clamp-2 max-w-sm">{assignment.content}</p>
               </td>

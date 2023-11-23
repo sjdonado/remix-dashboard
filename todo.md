@@ -10,12 +10,16 @@ TODO:
 - [x] Rename "Inbox" to "Assignments"
 - [x] Create assignments model and seed data (a user can have many assignments)
 - [x] Ensure that a comment belongs to a user
-- [ ] Finish CRUD for assignments (show/view assignments button)
-- [ ] Profile page
+- [x] Finish CRUD for assignments (show/view assignments button)
+- [ ] Profile page (react-avatar) github like
 - [ ] Assignments table should be available for teachers (only my assignments)
 - [ ] Feed should be available for teachers and students
+
+- [ ] Implement statistics page showing the total number of users, assignments, and comments
+- [ ] Implement logging using Pino logger for actions and loaders
+
+Not for now
+
 - [ ] Allow a assignment to have multiple comments (students + teachers can create comments)
 - [ ] Add comments section below each assignment
 - [ ] Admin can see, edit and delete comments in assignment (show/view page)
-- [ ] Implement statistics page showing the total number of users, assignments, and comments
-- [ ] Implement logging using Pino logger for actions and loaders

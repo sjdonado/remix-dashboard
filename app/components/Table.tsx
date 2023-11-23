@@ -1,4 +1,4 @@
-import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { EyeIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 import { Link, useSearchParams } from '@remix-run/react';
 
@@ -53,6 +53,19 @@ export function ResponsiveTable({
       </thead>
       <tbody className="bg-base-100">{children}</tbody>
     </table>
+  );
+}
+
+export function ShowBtnLink({ to }: { to: string }) {
+  const [searchParams] = useSearchParams();
+
+  return (
+    <Link
+      to={`${to}?${searchParams.toString()}`}
+      className="rounded-lg border p-2 hover:bg-base-200"
+    >
+      <EyeIcon className="h-5" />
+    </Link>
   );
 }
 

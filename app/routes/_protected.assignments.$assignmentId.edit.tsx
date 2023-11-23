@@ -8,7 +8,7 @@ import {
 
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { useLoaderData, useNavigate } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -19,6 +19,8 @@ import { AssignmentUpdateSchema } from '~/schemas/assignment';
 
 import { Input } from '~/components/forms/Input';
 import { TextArea } from '~/components/forms/TextArea';
+import BackButton from '~/components/forms/BackButton';
+import SubmitButton from '~/components/forms/SubmitButton';
 
 const validator = withZod(AssignmentUpdateSchema);
 
@@ -67,7 +69,6 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 export default function EditAssignmentPage() {
-  const navigate = useNavigate();
   const { assignment } = useLoaderData<typeof loader>();
 
   return (
@@ -104,19 +105,8 @@ export default function EditAssignmentPage() {
         />
       </div>
       <div className="mt-6 flex justify-end gap-4">
-        <button
-          className="flex h-10 items-center rounded-lg bg-base-200 px-4 text-sm font-medium hover:bg-base-200/50"
-          onClick={() => navigate(-1)}
-          type="button"
-        >
-          Cancel
-        </button>
-        <button
-          className="flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-medium text-white hover:bg-primary/50"
-          type="submit"
-        >
-          Edit Assignment
-        </button>
+        <BackButton message="Cancel" />
+        <SubmitButton message="Edit Assignment" />
       </div>
     </ValidatedForm>
   );
