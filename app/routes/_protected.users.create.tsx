@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { PostgresError } from 'postgres';
 
 import {
@@ -13,7 +12,6 @@ import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
 
 import type { ActionFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
 
 import { db } from '~/db/config.server';
 import { userRoles, usersTable } from '~/db/schema';
@@ -40,7 +38,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const password = await Password.hash(fieldValues.data.password);
 
   try {
-    await db.insert(usersTable).values({ id: uuidv4(), name, username, role, password });
+    await db.insert(usersTable).values({ name, username, role, password });
   } catch (error) {
     if (error instanceof PostgresError) {
       const validationError = duplicateUsernameError(error, fieldValues);

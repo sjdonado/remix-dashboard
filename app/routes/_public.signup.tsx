@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import {
   IdentificationIcon,
   LockClosedIcon,
@@ -35,7 +34,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const password = await Password.hash(fieldValues.data.password);
 
   try {
-    await db.insert(usersTable).values({ id: uuidv4(), name, username, password });
+    await db.insert(usersTable).values({ name, username, password });
   } catch (error) {
     if (error instanceof PostgresError) {
       const validationError = duplicateUsernameError(error, fieldValues);

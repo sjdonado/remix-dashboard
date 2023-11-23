@@ -1,8 +1,8 @@
-import { pgEnum, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { pgEnum, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 
 export const userRoles = pgEnum('roles', ['admin', 'teacher', 'student']);
 export const usersTable = pgTable('users', {
-  id: text('id').primaryKey().notNull(),
+  id: uuid('id').defaultRandom().primaryKey(),
   name: text('name').notNull(),
   username: varchar('username').unique().notNull(),
   role: userRoles('role').notNull().default(userRoles.enumValues[2]),
@@ -12,8 +12,8 @@ export const usersTable = pgTable('users', {
 });
 
 export const assignmentsTable = pgTable('assignments', {
-  id: text('id').primaryKey().notNull(),
-  authorId: text('author_id')
+  id: uuid('id').defaultRandom().primaryKey(),
+  authorId: uuid('author_id')
     .notNull()
     .references(() => usersTable.id),
   title: text('title').notNull(),

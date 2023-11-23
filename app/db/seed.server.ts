@@ -1,6 +1,5 @@
 import 'dotenv/config';
 
-import { v4 as uuidv4 } from 'uuid';
 import { faker } from '@faker-js/faker';
 
 import postgres from 'postgres';
@@ -24,7 +23,6 @@ const seedUsers = async (db: PostgresJsDatabase) => {
     const role = i % 2 === 0 ? userRoles.enumValues[0] : userRoles.enumValues[1];
 
     data.push({
-      id: uuidv4(),
       name: faker.person.fullName(),
       username: `${role === userRoles.enumValues[0] ? 'admin' : 'teacher'}${i + 1}`,
       password,
@@ -47,7 +45,6 @@ const seedAssignments = async (db: PostgresJsDatabase, users: User[]) => {
   for (const user of users) {
     for (let i = 0; i < 10; i++) {
       data.push({
-        id: uuidv4(),
         authorId: user.id,
         title: faker.lorem.sentence(),
         content: faker.lorem.paragraphs(),
