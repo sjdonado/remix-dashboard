@@ -15,6 +15,13 @@
       "when": 1700408326770,
       "tag": "0001_flawless_leech",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1700756590960,
+      "tag": "0002_productive_prowler",
+      "breakpoints": true
     }
   ]
 }

@@ -14,8 +14,8 @@ export const usersTable = pgTable('users', {
 export const assignmentsTable = pgTable('assignments', {
   id: uuid('id').defaultRandom().primaryKey(),
   authorId: uuid('author_id')
-    .notNull()
-    .references(() => usersTable.id),
+    .references(() => usersTable.id, { onDelete: 'cascade' })
+    .notNull(),
   title: text('title').notNull(),
   content: text('content').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
