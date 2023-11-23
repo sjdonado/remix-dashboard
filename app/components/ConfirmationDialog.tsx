@@ -23,12 +23,12 @@ export const DialogModal = forwardRef(function ConfirmationDialog(
         <h3 className="font-bold text-xl">{title}</h3>
         <p className="py-4">{description}</p>
         <div className="modal-action">
-          <Form method="post" action={action}>
-            <button className="btn btn-error error-content rounded-lg">{button}</button>
-          </Form>
           <form method="dialog">
             <button className="btn rounded-lg">Close</button>
           </form>
+          <Form method="post" action={action}>
+            <button className="btn btn-error error-content rounded-lg">{button}</button>
+          </Form>
         </div>
       </div>
     </dialog>
