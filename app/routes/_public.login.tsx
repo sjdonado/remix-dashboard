@@ -55,7 +55,7 @@ export default function LoginPage() {
           type="username"
           placeholder="Your username"
           icon={
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-content" />
+            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         />
         <Input
@@ -64,7 +64,7 @@ export default function LoginPage() {
           type="password"
           placeholder="Your password"
           icon={
-            <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-content" />
+            <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         />
         <button className="btn bg-primary rounded-lg mt-4 w-full" type="submit">

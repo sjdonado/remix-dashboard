@@ -59,7 +59,7 @@ export default function SignupPage() {
           type="username"
           placeholder="Your username"
           icon={
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-content" />
+            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         />
         <Input
@@ -68,7 +68,7 @@ export default function SignupPage() {
           type="text"
           placeholder="Your name"
           icon={
-            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-content" />
+            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         />
         <Input
@@ -77,7 +77,7 @@ export default function SignupPage() {
           type="password"
           placeholder="Your password"
           icon={
-            <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-content" />
+            <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         />
         <Input
@@ -86,7 +86,7 @@ export default function SignupPage() {
           type="password"
           placeholder="Confirm your password"
           icon={
-            <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-content" />
+            <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         />
         <button className="btn btn-primary rounded-lg mt-4 w-full" type="submit">

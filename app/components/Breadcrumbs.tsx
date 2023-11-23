@@ -16,7 +16,7 @@ export default function Breadcrumbs({ breadcrumbs }: { breadcrumbs: Breadcrumb[]
           <li
             key={breadcrumb.href}
             aria-current={breadcrumb.active}
-            className={clsx(breadcrumb.active ? 'text-content' : 'text-gray-500')}
+            className={clsx(breadcrumb.active ? '' : 'text-gray-500')}
           >
             <Link to={breadcrumb.href}>{breadcrumb.label}</Link>
           </li>

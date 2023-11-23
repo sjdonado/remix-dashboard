@@ -77,7 +77,7 @@ export default function EditUserPage() {
           placeholder="Your name"
           defaultValue={user.name}
           icon={
-            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-content" />
+            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         />
         <Input
@@ -87,7 +87,7 @@ export default function EditUserPage() {
           placeholder="Your username"
           defaultValue={user.username}
           icon={
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-content" />
+            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         />
         <Select
@@ -96,7 +96,7 @@ export default function EditUserPage() {
           label="Choose role"
           defaultValue={user.role}
           icon={
-            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-content" />
+            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         >
           <option value="" disabled>
@@ -111,7 +111,7 @@ export default function EditUserPage() {
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <button
-          className="flex h-10 items-center rounded-lg bg-base-200 px-4 text-sm font-medium text-content hover:bg-base-200/50"
+          className="flex h-10 items-center rounded-lg bg-base-200 px-4 text-sm font-medium hover:bg-base-200/50"
           onClick={() => navigate(-1)}
           type="button"
         >

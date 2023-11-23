@@ -21,7 +21,7 @@ export const Input: FC<InputProps> = ({ name, label, icon, ...rest }) => {
         <div className="relative">
           <input
             className={clsx(
-              'peer input input-sm input-bordered rounded-md w-full !pl-9',
+              'peer input input-sm input-bordered rounded-md w-full !h-10 !pl-9',
               error && 'input-error'
             )}
             {...rest}

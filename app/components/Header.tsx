@@ -26,12 +26,12 @@ export default function Header({ username }: HeaderProps) {
         <Bars3Icon className="h-6 w-6" />
       </label>
       <div className="flex items-center justify-center gap-1">
-        <label className="btn btn-ghost rounded-lg swap swap-rotate text-content">
+        <label className="btn btn-ghost rounded-lg swap swap-rotate">
           <input type="checkbox" className="theme-controller" value="dark" />
           <SunIcon className="swap-off fill-current w-6 h-6" />
           <MoonIcon className="swap-on fill-current w-6 h-6" />
         </label>
-        <button className="btn btn-ghost rounded-lg text-content">
+        <button className="btn btn-ghost rounded-lg">
           <BellIcon className="h-6 w-6" />
         </button>
         <div className="dropdown">
@@ -47,7 +47,7 @@ export default function Header({ username }: HeaderProps) {
             <li>
               <Link
                 to="/profile"
-                className="flex items-center justify-start block rounded-lg px-4 py-2 text-sm text-content hover:bg-content-200 transition-colors"
+                className="flex items-center justify-start block rounded-lg px-4 py-2 text-sm hover:bg-content-200 transition-colors"
                 role="menuitem"
               >
                 <UserIcon className="w-6 h-6" />
@@ -60,7 +60,7 @@ export default function Header({ username }: HeaderProps) {
                 description="Are you sure you want to log out? You will be redirected to the login page."
                 button="Logout"
                 action="/logout"
-                className="flex items-center justify-start block rounded-lg px-4 py-2 text-sm text-content hover:bg-content-200 transition-colors"
+                className="flex items-center justify-start block rounded-lg px-4 py-2 text-sm hover:bg-content-200 transition-colors"
               >
                 <ArrowLeftOnRectangleIcon className="w-6 h-6" />
                 Logout
