@@ -4,13 +4,14 @@ import {
   UserCircleIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
-
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { jsonWithSuccess } from 'remix-toast';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
+
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
@@ -43,7 +44,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     .set({ name, username, updatedAt: new Date() })
     .where(eq(usersTable.id, id));
 
-  return redirect('/');
+  return jsonWithSuccess({}, 'Profile updated successfully');
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

@@ -1,12 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
-
 import { DocumentIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
-
-import type { ActionFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
+import { redirectWithSuccess } from 'remix-toast';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
+
+import type { ActionFunctionArgs } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable } from '~/db/schema';
@@ -37,7 +37,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   await db.insert(assignmentsTable).values({ id: uuidv4(), title, content, authorId });
 
-  return redirect('/assignments');
+  return redirectWithSuccess('/assignments', 'Assignment created successfully');
 };
 
 export default function NewAssignmentPage() {

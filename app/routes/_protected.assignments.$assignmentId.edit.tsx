@@ -5,13 +5,14 @@ import {
   DocumentTextIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
+import { redirectWithSuccess } from 'remix-toast';
+
+import { ValidatedForm, validationError } from 'remix-validated-form';
+import { withZod } from '@remix-validated-form/with-zod';
 
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-
-import { ValidatedForm, validationError } from 'remix-validated-form';
-import { withZod } from '@remix-validated-form/with-zod';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
@@ -41,7 +42,10 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     .set({ title, content, updatedAt: new Date() })
     .where(eq(assignmentsTable.id, params.assignmentId));
 
-  return redirect(`/assignments?${searchParams.toString()}`);
+  return redirectWithSuccess(
+    `/assignments?${searchParams.toString()}`,
+    'Assignment updated successfully'
+  );
 };
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {

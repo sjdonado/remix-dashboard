@@ -7,12 +7,13 @@ import {
   UserCircleIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
-
-import type { ActionFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
+import { redirectWithSuccess } from 'remix-toast';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
+
+import type { ActionFunctionArgs } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 
 import { db } from '~/db/config.server';
 import { userRoles, usersTable } from '~/db/schema';
@@ -49,7 +50,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     throw error;
   }
 
-  return redirect('/users');
+  return redirectWithSuccess('/users', 'User created successfully');
 };
 
 export default function CreateUserPage() {
