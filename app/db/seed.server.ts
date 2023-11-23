@@ -9,7 +9,7 @@ import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { drizzle } from 'drizzle-orm/postgres-js';
 
 import type { User } from '~/schemas/user';
-import { postsTable, userRoles, usersTable } from './schema';
+import { assignmentsTable, userRoles, usersTable } from './schema';
 
 import Password from '~/utils/password';
 
@@ -41,7 +41,7 @@ const seedUsers = async (db: PostgresJsDatabase) => {
   return result;
 };
 
-const seedPosts = async (db: PostgresJsDatabase, users: User[]) => {
+const seedAssignments = async (db: PostgresJsDatabase, users: User[]) => {
   const data = [];
 
   for (const user of users) {
@@ -56,7 +56,7 @@ const seedPosts = async (db: PostgresJsDatabase, users: User[]) => {
   }
 
   const result = await db
-    .insert(postsTable)
+    .insert(assignmentsTable)
     .values(data)
     .onConflictDoNothing()
     .returning();
@@ -69,10 +69,10 @@ const main = async () => {
   const db = drizzle(client);
 
   const users = await seedUsers(db);
-  const posts = await seedPosts(db, users);
+  const assignments = await seedAssignments(db, users);
 
   console.log('[seedUsers] first 10:', users.slice(0, 10));
-  console.log('[seedPosts] first 10:', posts.slice(0, 10));
+  console.log('[seedAssignments] first 10:', assignments.slice(0, 10));
 
   await client.end();
 };

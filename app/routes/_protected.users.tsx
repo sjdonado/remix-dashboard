@@ -1,9 +1,27 @@
 import { Outlet, useLocation } from '@remix-run/react';
+import { redirect, type LoaderFunctionArgs, json } from '@remix-run/node';
 
 import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
 import Breadcrumbs from '~/components/Breadcrumbs';
 
-export default function AdminUsersLayout() {
+import { userRoles } from '~/db/schema';
+import type { UserSession } from '~/schemas/user';
+
+import { auth } from '~/session.server';
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const data = await auth.isAuthenticated(request, { failureRedirect: '/login' });
+  const { role } = JSON.parse(data) satisfies UserSession;
+
+  const [adminRole] = userRoles.enumValues;
+  if (role !== adminRole) {
+    return redirect('/');
+  }
+
+  return json({});
+};
+
+export default function UsersLayout() {
   const location = useLocation();
   const pageTitle = location.pathname.split('/').pop()!;
 
@@ -13,14 +31,14 @@ export default function AdminUsersLayout() {
         breadcrumbs={[
           {
             label: 'Users',
-            href: '/admin/users',
+            href: '/users',
             active: pageTitle === 'users',
           },
           ...(pageTitle === 'create'
             ? [
                 {
-                  label: 'Create User',
-                  href: '/admin/users/create',
+                  label: 'Create',
+                  href: '/users/create',
                   active: true,
                 },
               ]
@@ -28,8 +46,8 @@ export default function AdminUsersLayout() {
           ...(pageTitle === 'edit'
             ? [
                 {
-                  label: 'Edit User',
-                  href: '/admin/users/edit',
+                  label: 'Edit',
+                  href: '/users/edit',
                   active: true,
                 },
               ]
@@ -42,5 +60,5 @@ export default function AdminUsersLayout() {
 }
 
 export function ErrorBoundary() {
-  return <CustomErrorBoundary />;
+  return <CustomErrorBoundary className="w-full h-[90vh]" />;
 }

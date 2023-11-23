@@ -1,33 +1,31 @@
-import { v4 as uuidv4 } from 'uuid';
-import { PostgresError } from 'postgres';
+import { eq } from 'drizzle-orm';
+import invariant from 'tiny-invariant';
 
-import {
-  IdentificationIcon,
-  KeyIcon,
-  UserCircleIcon,
-  UserGroupIcon,
-} from '@heroicons/react/24/outline';
-
-import type { ActionFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/node';
-import { useNavigate } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { useLoaderData, useNavigate } from '@remix-run/react';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
 
 import { db } from '~/db/config.server';
 import { userRoles, usersTable } from '~/db/schema';
-import { UserCreateSchema } from '~/schemas/user';
-
-import Password from '~/utils/password';
-import { duplicateUsernameError } from '~/errors/form.server';
+import { UserUpdateSchema } from '~/schemas/user';
 
 import { Input } from '~/components/forms/Input';
 import { Select } from '~/components/forms/Select';
+import {
+  IdentificationIcon,
+  UserCircleIcon,
+  UserGroupIcon,
+} from '@heroicons/react/24/outline';
 
-const validator = withZod(UserCreateSchema);
+const validator = withZod(UserUpdateSchema);
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ params, request }: ActionFunctionArgs) => {
+  invariant(params.userId, 'Missing userId param');
+  const { searchParams } = new URL(request.url);
+
   const fieldValues = await validator.validate(await request.formData());
 
   if (fieldValues.error) {
@@ -35,24 +33,39 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const { name, username, role } = fieldValues.data;
-  const password = await Password.hash(fieldValues.data.password);
 
-  try {
-    await db.insert(usersTable).values({ id: uuidv4(), name, username, role, password });
-  } catch (error) {
-    if (error instanceof PostgresError) {
-      const validationError = duplicateUsernameError(error, fieldValues);
-      if (validationError) return validationError;
-    }
+  await db
+    .update(usersTable)
+    .set({ name, username, role, updatedAt: new Date() })
+    .where(eq(usersTable.id, params.userId));
 
-    throw error;
-  }
-
-  return redirect('/admin/users');
+  return redirect(`/users?${searchParams.toString()}`);
 };
 
-export default function CreateUserPage() {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
+  invariant(params.userId, 'Missing userId param');
+
+  const [user] = await db
+    .select({
+      id: usersTable.id,
+      name: usersTable.name,
+      username: usersTable.username,
+      role: usersTable.role,
+    })
+    .from(usersTable)
+    .where(eq(usersTable.id, params.userId))
+    .limit(1);
+
+  if (!user) {
+    throw new Response('Not Found', { status: 404 });
+  }
+
+  return json({ user });
+};
+
+export default function EditUserPage() {
   const navigate = useNavigate();
+  const { user } = useLoaderData<typeof loader>();
 
   return (
     <ValidatedForm validator={validator} method="post">
@@ -61,7 +74,8 @@ export default function CreateUserPage() {
           name="name"
           label="Name"
           type="text"
-          placeholder="Name"
+          placeholder="Your name"
+          defaultValue={user.name}
           icon={
             <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
@@ -70,7 +84,8 @@ export default function CreateUserPage() {
           name="username"
           label="Username"
           type="text"
-          placeholder="Username"
+          placeholder="Your username"
+          defaultValue={user.username}
           icon={
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
@@ -79,6 +94,7 @@ export default function CreateUserPage() {
           id="role"
           name="role"
           label="Choose role"
+          defaultValue={user.role}
           icon={
             <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
@@ -92,15 +108,6 @@ export default function CreateUserPage() {
             </option>
           ))}
         </Select>
-        <Input
-          name="password"
-          label="Password"
-          type="password"
-          placeholder="Password"
-          icon={
-            <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
-        />
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <button
@@ -114,7 +121,7 @@ export default function CreateUserPage() {
           className="flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-medium text-white hover:bg-primary/50"
           type="submit"
         >
-          Create User
+          Edit User
         </button>
       </div>
     </ValidatedForm>

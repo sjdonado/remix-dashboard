@@ -8,11 +8,13 @@ import { userRoles } from '~/db/schema';
 import AppLogo from './AppLogo';
 
 interface SidebarProps {
-  userSessionRole: string;
+  userSessionRole: (typeof userRoles.enumValues)[number];
   children: React.ReactNode;
 }
 
 export default function Sidebar({ userSessionRole, children }: SidebarProps) {
+  const [adminRole, teacherRole] = userRoles.enumValues;
+
   return (
     <div className="drawer md:drawer-open">
       <input id="header" type="checkbox" className="drawer-toggle" />
@@ -29,7 +31,7 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
           <ul className="flex-1 flex flex-col gap-2">
             <li className="bg-base-200/40 rounded-lg">
               <NavLink
-                to={`/${userSessionRole}/home`}
+                to="home"
                 className={({ isActive, isPending }) =>
                   clsx(
                     'flex items-center p-3 rounded-lg hover:bg-primary/40 hover:text-primary transition-colors',
@@ -44,27 +46,31 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
                 <span className="text-sm font-medium">Home</span>
               </NavLink>
             </li>
-            <li className="bg-base-200/40 rounded-lg">
-              <NavLink
-                to={`/${userSessionRole}/posts`}
-                className={({ isActive, isPending }) =>
-                  clsx(
-                    'flex items-center p-3 rounded-lg hover:bg-primary/40 hover:text-primary transition-colors',
-                    {
-                      'active bg-primary-100 text-primary': isActive,
-                      'pending cursor-not-allowed': isPending,
-                    }
-                  )
-                }
-              >
-                <InboxIcon className="w-6 h-6 mr-2" />
-                <span className="text-sm font-medium">Posts</span>
-              </NavLink>
-            </li>
-            {userSessionRole === userRoles.enumValues[0] && (
+            {[adminRole, teacherRole].includes(
+              userSessionRole as typeof adminRole | typeof teacherRole
+            ) && (
               <li className="bg-base-200/40 rounded-lg">
                 <NavLink
-                  to={`/${userSessionRole}/users`}
+                  to="assignments"
+                  className={({ isActive, isPending }) =>
+                    clsx(
+                      'flex items-center p-3 rounded-lg hover:bg-primary/40 hover:text-primary transition-colors',
+                      {
+                        'active bg-primary-100 text-primary': isActive,
+                        'pending cursor-not-allowed': isPending,
+                      }
+                    )
+                  }
+                >
+                  <InboxIcon className="w-6 h-6 mr-2" />
+                  <span className="text-sm font-medium">Assignments</span>
+                </NavLink>
+              </li>
+            )}
+            {userSessionRole === adminRole && (
+              <li className="bg-base-200/40 rounded-lg">
+                <NavLink
+                  to="users"
                   className={({ isActive, isPending }) =>
                     clsx(
                       'flex items-center p-3 rounded-lg hover:bg-primary/40 hover:text-primary transition-colors',

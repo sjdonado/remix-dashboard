@@ -11,7 +11,7 @@ export const usersTable = pgTable('users', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export const postsTable = pgTable('posts', {
+export const assignmentsTable = pgTable('assignments', {
   id: text('id').primaryKey().notNull(),
   authorId: text('author_id')
     .notNull()

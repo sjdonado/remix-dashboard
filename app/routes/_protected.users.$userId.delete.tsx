@@ -12,5 +12,5 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   await db.delete(usersTable).where(eq(usersTable.id, params.userId));
 
-  return redirect(`/admin/users?${searchParams.toString()}`);
+  return redirect(`/users?${searchParams.toString()}`);
 };

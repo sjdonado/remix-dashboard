@@ -27,5 +27,5 @@ export default function Login() {
 }
 
 export function ErrorBoundary() {
-  return <CustomErrorBoundary />;
+  return <CustomErrorBoundary className="w-full h-full" />;
 }
