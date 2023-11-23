@@ -10,19 +10,21 @@ import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
 
 import { db } from '~/db/config.server';
-import { postsTable } from '~/db/schema';
-import { PostCreateSchema } from '~/schemas/post';
+import { assignmentsTable } from '~/db/schema';
+import { AssignmentCreateSchema } from '~/schemas/assignment';
 import type { UserSession } from '~/schemas/user';
 
 import { auth } from '~/session.server';
 
 import { Input } from '~/components/forms/Input';
+import { TextArea } from '~/components/forms/TextArea';
 
-const validator = withZod(PostCreateSchema);
+const validator = withZod(AssignmentCreateSchema);
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const data = await auth.isAuthenticated(request, { failureRedirect: '/login' });
   const userSession = JSON.parse(data) satisfies UserSession;
+  const authorId = userSession.id;
 
   const fieldValues = await validator.validate(await request.formData());
 
@@ -31,14 +33,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const { title, content } = fieldValues.data;
-  const authorId = userSession.user.id;
 
-  await db.insert(postsTable).values({ id: uuidv4(), title, content, authorId });
+  await db.insert(assignmentsTable).values({ id: uuidv4(), title, content, authorId });
 
-  return redirect('/admin/posts');
+  return redirect('/assignments');
 };
 
-export default function NewPostPage() {
+export default function NewAssignmentPage() {
   const navigate = useNavigate();
 
   return (
@@ -53,13 +54,12 @@ export default function NewPostPage() {
             <DocumentIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         />
-        <Input
+        <TextArea
           name="content"
           label="Content"
-          type="text"
           placeholder="Content"
           icon={
-            <DocumentTextIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
+            <DocumentTextIcon className="pointer-events-none absolute left-3 top-[0.55rem] h-[18px] w-[18px]" />
           }
         />
       </div>
@@ -75,7 +75,7 @@ export default function NewPostPage() {
           className="flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-medium text-white hover:bg-primary/50"
           type="submit"
         >
-          New Post
+          New Assignment
         </button>
       </div>
     </ValidatedForm>

@@ -29,6 +29,7 @@ const validator = withZod(UserCreateSchema);
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const fieldValues = await validator.validate(await request.formData());
+
   if (fieldValues.error) {
     return validationError(fieldValues.error);
   }

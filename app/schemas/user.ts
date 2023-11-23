@@ -65,6 +65,4 @@ export const UserSessionSchema = UserSchema.pick({
 
 export type User = z.infer<typeof UserSchema>;
 export type UserSerialized = z.infer<typeof UserSerialized>;
-export type UserLogin = z.infer<typeof UserLoginSchema>;
-export type UserSignup = z.infer<typeof UserSignupSchema>;
 export type UserSession = z.infer<typeof UserSessionSchema>;
