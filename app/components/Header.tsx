@@ -34,20 +34,19 @@ export default function Header({ username }: HeaderProps) {
         <button className="btn btn-ghost rounded-lg">
           <BellIcon className="h-6 w-6" />
         </button>
-        <div className="dropdown">
+        <div className="dropdown dropdown-end">
           <label tabIndex={0} className="btn btn-ghost rounded-lg p-2">
             {username}
             <ChevronDownIcon className="h-4 w-4" />
           </label>
           <ul
             tabIndex={0}
-            className="dropdown-content z-[1] menu shadow-lg bg-base-100 
-              rounded-box rounded-lg w-52 right-0 mt-1 p-2"
+            className="menu dropdown-content z-[1] shadow-lg bg-base-100 rounded-box rounded-lg w-52 right-0 mt-1 p-2"
           >
-            <li>
+            <li onClick={() => (document.activeElement as HTMLInputElement).blur()}>
               <Link
-                to="/profile"
-                className="flex items-center justify-start block rounded-lg px-4 py-2 text-sm hover:bg-content-200 transition-colors"
+                to="/me"
+                className="flex items-center justify-start block rounded-lg px-4 py-2 text-sm hover:bg-content-200"
                 role="menuitem"
               >
                 <UserIcon className="w-6 h-6" />
@@ -60,7 +59,7 @@ export default function Header({ username }: HeaderProps) {
                 description="Are you sure you want to log out? You will be redirected to the login page."
                 button="Logout"
                 action="/logout"
-                className="flex items-center justify-start block rounded-lg px-4 py-2 text-sm hover:bg-content-200 transition-colors"
+                className="flex items-center justify-start block rounded-lg px-4 py-2 text-sm hover:bg-content-200"
               >
                 <ArrowLeftOnRectangleIcon className="w-6 h-6" />
                 Logout

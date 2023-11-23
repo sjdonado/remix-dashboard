@@ -30,7 +30,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     .limit(1);
 
   if (!assignment) {
-    redirect('/assignments');
+    return redirect('/assignments');
   }
 
   return json({ assignment });
@@ -47,7 +47,7 @@ export default function AssignmentPage() {
           <div className="flex flex-col gap-6">
             <div className="flex items-center text-sm gap-2">
               <Avatar name={author.name} round size="32" alt={author.name} />
-              <span>{author.name}</span>
+              <span className="font-semibold">{author.name}</span>
               <p className="text-gray-500">{formatDateToLocal(assignment.createdAt)}</p>
             </div>
             <h1 className="text-3xl mt-2">{assignment.title}</h1>

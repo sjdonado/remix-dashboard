@@ -57,6 +57,11 @@ export const UserUpdateSchema = UserSchema.pick({
   role: true,
 });
 
+export const UserMeUpdateSchema = UserSchema.pick({
+  name: true,
+  username: true,
+});
+
 export const UserSessionSchema = UserSchema.pick({
   id: true,
   username: true,

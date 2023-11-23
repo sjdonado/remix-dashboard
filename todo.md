@@ -11,9 +11,10 @@ TODO:
 - [x] Create assignments model and seed data (a user can have many assignments)
 - [x] Ensure that a comment belongs to a user
 - [x] Finish CRUD for assignments (show/view assignments button)
-- [ ] Profile page (react-avatar) github like
+- [x] Profile page (react-avatar) github like
 - [ ] Assignments table should be available for teachers (only my assignments)
 - [ ] Feed should be available for teachers and students
+- [ ] Alerts (info and error) toast
 
 - [ ] Implement statistics page showing the total number of users, assignments, and comments
 - [ ] Implement logging using Pino logger for actions and loaders
