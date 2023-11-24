@@ -81,33 +81,26 @@ export default function UsersPage() {
       <TableContainer totalPages={totalPages} currentPage={currentPage}>
         <MobileTable>
           {users?.map(user => (
-            <div key={user.id} className="mb-2 w-full rounded-md bg-base-100 p-4">
-              <div className="flex items-center justify-between border-b pb-4 gap-4">
-                <div>
-                  <div className="mb-2 flex items-center gap-2">
+            <div key={user.id} className="w-full bg-base-100 border-b p-4">
+              <div className="flex flex-col items-start gap-4">
+                <div className="flex items-center justify-between gap-2 w-full">
+                  <div className="flex items-center gap-2">
                     <Avatar name={user.name} round size="32" alt={user.name} />
-                    <p>{user.name}</p>
+                    <p className="text-sm text-gray-500">{user.name}</p>
                   </div>
-                  <p className="text-sm text-gray-500">{user.username}</p>
+                  <span className="text-xs min-w-fit">
+                    {formatDateToLocal(user.createdAt)}
+                  </span>
                 </div>
-                <span className="text-sm font-medium">{user.role}</span>
-                {/* <InvoiceStatus status={invoice.status} /> */}
+                <p>{user.role}</p>
               </div>
-              <div className="flex w-full items-center justify-between pt-4">
-                <div>
-                  <p className="text-sm min-w-fit">
-                    Created at {formatDateToLocal(user.createdAt)}
-                  </p>
-                  {/* <p className="text-xl font-medium">{formatCurrency(invoice.amount)}</p> */}
-                </div>
-                <div className="flex justify-end gap-2">
-                  <UpdateBtnLink to={`${user.id}/edit`} />
-                  <DeleteBtnLink
-                    to={`${user.id}/delete`}
-                    title="Delete User"
-                    recordName={user.name}
-                  />
-                </div>
+              <div className="flex items-center justify-end gap-2 pt-4">
+                <UpdateBtnLink to={`${user.id}/edit`} />
+                <DeleteBtnLink
+                  to={`${user.id}/delete`}
+                  title="Delete Assignment"
+                  recordName={user.name}
+                />
               </div>
             </div>
           ))}

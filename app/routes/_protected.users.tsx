@@ -4,17 +4,12 @@ import { redirect, type LoaderFunctionArgs, json } from '@remix-run/node';
 import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
 import Breadcrumbs from '~/components/Breadcrumbs';
 
-import { userRoles } from '~/db/schema';
-import type { UserSession } from '~/schemas/user';
-
-import { auth } from '~/session.server';
+import { getSessionData } from '~/utils/session';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const data = await auth.isAuthenticated(request, { failureRedirect: '/login' });
-  const { role } = JSON.parse(data) satisfies UserSession;
+  const { isAdmin } = await getSessionData(request);
 
-  const [adminRole] = userRoles.enumValues;
-  if (role !== adminRole) {
+  if (!isAdmin) {
     return redirect('/');
   }
 

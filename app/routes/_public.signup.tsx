@@ -88,7 +88,10 @@ export default function SignupPage() {
             <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         />
-        <button className="btn btn-primary rounded-lg mt-4 w-full" type="submit">
+        <button
+          className="btn btn-primary text-white rounded-lg mt-4 w-full"
+          type="submit"
+        >
           Signup
         </button>
       </ValidatedForm>

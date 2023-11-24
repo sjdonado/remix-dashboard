@@ -30,6 +30,15 @@ const seedUsers = async (db: PostgresJsDatabase) => {
     } as User);
   }
 
+  for (let i = 0; i < 10; i++) {
+    data.push({
+      name: faker.person.fullName(),
+      username: `student${i + 1}`,
+      password,
+      role: userRoles.enumValues[2],
+    } as User);
+  }
+
   const result = await db
     .insert(usersTable)
     .values(data)

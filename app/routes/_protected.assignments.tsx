@@ -1,29 +1,31 @@
-import { Outlet, useLocation } from '@remix-run/react';
+import clsx from 'clsx';
+
+import { Outlet, useLoaderData, useLocation } from '@remix-run/react';
 import { redirect, type LoaderFunctionArgs, json } from '@remix-run/node';
 
 import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
 import Breadcrumbs from '~/components/Breadcrumbs';
 
-import { userRoles } from '~/db/schema';
-import type { UserSession } from '~/schemas/user';
-
-import { auth } from '~/session.server';
+import { getSessionData } from '~/utils/session';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const data = await auth.isAuthenticated(request, { failureRedirect: '/login' });
-  const { role } = JSON.parse(data) satisfies UserSession;
+  const { isAdmin, isTeacher } = await getSessionData(request);
 
-  const [adminRole, teacherRole] = userRoles.enumValues;
-  if (![adminRole, teacherRole].includes(role)) {
+  if (!isAdmin && !isTeacher) {
     return redirect('/');
   }
 
-  return json({});
+  return json({
+    isAdmin,
+    isTeacher,
+  });
 };
 
 export default function AssignmentsLayout() {
   const location = useLocation();
   const pathName = location.pathname.split('/');
+
+  const { isAdmin, isTeacher } = useLoaderData<typeof loader>();
 
   const pageTitle = pathName.pop()!;
   const uuid = pathName.pop()!;
@@ -33,7 +35,10 @@ export default function AssignmentsLayout() {
       <Breadcrumbs
         breadcrumbs={[
           {
-            label: 'Assignments',
+            label: clsx({
+              'My Assignments': isTeacher,
+              Assignments: isAdmin,
+            }),
             href: '/assignments',
             active: pageTitle === 'assignments',
           },

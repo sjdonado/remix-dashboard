@@ -15,21 +15,18 @@ import { useLoaderData } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
-import type { UserSession } from '~/schemas/user';
 import { UserMeUpdateSchema } from '~/schemas/user';
-
-import { auth } from '~/session.server';
 
 import { Input } from '~/components/forms/Input';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
 import Breadcrumbs from '~/components/Breadcrumbs';
+import { getSessionData } from '~/utils/session';
 
 const validator = withZod(UserMeUpdateSchema);
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const data = await auth.isAuthenticated(request);
-  const { id } = JSON.parse(data as string) satisfies UserSession;
+  const { userSession } = await getSessionData(request);
 
   const fieldValues = await validator.validate(await request.formData());
 
@@ -42,14 +39,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   await db
     .update(usersTable)
     .set({ name, username, updatedAt: new Date() })
-    .where(eq(usersTable.id, id));
+    .where(eq(usersTable.id, userSession.id));
 
   return jsonWithSuccess({}, 'Profile updated successfully');
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const data = await auth.isAuthenticated(request);
-  const { id } = JSON.parse(data as string) satisfies UserSession;
+  const { userSession } = await getSessionData(request);
 
   const [user] = await db
     .select({
@@ -59,7 +55,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       createdAt: usersTable.createdAt,
     })
     .from(usersTable)
-    .where(eq(usersTable.id, id))
+    .where(eq(usersTable.id, userSession.id))
     .limit(1);
 
   return json({ user });

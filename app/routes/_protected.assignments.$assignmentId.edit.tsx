@@ -1,22 +1,24 @@
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import invariant from 'tiny-invariant';
 import {
   DocumentIcon,
   DocumentTextIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import { redirectWithSuccess } from 'remix-toast';
+import { redirectWithToast } from 'remix-toast';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
 
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json, redirect } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentUpdateSchema } from '~/schemas/assignment';
+
+import { getSessionData } from '~/utils/session';
 
 import { Input } from '~/components/forms/Input';
 import { TextArea } from '~/components/forms/TextArea';
@@ -27,6 +29,8 @@ const validator = withZod(AssignmentUpdateSchema);
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.assignmentId, 'Missing assignmentId param');
+  const { userSession, isTeacher } = await getSessionData(request);
+
   const { searchParams } = new URL(request.url);
 
   const fieldValues = await validator.validate(await request.formData());
@@ -37,15 +41,28 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   const { title, content } = fieldValues.data;
 
-  await db
+  const result = await db
     .update(assignmentsTable)
     .set({ title, content, updatedAt: new Date() })
-    .where(eq(assignmentsTable.id, params.assignmentId));
+    .where(
+      and(
+        isTeacher ? eq(assignmentsTable.authorId, userSession.id) : undefined,
+        eq(assignmentsTable.id, params.assignmentId)
+      )
+    )
+    .returning({ updatedId: assignmentsTable.id });
 
-  return redirectWithSuccess(
-    `/assignments?${searchParams.toString()}`,
-    'Assignment updated successfully'
-  );
+  if (!result.length) {
+    return redirectWithToast(`/assignments?${searchParams.toString()}`, {
+      message: 'Assignment not found or not authorized to update',
+      type: 'error',
+    });
+  }
+
+  return redirectWithToast(`/assignments?${searchParams.toString()}`, {
+    message: 'Assignment updated successfully',
+    type: 'success',
+  });
 };
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {

@@ -5,7 +5,7 @@ import {
   UserCircleIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
-import { redirectWithSuccess } from 'remix-toast';
+import { redirectWithToast } from 'remix-toast';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -42,10 +42,10 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     .set({ name, username, role, updatedAt: new Date() })
     .where(eq(usersTable.id, params.userId));
 
-  return redirectWithSuccess(
-    `/users?${searchParams.toString()}`,
-    'User updated successfully'
-  );
+  return redirectWithToast(`/users?${searchParams.toString()}`, {
+    message: 'User updated successfully',
+    type: 'success',
+  });
 };
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {

@@ -4,7 +4,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
-import { asc, desc, sql, eq } from 'drizzle-orm';
+import { asc, desc, sql, eq, or } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core/alias';
 
 import { db } from '~/db/config.server';
@@ -24,8 +24,11 @@ import {
   UpdateBtnLink,
 } from '~/components/Table';
 import Search from '~/components/Search';
+import { getSessionData } from '~/utils/session';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const { userSession, isTeacher } = await getSessionData(request);
+
   const url = new URL(request.url);
 
   const query = url.searchParams.get('q')?.toString();
@@ -48,11 +51,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .from(assignmentsTable)
       .leftJoin(author, eq(assignmentsTable.authorId, author.id))
       .where(
-        query
-          ? sql`(${assignmentsTable.title} ilike ${`%${query}%`} 
+        or(
+          isTeacher ? eq(assignmentsTable.authorId, userSession.id) : undefined,
+          query
+            ? sql`(${assignmentsTable.title} ilike ${`%${query}%`} 
             or ${assignmentsTable.content} ilike ${`%${query}%`})
             or ${author.name} ilike ${`%${query}%`} `
-          : undefined
+            : undefined
+        )
       )
   );
 
@@ -91,13 +97,10 @@ export default function AssignmentsPage() {
       <TableContainer totalPages={totalPages} currentPage={currentPage}>
         <MobileTable>
           {assignments?.map(assignment => (
-            <div key={assignment.id} className="mb-2 w-full rounded-md bg-base-100 p-4">
-              <div className="flex items-center justify-between border-b pb-4 gap-4">
-                <div>
-                  <div className="mb-2 flex items-center">
-                    <p>{assignment.title}</p>
-                  </div>
-                  <div className="mb-2 flex items-center">
+            <div key={assignment.id} className="w-full bg-base-100 border-b p-4">
+              <div className="flex flex-col items-start gap-4">
+                <div className="flex items-center justify-between gap-2 w-full">
+                  <div className="flex items-center gap-2">
                     <Avatar
                       name={assignment.author.name}
                       round
@@ -106,24 +109,21 @@ export default function AssignmentsPage() {
                     />
                     <p className="text-sm text-gray-500">{assignment.author.name}</p>
                   </div>
+                  <span className="text-xs min-w-fit">
+                    {formatDateToLocal(assignment.createdAt)}
+                  </span>
                 </div>
-                <span className="text-xs min-w-fit">
-                  {formatDateToLocal(assignment.createdAt)}
-                </span>
+                <p>{assignment.title}</p>
+                <p className="text-sm line-clamp-3">{assignment.content}</p>
               </div>
-              <div className="flex w-full items-center justify-between pt-4">
-                <div>
-                  <p className="text-sm line-clamp-3">{assignment.content}</p>
-                </div>
-                <div className="flex justify-end gap-2">
-                  <ShowBtnLink to={`${assignment.id}/show`} />
-                  <UpdateBtnLink to={`${assignment.id}/edit`} />
-                  <DeleteBtnLink
-                    to={`${assignment.id}/delete`}
-                    title="Delete Assignment"
-                    recordName={assignment.title}
-                  />
-                </div>
+              <div className="flex items-center justify-end gap-2 pt-4">
+                <ShowBtnLink to={`${assignment.id}/show`} />
+                <UpdateBtnLink to={`${assignment.id}/edit`} />
+                <DeleteBtnLink
+                  to={`${assignment.id}/delete`}
+                  title="Delete Assignment"
+                  recordName={assignment.title}
+                />
               </div>
             </div>
           ))}

@@ -1,5 +1,5 @@
 import { DocumentIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
-import { redirectWithSuccess } from 'remix-toast';
+import { redirectWithToast } from 'remix-toast';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -35,7 +35,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   await db.insert(assignmentsTable).values({ title, content, authorId });
 
-  return redirectWithSuccess('/assignments', 'Assignment created successfully');
+  return redirectWithToast('/assignments', {
+    message: 'Assignment created successfully',
+    type: 'success',
+  });
 };
 
 export default function NewAssignmentPage() {

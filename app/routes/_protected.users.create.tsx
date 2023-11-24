@@ -6,7 +6,7 @@ import {
   UserCircleIcon,
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
-import { redirectWithSuccess } from 'remix-toast';
+import { redirectWithToast } from 'remix-toast';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -48,7 +48,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     throw error;
   }
 
-  return redirectWithSuccess('/users', 'User created successfully');
+  return redirectWithToast('/users', {
+    message: 'User created successfully',
+    type: 'success',
+  });
 };
 
 export default function CreateUserPage() {
