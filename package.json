@@ -14,6 +14,7 @@
     "db:studio": "drizzle-kit studio --port 5432"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.3.1",
     "@heroicons/react": "^2.0.18",
     "@remix-run/css-bundle": "^2.3.1",
     "@remix-run/node": "^2.3.1",

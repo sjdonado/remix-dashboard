@@ -1,5 +1,10 @@
 version: '3.9'
 services:
+  app:
+    build: .
+    env_file: .env
+    ports:
+      - 3333:3333
   db:
     image: postgres:latest
     restart: always

@@ -1,0 +1,6 @@
+.git
+.github
+.cache/
+node_modules/
+build
+public/build
