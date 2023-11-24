@@ -13,7 +13,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ userSessionRole, children }: SidebarProps) {
-  const [adminRole, teacherRole] = userRoles.enumValues;
+  const [adminRole, teacherRole, studentRole] = userRoles.enumValues;
 
   return (
     <div className="drawer md:drawer-open">
@@ -29,23 +29,27 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
             <AppLogo />
           </div>
           <ul className="flex-1 flex flex-col gap-2">
-            <li className="bg-base-200/40 rounded-lg">
-              <NavLink
-                to="home"
-                className={({ isActive, isPending }) =>
-                  clsx(
-                    'flex items-center p-3 rounded-lg hover:bg-primary/40 hover:text-primary transition-colors',
-                    {
-                      'active bg-primary-100 text-primary': isActive,
-                      'pending cursor-not-allowed': isPending,
-                    }
-                  )
-                }
-              >
-                <HomeIcon className="w-6 h-6 mr-2" />
-                <span className="text-sm font-medium">Home</span>
-              </NavLink>
-            </li>
+            {[adminRole, studentRole].includes(
+              userSessionRole as typeof adminRole | typeof studentRole
+            ) && (
+              <li className="bg-base-200/40 rounded-lg">
+                <NavLink
+                  to="home"
+                  className={({ isActive, isPending }) =>
+                    clsx(
+                      'flex items-center p-3 rounded-lg hover:bg-primary/40 hover:text-primary transition-colors',
+                      {
+                        'active bg-primary-100 text-primary': isActive,
+                        'pending cursor-not-allowed': isPending,
+                      }
+                    )
+                  }
+                >
+                  <HomeIcon className="w-6 h-6 mr-2" />
+                  <span className="text-sm font-medium">Home</span>
+                </NavLink>
+              </li>
+            )}
             {[adminRole, teacherRole].includes(
               userSessionRole as typeof adminRole | typeof teacherRole
             ) && (
@@ -67,7 +71,7 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
                 </NavLink>
               </li>
             )}
-            {userSessionRole === adminRole && (
+            {adminRole === userSessionRole && (
               <li className="bg-base-200/40 rounded-lg">
                 <NavLink
                   to="users"
