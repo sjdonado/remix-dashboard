@@ -69,10 +69,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function HomePage() {
-  const { totalPages, assignments } = useLoaderData<{
-    totalPages: number;
-    assignments: AssignmentSerialized[];
-  }>();
+  const { totalPages, assignments } = useLoaderData<typeof loader>();
 
   const [searchParams] = useSearchParams();
 
@@ -89,10 +86,10 @@ export default function HomePage() {
           <div key={assignment.id} className="w-full border rounded-lg bg-base-100 p-4">
             <div className="flex items-start justify-start pb-4 gap-2">
               <Avatar
-                name={assignment.author.name}
+                name={assignment.author.name as string}
                 round
                 size="48"
-                alt={assignment.author.name}
+                alt={assignment.author.name as string}
               />
               <div className="flex flex-col items-start gap-1">
                 <Link to={`/home/${assignment.id}/show`} className="link">

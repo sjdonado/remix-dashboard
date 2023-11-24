@@ -18,12 +18,7 @@ export default function Assignment({ assignment }: AssignmentProps) {
         <div className="flex flex-col bg-base-100 rounded-lg gap-4 p-8">
           <div className="flex flex-col gap-6">
             <div className="flex items-center text-sm gap-2">
-              <Avatar
-                name={author.name as string}
-                round
-                size="32"
-                alt={author.name as string}
-              />
+              <Avatar name={author.name} round size="32" alt={author.name} />
               <span className="font-semibold">{author.name}</span>
               <p className="text-gray-500">{formatDateToLocal(assignment.createdAt)}</p>
             </div>

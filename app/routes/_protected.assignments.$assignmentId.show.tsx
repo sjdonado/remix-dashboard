@@ -8,7 +8,7 @@ import { useLoaderData } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
-import type { AssignmentSerialized } from '~/schemas/assignment';
+import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
 import { getSessionData } from '~/utils/session';
 
@@ -18,7 +18,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.assignmentId, 'Missing assignmentId param');
   const { userSession, isTeacher } = await getSessionData(request);
 
-  const [assignment] = await db
+  const [row] = await db
     .select({
       id: assignmentsTable.id,
       title: assignmentsTable.title,
@@ -39,18 +39,23 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
     .limit(1);
 
-  if (!assignment) {
+  if (!row) {
     return redirectWithToast('/assignments', {
       message: 'Assignment not found or not authorized to view',
       type: 'error',
     });
   }
 
-  return json({ assignment });
+  const result = AssignmentSerializedSchema.safeParse(row);
+  if (!result.success) {
+    throw new Error(result.error.toString());
+  }
+
+  return json({ assignment: result.data });
 };
 
 export default function ShowAssignmentPage() {
-  const { assignment } = useLoaderData<{ assignment: AssignmentSerialized }>();
+  const { assignment } = useLoaderData<typeof loader>();
 
   return <Assignment assignment={assignment} />;
 }
