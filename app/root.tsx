@@ -12,12 +12,14 @@ import {
 } from '@remix-run/react';
 import { useEffect } from 'react';
 
-import type { LoaderFunctionArgs } from '@remix-run/node';
+import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 
-import '~/tailwind.css';
+import stylesheet from '~/tailwind.css';
 
 import LoadingBar from './components/LoadingBar';
+
+export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet }];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { toast, headers } = await getToast(request);
@@ -51,8 +53,8 @@ export default function App() {
         <Toaster closeButton />
 
         <ScrollRestoration />
-        <LiveReload />
         <Scripts />
+        <LiveReload />
       </body>
     </html>
   );

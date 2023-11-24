@@ -1,4 +1,4 @@
-FROM oven/bun
+FROM oven/bun:1.0.14
 
 EXPOSE 3000
 
