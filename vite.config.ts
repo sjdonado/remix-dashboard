@@ -9,6 +9,6 @@ export default defineConfig({
     port: 3001,
   },
   ssr: {
-    noExternal: ['postgres'],
+    noExternal: ['postgres', 'react-dom'],
   },
 });
