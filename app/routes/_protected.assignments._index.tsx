@@ -7,11 +7,11 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { asc, desc, sql, eq, or } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core/alias';
 
+import { PAGE_SIZE } from '~/config/constants.server';
+
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import type { AssignmentSerialized } from '~/schemas/assignment';
-
-import { PAGE_SIZE } from '~/config/constants';
 
 import { formatDateToLocal } from '~/utils/date';
 import { getSessionData } from '~/utils/session.server';

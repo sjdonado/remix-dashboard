@@ -8,11 +8,11 @@ import { Link, useLoaderData, useSearchParams } from '@remix-run/react';
 import { asc, desc, sql, eq } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core/alias';
 
+import { PAGE_SIZE } from '~/config/constants.server';
+import { formatDateToLocal } from '~/utils/date';
+
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
-
-import { formatDateToLocal } from '~/utils/date';
-import { PAGE_SIZE } from '~/config/constants';
 
 import Pagination from '~/components/Pagination';
 
