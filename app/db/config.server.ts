@@ -1,7 +1,10 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import pg from 'pg';
 
-import { DATABASE_URL } from '~/config/env';
+import { drizzle } from 'drizzle-orm/node-postgres';
 
-const client = postgres(DATABASE_URL);
-export const db = drizzle(client);
+import { DATABASE_URL } from '~/config/env.server';
+
+const pool = new pg.Pool({ connectionString: DATABASE_URL });
+await pool.connect();
+
+export const db = drizzle(pool);

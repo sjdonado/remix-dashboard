@@ -6,6 +6,7 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { redirectWithToast } from 'remix-toast';
+import type { DatabaseError } from 'pg';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -13,6 +14,8 @@ import { withZod } from '@remix-validated-form/with-zod';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+
+import { duplicateUsernameError } from '~/errors/form.server';
 
 import { db } from '~/db/config.server';
 import { userRoles, usersTable } from '~/db/schema';
@@ -37,10 +40,17 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   const { name, username, role } = fieldValues.data;
 
-  await db
-    .update(usersTable)
-    .set({ name, username, role, updatedAt: new Date() })
-    .where(eq(usersTable.id, params.userId));
+  try {
+    await db
+      .update(usersTable)
+      .set({ name, username, role, updatedAt: new Date() })
+      .where(eq(usersTable.id, params.userId));
+  } catch (error) {
+    const validationError = duplicateUsernameError(error as DatabaseError, fieldValues);
+    if (validationError) return validationError;
+
+    throw error;
+  }
 
   return redirectWithToast(`/users?${searchParams.toString()}`, {
     message: 'User updated successfully',

@@ -1,11 +1,10 @@
 import 'dotenv/config';
 
+import pg from 'pg';
 import { faker } from '@faker-js/faker';
 
-import postgres from 'postgres';
-
-import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import { drizzle } from 'drizzle-orm/postgres-js';
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { drizzle } from 'drizzle-orm/node-postgres';
 
 import type { User } from '~/schemas/user';
 import { assignmentsTable, userRoles, usersTable } from './schema';
@@ -15,7 +14,7 @@ import Password from '~/utils/password.server';
 const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) throw new Error('DATABASE_URL is not set');
 
-const seedUsers = async (db: PostgresJsDatabase) => {
+const seedUsers = async (db: NodePgDatabase) => {
   const data: User[] = [];
   const password = await Password.hash('123456');
 
@@ -45,10 +44,12 @@ const seedUsers = async (db: PostgresJsDatabase) => {
     .onConflictDoNothing()
     .returning();
 
+  console.log(result);
+
   return result;
 };
 
-const seedAssignments = async (db: PostgresJsDatabase, users: User[]) => {
+const seedAssignments = async (db: NodePgDatabase, users: User[]) => {
   const data = [];
 
   for (const user of users) {
@@ -71,7 +72,9 @@ const seedAssignments = async (db: PostgresJsDatabase, users: User[]) => {
 };
 
 const main = async () => {
-  const client = postgres(DATABASE_URL);
+  const client = new pg.Client(DATABASE_URL);
+  await client.connect();
+
   const db = drizzle(client);
 
   const users = await seedUsers(db);

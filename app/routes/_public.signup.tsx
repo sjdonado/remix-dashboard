@@ -3,6 +3,7 @@ import {
   LockClosedIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
+import type { DatabaseError } from 'pg';
 
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
@@ -19,7 +20,6 @@ import Password from '~/utils/password.server';
 import { duplicateUsernameError } from '~/errors/form.server';
 
 import { Input } from '~/components/forms/Input';
-import type { PostgresError } from 'postgres';
 
 const validator = withZod(UserSignupSchema);
 
@@ -36,7 +36,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     await db.insert(usersTable).values({ name, username, password });
   } catch (error) {
-    const validationError = duplicateUsernameError(error as PostgresError, fieldValues);
+    const validationError = duplicateUsernameError(error as DatabaseError, fieldValues);
     if (validationError) return validationError;
 
     throw error;

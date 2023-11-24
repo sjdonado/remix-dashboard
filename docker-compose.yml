@@ -1,6 +1,6 @@
-version: "3.9"
+version: '3.9'
 services:
-  postgres:
+  db:
     image: postgres:latest
     restart: always
     ports:
@@ -11,6 +11,5 @@ services:
       POSTGRES_DB: remix_dashboard
     volumes:
       - pgdata:/var/lib/postgresql/data
-
 volumes:
   pgdata:

@@ -1,13 +1,13 @@
-import type { PostgresError } from 'postgres';
+import type { DatabaseError } from 'pg';
 
 import type { ValidationResult } from 'remix-validated-form';
 import { validationError } from 'remix-validated-form';
 
 export function duplicateUsernameError(
-  error: PostgresError,
+  error: DatabaseError,
   fieldValues: ValidationResult<any>
 ) {
-  if (error.constraint_name === 'users_username_unique') {
+  if (error.constraint === 'users_username_unique') {
     return validationError(
       {
         fieldErrors: {
