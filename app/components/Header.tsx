@@ -8,9 +8,8 @@ import {
   UserIcon,
 } from '@heroicons/react/24/outline';
 
-import { Link } from 'react-router-dom';
-
 import { DialogModalButton } from './ConfirmationDialog';
+import { Link } from '@remix-run/react';
 
 interface HeaderProps {
   username: string;
