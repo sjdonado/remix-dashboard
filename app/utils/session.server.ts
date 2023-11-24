@@ -1,7 +1,7 @@
 import { userRoles } from '~/db/schema';
 import type { UserSession } from '~/schemas/user';
 
-import { auth } from '~/session.server';
+import { auth } from '~/services/auth.server';
 
 export const getSessionData = async (request: Request) => {
   const data = await auth.isAuthenticated(request, { failureRedirect: '/login' });

@@ -18,7 +18,7 @@ import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentUpdateSchema } from '~/schemas/assignment';
 
-import { getSessionData } from '~/utils/session';
+import { getSessionData } from '~/utils/session.server';
 
 import { Input } from '~/components/forms/Input';
 import { TextArea } from '~/components/forms/TextArea';

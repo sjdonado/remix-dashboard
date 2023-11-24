@@ -17,11 +17,12 @@ import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
 import { UserMeUpdateSchema } from '~/schemas/user';
 
+import { getSessionData } from '~/utils/session.server';
+
 import { Input } from '~/components/forms/Input';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
 import Breadcrumbs from '~/components/Breadcrumbs';
-import { getSessionData } from '~/utils/session';
 
 const validator = withZod(UserMeUpdateSchema);
 

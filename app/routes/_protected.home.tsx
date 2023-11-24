@@ -1,9 +1,9 @@
 import { Outlet } from '@remix-run/react';
 import { redirect, type LoaderFunctionArgs, json } from '@remix-run/node';
 
-import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
+import { getSessionData } from '~/utils/session.server';
 
-import { getSessionData } from '~/utils/session';
+import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { isAdmin, isStudent } = await getSessionData(request);

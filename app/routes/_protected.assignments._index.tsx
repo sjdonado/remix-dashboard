@@ -11,8 +11,10 @@ import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import type { AssignmentSerialized } from '~/schemas/assignment';
 
-import { formatDateToLocal } from '~/utils/date';
 import { PAGE_SIZE } from '~/config/constants';
+
+import { formatDateToLocal } from '~/utils/date';
+import { getSessionData } from '~/utils/session.server';
 
 import {
   CreateBtnLink,
@@ -24,7 +26,6 @@ import {
   UpdateBtnLink,
 } from '~/components/Table';
 import Search from '~/components/Search';
-import { getSessionData } from '~/utils/session';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { userSession, isTeacher } = await getSessionData(request);

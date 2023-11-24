@@ -10,7 +10,7 @@ import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
-import { getSessionData } from '~/utils/session';
+import { getSessionData } from '~/utils/session.server';
 
 import Assignment from '~/components/Assignment';
 

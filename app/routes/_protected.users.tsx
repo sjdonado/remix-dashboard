@@ -1,10 +1,10 @@
 import { Outlet, useLocation } from '@remix-run/react';
 import { redirect, type LoaderFunctionArgs, json } from '@remix-run/node';
 
+import { getSessionData } from '~/utils/session.server';
+
 import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
 import Breadcrumbs from '~/components/Breadcrumbs';
-
-import { getSessionData } from '~/utils/session';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { isAdmin } = await getSessionData(request);
