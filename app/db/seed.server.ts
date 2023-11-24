@@ -12,7 +12,7 @@ import { assignmentsTable, userRoles, usersTable } from './schema';
 
 import Password from '~/utils/password.server';
 
-const DATABASE_URL = process.env.VITE_DATABASE_URL;
+const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) throw new Error('DATABASE_URL is not set');
 
 const seedUsers = async (db: PostgresJsDatabase) => {

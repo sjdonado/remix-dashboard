@@ -1,3 +1,4 @@
-export const DATABASE_URL = import.meta.env.VITE_DATABASE_URL;
+import 'dotenv/config';
 
-export const SESSION_SECRET = import.meta.env.VITE_SESSION_SECRET;
+export const DATABASE_URL = process.env.DATABASE_URL!;
+export const SESSION_SECRET = process.env.SESSION_SECRET!;
