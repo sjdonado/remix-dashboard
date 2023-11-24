@@ -11,7 +11,7 @@ import { assignmentsTable } from '~/db/schema';
 import { AssignmentCreateSchema } from '~/schemas/assignment';
 import type { UserSession } from '~/schemas/user';
 
-import { auth } from '~/session.server';
+import { auth } from '~/services/auth.server';
 
 import { Input } from '~/components/forms/Input';
 import { TextArea } from '~/components/forms/TextArea';

@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
 
-import { auth } from '~/session.server';
+import { auth } from '~/services/auth.server';
 
 import AppLogo from '~/components/AppLogo';
 import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';

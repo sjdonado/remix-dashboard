@@ -6,7 +6,7 @@ import { Outlet, useLoaderData, useNavigation } from '@remix-run/react';
 
 import type { UserSession } from '~/schemas/user';
 
-import { auth } from '~/session.server';
+import { auth } from '~/services/auth.server';
 
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';

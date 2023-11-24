@@ -9,7 +9,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 
 import { UserLoginSchema } from '~/schemas/user';
 
-import { auth } from '~/session.server';
+import { auth } from '~/services/auth.server';
 
 import { Input } from '~/components/forms/Input';
 

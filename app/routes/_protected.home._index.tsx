@@ -10,7 +10,6 @@ import { alias } from 'drizzle-orm/pg-core/alias';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
-import type { AssignmentSerialized } from '~/schemas/assignment';
 
 import { formatDateToLocal } from '~/utils/date';
 import { PAGE_SIZE } from '~/config/constants';
