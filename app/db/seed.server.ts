@@ -10,7 +10,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import type { User } from '~/schemas/user';
 import { assignmentsTable, userRoles, usersTable } from './schema';
 
-import Password from '~/utils/password';
+import Password from '~/utils/password.server';
 
 const DATABASE_URL = process.env.VITE_DATABASE_URL;
 if (!DATABASE_URL) throw new Error('DATABASE_URL is not set');

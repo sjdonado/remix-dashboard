@@ -68,7 +68,7 @@ export default function LoginPage() {
           }
         />
         <button
-          className="btn bg-primary text-white rounded-lg mt-4 w-full"
+          className="btn bg-primary text-base-100 rounded-lg mt-4 w-full"
           type="submit"
         >
           Login

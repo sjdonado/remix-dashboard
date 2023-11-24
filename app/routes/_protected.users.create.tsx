@@ -1,5 +1,3 @@
-import { PostgresError } from 'postgres';
-
 import {
   IdentificationIcon,
   KeyIcon,
@@ -17,7 +15,7 @@ import { db } from '~/db/config.server';
 import { userRoles, usersTable } from '~/db/schema';
 import { UserCreateSchema } from '~/schemas/user';
 
-import Password from '~/utils/password';
+import Password from '~/utils/password.server';
 import { duplicateUsernameError } from '~/errors/form.server';
 
 import { Input } from '~/components/forms/Input';
@@ -40,10 +38,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     await db.insert(usersTable).values({ name, username, role, password });
   } catch (error) {
-    if (error instanceof PostgresError) {
-      const validationError = duplicateUsernameError(error, fieldValues);
-      if (validationError) return validationError;
-    }
+    const validationError = duplicateUsernameError(error, fieldValues);
+    if (validationError) return validationError;
 
     throw error;
   }

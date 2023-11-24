@@ -15,11 +15,11 @@ import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
 import { UserSignupSchema } from '~/schemas/user';
 
-import Password from '~/utils/password';
+import Password from '~/utils/password.server';
 import { duplicateUsernameError } from '~/errors/form.server';
 
 import { Input } from '~/components/forms/Input';
-import { PostgresError } from 'postgres';
+import type { PostgresError } from 'postgres';
 
 const validator = withZod(UserSignupSchema);
 
@@ -36,10 +36,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     await db.insert(usersTable).values({ name, username, password });
   } catch (error) {
-    if (error instanceof PostgresError) {
-      const validationError = duplicateUsernameError(error, fieldValues);
-      if (validationError) return validationError;
-    }
+    const validationError = duplicateUsernameError(error as PostgresError, fieldValues);
+    if (validationError) return validationError;
 
     throw error;
   }
@@ -89,7 +87,7 @@ export default function SignupPage() {
           }
         />
         <button
-          className="btn btn-primary text-white rounded-lg mt-4 w-full"
+          className="btn btn-primary text-base-100 rounded-lg mt-4 w-full"
           type="submit"
         >
           Signup

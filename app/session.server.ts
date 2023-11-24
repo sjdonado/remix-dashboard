@@ -4,7 +4,7 @@ import { createCookieSessionStorage } from '@remix-run/node';
 import { Authenticator, AuthorizationError } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
 
-import Password from '~/utils/password';
+import Password from '~/utils/password.server';
 
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
