@@ -4,6 +4,7 @@ import React from 'react';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Link, useLoaderData, useSearchParams } from '@remix-run/react';
+import { ClientOnly } from 'remix-utils/client-only';
 
 import { asc, desc, sql, eq } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core/alias';
@@ -13,6 +14,7 @@ import { formatDateToLocal } from '~/utils/date';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
+import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
 import Pagination from '~/components/Pagination';
 
@@ -41,6 +43,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         author: {
           id: assignmentsTable.authorId,
           name: author.name,
+          username: author.username,
         },
       })
       .from(assignmentsTable)
@@ -61,9 +64,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .limit(PAGE_SIZE),
   ]);
 
+  const parsedAssignments = assignments.map(assignment => {
+    const result = AssignmentSerializedSchema.safeParse(assignment);
+    if (!result.success) {
+      throw new Error(result.error.toString());
+    }
+    return result.data;
+  });
+
   return json({
     totalPages: Math.ceil(Number(count) / PAGE_SIZE),
-    assignments,
+    assignments: parsedAssignments,
   });
 };
 
@@ -84,12 +95,16 @@ export default function HomePage() {
         {assignments?.map(assignment => (
           <div key={assignment.id} className="w-full border rounded-lg bg-base-100 p-4">
             <div className="flex items-start justify-start pb-4 gap-2">
-              <Avatar
-                name={assignment.author.name as string}
-                round
-                size="48"
-                alt={assignment.author.name as string}
-              />
+              <ClientOnly>
+                {() => (
+                  <Avatar
+                    name={assignment.author.name}
+                    alt={assignment.author.name}
+                    round
+                    size="48"
+                  />
+                )}
+              </ClientOnly>
               <div className="flex flex-col items-start gap-1">
                 <Link to={`/home/${assignment.id}/show`} className="link">
                   {assignment.title}

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { UserSerialized } from './user';
+import { UserSerializedSchema } from './user';
 
 export const AssignmentSchema = z.object({
   id: z.string(),
@@ -16,7 +16,7 @@ export const AssignmentSerializedSchema = AssignmentSchema.omit({
   updatedAt: true,
 })
   .extend({
-    author: UserSerialized.pick({
+    author: UserSerializedSchema.pick({
       id: true,
       name: true,
       username: true,
@@ -24,7 +24,7 @@ export const AssignmentSerializedSchema = AssignmentSchema.omit({
   })
   .transform(data => ({
     ...data,
-    createdAt: data.createdAt.toString(),
+    createdAt: data.createdAt.toISOString(),
   }));
 
 export const AssignmentCreateSchema = AssignmentSchema.pick({

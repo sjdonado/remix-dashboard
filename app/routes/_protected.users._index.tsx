@@ -3,6 +3,7 @@ import Avatar from 'react-avatar';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
+import { ClientOnly } from 'remix-utils/client-only';
 
 import { PAGE_SIZE } from '~/config/constants.server';
 import { formatDateToLocal } from '~/utils/date';
@@ -10,7 +11,7 @@ import { formatDateToLocal } from '~/utils/date';
 import { asc, desc, sql } from 'drizzle-orm';
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
-import type { UserSerialized } from '~/schemas/user';
+import { UserSerializedSchema } from '~/schemas/user';
 
 import {
   CreateBtnLink,
@@ -60,9 +61,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .limit(PAGE_SIZE),
   ]);
 
+  const parsedUsers = users.map(user => {
+    const result = UserSerializedSchema.safeParse(user);
+    if (!result.success) {
+      throw new Error(result.error.toString());
+    }
+    return result.data;
+  });
+
   return json({
     totalPages: Math.ceil(Number(count) / PAGE_SIZE),
-    users: users as UserSerialized[],
+    users: parsedUsers,
   });
 };
 
@@ -85,7 +94,9 @@ export default function UsersPage() {
               <div className="flex flex-col items-start gap-4">
                 <div className="flex items-center justify-between gap-2 w-full">
                   <div className="flex items-center gap-2">
-                    <Avatar name={user.name} round size="32" alt={user.name} />
+                    <ClientOnly>
+                      {() => <Avatar name={user.name} round size="32" alt={user.name} />}
+                    </ClientOnly>
                     <p className="text-sm text-gray-500">{user.name}</p>
                   </div>
                   <span className="text-xs min-w-fit">
@@ -113,7 +124,9 @@ export default function UsersPage() {
             >
               <td className="whitespace-nowrap py-3 pl-6 pr-3">
                 <div className="flex items-center gap-2">
-                  <Avatar name={user.name} round size="32" alt={user.name} />
+                  <ClientOnly>
+                    {() => <Avatar name={user.name} round size="32" alt={user.name} />}
+                  </ClientOnly>
                   <p>{user.name}</p>
                 </div>
               </td>

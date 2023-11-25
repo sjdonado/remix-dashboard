@@ -3,6 +3,7 @@ import Avatar from 'react-avatar';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
+import { ClientOnly } from 'remix-utils/client-only';
 
 import { asc, desc, sql, eq, or } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core/alias';
@@ -11,7 +12,7 @@ import { PAGE_SIZE } from '~/config/constants.server';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
-import type { AssignmentSerialized } from '~/schemas/assignment';
+import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
 import { formatDateToLocal } from '~/utils/date';
 import { getSessionData } from '~/utils/session.server';
@@ -47,6 +48,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         author: {
           id: assignmentsTable.authorId,
           name: author.name,
+          username: author.username,
         },
       })
       .from(assignmentsTable)
@@ -77,9 +79,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .limit(PAGE_SIZE),
   ]);
 
+  const parsedAssignments = assignments.map(assignment => {
+    const result = AssignmentSerializedSchema.safeParse(assignment);
+    if (!result.success) {
+      throw new Error(result.error.toString());
+    }
+    return result.data;
+  });
+
   return json({
     totalPages: Math.ceil(Number(count) / PAGE_SIZE),
-    assignments: assignments as AssignmentSerialized[],
+    assignments: parsedAssignments,
   });
 };
 
@@ -102,12 +112,16 @@ export default function AssignmentsPage() {
               <div className="flex flex-col items-start gap-4">
                 <div className="flex items-center justify-between gap-2 w-full">
                   <div className="flex items-center gap-2">
-                    <Avatar
-                      name={assignment.author.name}
-                      round
-                      size="32"
-                      alt={assignment.author.name}
-                    />
+                    <ClientOnly>
+                      {() => (
+                        <Avatar
+                          name={assignment.author.name}
+                          round
+                          size="32"
+                          alt={assignment.author.name}
+                        />
+                      )}
+                    </ClientOnly>
                     <p className="text-sm text-gray-500">{assignment.author.name}</p>
                   </div>
                   <span className="text-xs min-w-fit">
@@ -140,12 +154,16 @@ export default function AssignmentsPage() {
               </td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex items-center gap-2">
-                  <Avatar
-                    name={assignment.author.name}
-                    round
-                    size="32"
-                    alt={assignment.author.name}
-                  />
+                  <ClientOnly>
+                    {() => (
+                      <Avatar
+                        name={assignment.author.name}
+                        round
+                        size="32"
+                        alt={assignment.author.name}
+                      />
+                    )}
+                  </ClientOnly>
                   <p>{assignment.author.name}</p>
                 </div>
               </td>

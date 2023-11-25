@@ -14,7 +14,7 @@ export const UserSchema = z.object({
   updatedAt: z.date(),
 });
 
-export const UserSerialized = UserSchema.pick({
+export const UserSerializedSchema = UserSchema.pick({
   id: true,
   name: true,
   username: true,
@@ -69,5 +69,5 @@ export const UserSessionSchema = UserSchema.pick({
 });
 
 export type User = z.infer<typeof UserSchema>;
-export type UserSerialized = z.infer<typeof UserSerialized>;
+export type UserSerialized = z.infer<typeof UserSerializedSchema>;
 export type UserSession = z.infer<typeof UserSessionSchema>;
