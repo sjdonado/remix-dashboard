@@ -27,6 +27,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
       author: {
         id: assignmentsTable.authorId,
         name: usersTable.name,
+        username: usersTable.username,
       },
     })
     .from(assignmentsTable)

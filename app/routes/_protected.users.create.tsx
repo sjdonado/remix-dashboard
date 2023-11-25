@@ -5,6 +5,7 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { redirectWithToast } from 'remix-toast';
+import type { DatabaseError } from 'pg';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -18,12 +19,18 @@ import { UserCreateSchema } from '~/schemas/user';
 import Password from '~/utils/password.server';
 import { duplicateUsernameError } from '~/errors/form.server';
 
+import { Breadcrumb } from '~/components/Breadcrumbs';
 import { Input } from '~/components/forms/Input';
 import { Select } from '~/components/forms/Select';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
+import type { UIMatch } from '@remix-run/react';
 
 const validator = withZod(UserCreateSchema);
+
+export const handle = {
+  breadcrumb: (match: UIMatch) => <Breadcrumb pathname={match.pathname} label="Create" />,
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const fieldValues = await validator.validate(await request.formData());
@@ -38,7 +45,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     await db.insert(usersTable).values({ name, username, role, password });
   } catch (error) {
-    const validationError = duplicateUsernameError(error, fieldValues);
+    const validationError = duplicateUsernameError(error as DatabaseError, fieldValues);
     if (validationError) return validationError;
 
     throw error;

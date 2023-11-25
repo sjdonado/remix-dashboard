@@ -13,6 +13,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
+import type { UIMatch } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 
 import { duplicateUsernameError } from '~/errors/form.server';
@@ -21,12 +22,17 @@ import { db } from '~/db/config.server';
 import { userRoles, usersTable } from '~/db/schema';
 import { UserUpdateSchema } from '~/schemas/user';
 
+import { Breadcrumb } from '~/components/Breadcrumbs';
 import { Input } from '~/components/forms/Input';
 import { Select } from '~/components/forms/Select';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
 
 const validator = withZod(UserUpdateSchema);
+
+export const handle = {
+  breadcrumb: (match: UIMatch) => <Breadcrumb pathname={match.pathname} label="Edit" />,
+};
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.userId, 'Missing userId param');

@@ -1,10 +1,12 @@
 import { DocumentIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
+
 import { redirectWithToast } from 'remix-toast';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
 
 import type { ActionFunctionArgs } from '@remix-run/node';
+import type { UIMatch } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable } from '~/db/schema';
@@ -13,12 +15,17 @@ import type { UserSession } from '~/schemas/user';
 
 import { auth } from '~/services/auth.server';
 
+import { Breadcrumb } from '~/components/Breadcrumbs';
 import { Input } from '~/components/forms/Input';
 import { TextArea } from '~/components/forms/TextArea';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
 
 const validator = withZod(AssignmentCreateSchema);
+
+export const handle = {
+  breadcrumb: (match: UIMatch) => <Breadcrumb pathname={match.pathname} label="New" />,
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const data = await auth.isAuthenticated(request, { failureRedirect: '/login' });

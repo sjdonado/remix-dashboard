@@ -1,10 +1,15 @@
-import { Outlet, useLocation } from '@remix-run/react';
+import type { UIMatch } from '@remix-run/react';
+import { Outlet } from '@remix-run/react';
 import { redirect, type LoaderFunctionArgs, json } from '@remix-run/node';
 
 import { getSessionData } from '~/utils/session.server';
 
 import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
-import Breadcrumbs from '~/components/Breadcrumbs';
+import { Breadcrumb, Breadcrumbs } from '~/components/Breadcrumbs';
+
+export const handle = {
+  breadcrumb: (match: UIMatch) => <Breadcrumb pathname={match.pathname} label="Users" />,
+};
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { isAdmin } = await getSessionData(request);
@@ -17,41 +22,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function UsersLayout() {
-  const location = useLocation();
-  const pathName = location.pathname.split('/');
-
-  const pageTitle = pathName.pop()!;
-  const uuid = pathName.pop()!;
-
   return (
     <div className="flex flex-col gap-2">
-      <Breadcrumbs
-        breadcrumbs={[
-          {
-            label: 'Users',
-            href: '/users',
-            active: pageTitle === 'users',
-          },
-          ...(pageTitle === 'create'
-            ? [
-                {
-                  label: 'Create',
-                  href: '/users/create',
-                  active: true,
-                },
-              ]
-            : []),
-          ...(pageTitle === 'edit'
-            ? [
-                {
-                  label: 'Edit',
-                  href: `/users/${uuid}/edit`,
-                  active: true,
-                },
-              ]
-            : []),
-        ]}
-      />
+      <Breadcrumbs />
       <Outlet />
     </div>
   );

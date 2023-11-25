@@ -11,6 +11,7 @@ import { withZod } from '@remix-validated-form/with-zod';
 
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
+import type { UIMatch } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
@@ -22,9 +23,15 @@ import { getSessionData } from '~/utils/session.server';
 import { Input } from '~/components/forms/Input';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
-import Breadcrumbs from '~/components/Breadcrumbs';
+import { Breadcrumb, Breadcrumbs } from '~/components/Breadcrumbs';
 
 const validator = withZod(UserMeUpdateSchema);
+
+export const handle = {
+  breadcrumb: (match: UIMatch) => (
+    <Breadcrumb pathname={match.pathname} label="My Profile" />
+  ),
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const { userSession } = await getSessionData(request);
@@ -67,15 +74,7 @@ export default function MePage() {
 
   return (
     <div className="flex flex-col gap-2">
-      <Breadcrumbs
-        breadcrumbs={[
-          {
-            label: 'My Profile',
-            href: '/me',
-            active: true,
-          },
-        ]}
-      />
+      <Breadcrumbs />
       <ValidatedForm validator={validator} method="post">
         <div className="rounded-lg bg-base-200/30 p-4 md:p-6">
           <Input

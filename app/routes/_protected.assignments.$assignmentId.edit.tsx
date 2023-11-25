@@ -12,11 +12,12 @@ import { withZod } from '@remix-validated-form/with-zod';
 
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
+import type { UIMatch } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
-import { AssignmentUpdateSchema } from '~/schemas/assignment';
+import { AssignmentSerializedSchema, AssignmentUpdateSchema } from '~/schemas/assignment';
 
 import { getSessionData } from '~/utils/session.server';
 
@@ -24,8 +25,13 @@ import { Input } from '~/components/forms/Input';
 import { TextArea } from '~/components/forms/TextArea';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
+import { Breadcrumb } from '~/components/Breadcrumbs';
 
 const validator = withZod(AssignmentUpdateSchema);
+
+export const handle = {
+  breadcrumb: (match: UIMatch) => <Breadcrumb pathname={match.pathname} label="Edit" />,
+};
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.assignmentId, 'Missing assignmentId param');
@@ -68,13 +74,16 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.assignmentId, 'Missing assignmentId param');
 
-  const [assignment] = await db
+  const [row] = await db
     .select({
       id: assignmentsTable.id,
       title: assignmentsTable.title,
       content: assignmentsTable.content,
+      createdAt: assignmentsTable.createdAt,
       author: {
+        id: assignmentsTable.authorId,
         name: usersTable.name,
+        username: usersTable.username,
       },
     })
     .from(assignmentsTable)
@@ -82,11 +91,16 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
     .limit(1);
 
-  if (!assignment) {
+  if (!row) {
     throw new Response('Not Found', { status: 404 });
   }
 
-  return json({ assignment });
+  const result = AssignmentSerializedSchema.safeParse(row);
+  if (!result.success) {
+    throw new Error(result.error.toString());
+  }
+
+  return json({ assignment: result.data });
 };
 
 export default function EditAssignmentPage() {
