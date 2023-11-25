@@ -4,18 +4,14 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Outlet, useLoaderData, useNavigation } from '@remix-run/react';
 
-import type { UserSession } from '~/schemas/user';
-
-import { auth } from '~/services/auth.server';
-
 import Header from '~/components/Header';
 import Sidebar from '~/components/Sidebar';
+import { getSessionData } from '~/utils/session.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const data = await auth.isAuthenticated(request, { failureRedirect: '/login' });
-  const { username, role } = JSON.parse(data) satisfies UserSession;
+  const { userSession } = await getSessionData(request);
 
-  return json({ username, role });
+  return json(userSession);
 };
 
 export default function ProtectedLayout() {

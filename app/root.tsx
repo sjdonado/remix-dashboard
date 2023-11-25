@@ -9,6 +9,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useMatches,
 } from '@remix-run/react';
 import { useEffect } from 'react';
 
@@ -20,6 +21,14 @@ import stylesheet from '~/tailwind.css';
 import LoadingBar from './components/LoadingBar';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet }];
+
+export function useRouteData<T>(routeId: string): T | undefined {
+  const matches = useMatches();
+
+  const data = matches.find(match => match.id === routeId)?.data;
+
+  return data as T | undefined;
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { toast, headers } = await getToast(request);

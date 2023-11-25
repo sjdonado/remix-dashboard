@@ -20,6 +20,7 @@ import { duplicateUsernameError } from '~/errors/form.server';
 
 import { db } from '~/db/config.server';
 import { userRoles, usersTable } from '~/db/schema';
+import type { UserSession } from '~/schemas/user';
 import { UserUpdateSchema } from '~/schemas/user';
 
 import { Breadcrumb } from '~/components/Breadcrumbs';
@@ -27,6 +28,7 @@ import { Input } from '~/components/forms/Input';
 import { Select } from '~/components/forms/Select';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
+import { useRouteData } from '~/root';
 
 const validator = withZod(UserUpdateSchema);
 
@@ -87,6 +89,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function EditUserPage() {
   const { user } = useLoaderData<typeof loader>();
+  const userSession = useRouteData<UserSession>('routes/_protected');
 
   return (
     <ValidatedForm validator={validator} method="post">
@@ -116,6 +119,7 @@ export default function EditUserPage() {
           name="role"
           label="Choose role"
           defaultValue={user.role}
+          disabled={userSession?.role === user.role}
           icon={
             <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
