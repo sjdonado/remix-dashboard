@@ -24,7 +24,7 @@ export default function Header({ username }: HeaderProps) {
       >
         <Bars3Icon className="h-6 w-6" />
       </label>
-      <div className="flex items-center justify-center gap-1">
+      <div className="flex items-center justify-center ms:gap-1">
         <label className="btn btn-ghost rounded-lg swap swap-rotate">
           <input type="checkbox" className="theme-controller" value="dark" />
           <SunIcon className="swap-off fill-current w-6 h-6" />

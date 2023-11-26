@@ -1,35 +1,20 @@
 FROM node:20-alpine AS base
+WORKDIR /usr/src/app
+RUN apk update && apk upgrade npm
 
-# Install dependencies
-FROM base as deps
-
-WORKDIR /app
-
-ADD package*.json .
-
+FROM base as install
+COPY package.json package-lock.json .
 RUN npm ci
 
-# Build the app
-FROM base as build
-
+FROM install AS prerelease
 ENV NODE_ENV=production
-
-WORKDIR /app
-
-COPY --from=deps /app/node_modules /app/node_modules
+COPY --from=install /usr/src/app/node_modules node_modules
 ADD . .
-
 RUN npm run build
 
-# Production image
-FROM base
-
+FROM base AS release
 ENV NODE_ENV=production
+COPY --from=prerelease /usr/src/app .
 
-WORKDIR /app
-
-COPY --from=build /app .
-
-EXPOSE 3000
-
+EXPOSE 3000/tcp
 CMD ["npm", "run", "start"]

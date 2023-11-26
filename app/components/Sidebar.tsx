@@ -32,7 +32,10 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
             {[adminRole, studentRole].includes(
               userSessionRole as typeof adminRole | typeof studentRole
             ) && (
-              <li className="bg-base-200/40 rounded-lg">
+              <li
+                className="bg-base-200/40 rounded-lg"
+                onClick={() => (document.activeElement as HTMLInputElement).blur()}
+              >
                 <NavLink
                   to="home"
                   className={({ isActive, isPending }) =>
