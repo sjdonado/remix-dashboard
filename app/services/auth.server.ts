@@ -10,7 +10,7 @@ import Password from '~/utils/password.server';
 
 import { db } from '~/db/config.server';
 import { userRoles, usersTable } from '~/db/schema';
-import type { AppSession } from '~/schemas/session.server';
+import type { AppSession } from '~/schemas/session';
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {

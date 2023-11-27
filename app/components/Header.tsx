@@ -1,7 +1,6 @@
 import {
   ArrowLeftOnRectangleIcon,
   Bars3Icon,
-  BellIcon,
   ChevronDownIcon,
   MoonIcon,
   SunIcon,
@@ -30,9 +29,6 @@ export default function Header({ username }: HeaderProps) {
           <SunIcon className="swap-off fill-current w-6 h-6" />
           <MoonIcon className="swap-on fill-current w-6 h-6" />
         </label>
-        <button className="btn btn-ghost rounded-lg">
-          <BellIcon className="h-6 w-6" />
-        </button>
         <div className="dropdown dropdown-end">
           <label tabIndex={0} className="btn btn-ghost rounded-lg p-2">
             {username}

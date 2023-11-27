@@ -56,7 +56,10 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
             {[adminRole, teacherRole].includes(
               userSessionRole as typeof adminRole | typeof teacherRole
             ) && (
-              <li className="bg-base-200/40 rounded-lg">
+              <li
+                className="bg-base-200/40 rounded-lg"
+                onClick={() => (document.activeElement as HTMLInputElement).blur()}
+              >
                 <NavLink
                   to="assignments"
                   className={({ isActive, isPending }) =>
@@ -75,7 +78,10 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
               </li>
             )}
             {adminRole === userSessionRole && (
-              <li className="bg-base-200/40 rounded-lg">
+              <li
+                className="bg-base-200/40 rounded-lg"
+                onClick={() => (document.activeElement as HTMLInputElement).blur()}
+              >
                 <NavLink
                   to="users"
                   className={({ isActive, isPending }) =>

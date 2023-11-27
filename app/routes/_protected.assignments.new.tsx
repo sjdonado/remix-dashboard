@@ -11,7 +11,6 @@ import type { UIMatch } from '@remix-run/react';
 import { db } from '~/db/config.server';
 import { assignmentsTable } from '~/db/schema';
 import { AssignmentCreateSchema } from '~/schemas/assignment';
-import type { UserSession } from '~/schemas/user';
 
 import { auth } from '~/services/auth.server';
 
@@ -28,9 +27,9 @@ export const handle = {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const data = await auth.isAuthenticated(request, { failureRedirect: '/login' });
-  const userSession = JSON.parse(data) satisfies UserSession;
-  const authorId = userSession.id;
+  const { user: author } = await auth.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
 
   const fieldValues = await validator.validate(await request.formData());
 
@@ -40,7 +39,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const { title, content } = fieldValues.data;
 
-  await db.insert(assignmentsTable).values({ title, content, authorId });
+  await db.insert(assignmentsTable).values({ title, content, authorId: author.id });
 
   return redirectWithToast('/assignments', {
     message: 'Assignment created successfully',

@@ -20,7 +20,7 @@ import { duplicateUsernameError } from '~/errors/form.server';
 
 import { db } from '~/db/config.server';
 import { userRoles, usersTable } from '~/db/schema';
-import type { UserSession } from '~/schemas/user';
+import type { AppUserSession } from '~/schemas/session';
 import { UserUpdateSchema } from '~/schemas/user';
 
 import { Breadcrumb } from '~/components/Breadcrumbs';
@@ -89,7 +89,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function EditUserPage() {
   const { user } = useLoaderData<typeof loader>();
-  const userSession = useRouteData<UserSession>('routes/_protected');
+  const userSession = useRouteData<AppUserSession>('routes/_protected');
 
   return (
     <ValidatedForm validator={validator} method="post">
