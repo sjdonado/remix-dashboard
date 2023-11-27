@@ -62,12 +62,5 @@ export const UserMeUpdateSchema = UserSchema.pick({
   username: true,
 });
 
-export const UserSessionSchema = UserSchema.pick({
-  id: true,
-  username: true,
-  role: true,
-});
-
 export type User = z.infer<typeof UserSchema>;
 export type UserSerialized = z.infer<typeof UserSerializedSchema>;
-export type UserSession = z.infer<typeof UserSessionSchema>;

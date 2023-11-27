@@ -1,12 +1,14 @@
 import { Outlet } from '@remix-run/react';
 import { redirect, type LoaderFunctionArgs, json } from '@remix-run/node';
 
-import { getSessionData } from '~/utils/session.server';
+import { auth } from '~/services/auth.server';
 
 import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { isAdmin, isStudent } = await getSessionData(request);
+  const { isAdmin, isStudent } = await auth.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
 
   if (!isAdmin && !isStudent) {
     return redirect('/assignments');

@@ -15,7 +15,8 @@ import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
 import { formatDateToLocal } from '~/utils/date';
-import { getSessionData } from '~/utils/session.server';
+
+import { auth } from '~/services/auth.server';
 
 import {
   CreateBtnLink,
@@ -29,7 +30,9 @@ import {
 import Search from '~/components/Search';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { userSession, isTeacher } = await getSessionData(request);
+  const { user: userSession, isTeacher } = await auth.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
 
   const url = new URL(request.url);
 

@@ -19,7 +19,7 @@ import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema, AssignmentUpdateSchema } from '~/schemas/assignment';
 
-import { getSessionData } from '~/utils/session.server';
+import { auth } from '~/services/auth.server';
 
 import { Input } from '~/components/forms/Input';
 import { TextArea } from '~/components/forms/TextArea';
@@ -35,7 +35,9 @@ export const handle = {
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.assignmentId, 'Missing assignmentId param');
-  const { userSession, isTeacher } = await getSessionData(request);
+  const { user: userSession, isTeacher } = await auth.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
 
   const { searchParams } = new URL(request.url);
 

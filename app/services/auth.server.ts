@@ -9,8 +9,8 @@ import { SESSION_SECRET } from '~/config/env.server';
 import Password from '~/utils/password.server';
 
 import { db } from '~/db/config.server';
-import { usersTable } from '~/db/schema';
-import type { UserSession } from '~/schemas/user';
+import { userRoles, usersTable } from '~/db/schema';
+import type { AppSession } from '~/schemas/session.server';
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -23,7 +23,7 @@ export const sessionStorage = createCookieSessionStorage({
   },
 });
 
-export const auth = new Authenticator<string>(sessionStorage);
+export const auth = new Authenticator<AppSession>(sessionStorage);
 
 auth.use(
   new FormStrategy(async ({ form }) => {
@@ -45,12 +45,15 @@ auth.use(
       throw new AuthorizationError('Invalid credentials');
     }
 
-    const userSession: UserSession = {
-      id: user.id,
-      username: user.username,
-      role: user.role,
+    return {
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      },
+      isAdmin: user.role === userRoles.enumValues[0],
+      isTeacher: user.role === userRoles.enumValues[1],
+      isStudent: user.role === userRoles.enumValues[2],
     };
-
-    return JSON.stringify(userSession);
   })
 );

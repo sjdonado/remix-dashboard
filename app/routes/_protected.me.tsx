@@ -18,7 +18,7 @@ import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
 import { UserMeUpdateSchema } from '~/schemas/user';
 
-import { getSessionData } from '~/utils/session.server';
+import { auth } from '~/services/auth.server';
 
 import { Input } from '~/components/forms/Input';
 import BackButton from '~/components/forms/BackButton';
@@ -34,7 +34,9 @@ export const handle = {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { userSession } = await getSessionData(request);
+  const { user: userSession } = await auth.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
 
   const fieldValues = await validator.validate(await request.formData());
 
@@ -53,7 +55,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { userSession } = await getSessionData(request);
+  const { user: userSession } = await auth.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
 
   const [user] = await db
     .select({

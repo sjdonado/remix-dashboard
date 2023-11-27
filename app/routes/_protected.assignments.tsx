@@ -2,7 +2,7 @@ import type { UIMatch } from '@remix-run/react';
 import { Outlet } from '@remix-run/react';
 import { redirect, type LoaderFunctionArgs, json } from '@remix-run/node';
 
-import { getSessionData } from '~/utils/session.server';
+import { auth } from '~/services/auth.server';
 
 import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
 import { Breadcrumb, Breadcrumbs } from '~/components/Breadcrumbs';
@@ -14,7 +14,9 @@ export const handle = {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { isAdmin, isTeacher } = await getSessionData(request);
+  const { isAdmin, isTeacher } = await auth.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
 
   if (!isAdmin && !isTeacher) {
     return redirect('/');

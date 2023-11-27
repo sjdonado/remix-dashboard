@@ -10,13 +10,15 @@ import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
-import { getSessionData } from '~/utils/session.server';
+import { auth } from '~/services/auth.server';
 
 import Assignment from '~/components/Assignment';
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.assignmentId, 'Missing assignmentId param');
-  const { userSession, isTeacher } = await getSessionData(request);
+  const { user: userSession, isTeacher } = await auth.isAuthenticated(request, {
+    failureRedirect: '/login',
+  });
 
   const [row] = await db
     .select({
