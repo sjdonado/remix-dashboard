@@ -16,7 +16,7 @@ CREATE TABLE `users` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
 	`username` text NOT NULL,
-	`role` text DEFAULT 'student',
+	`role` text DEFAULT 'student' NOT NULL,
 	`password` text(256) NOT NULL,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`updated_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,

@@ -5,8 +5,9 @@ import 'dotenv/config';
 import { faker } from '@faker-js/faker';
 
 import Database from 'better-sqlite3';
-import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
+import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
+import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 
 import type { User } from '~/schemas/user';
 import { assignmentsTable, userRoles, userRolesTable, usersTable } from './schema';
@@ -52,8 +53,6 @@ const seedUsers = async (db: BetterSQLite3Database) => {
     .onConflictDoNothing()
     .returning();
 
-  console.log(result);
-
   return result;
 };
 
@@ -83,6 +82,7 @@ const seedAssignments = async (db: BetterSQLite3Database, users: User[]) => {
 const main = async () => {
   const sqlite = new Database(DATABASE_PATH);
   const db = drizzle(sqlite);
+  migrate(db, { migrationsFolder: './app/db/migrations' });
 
   const users = await seedUsers(db);
   const assignments = await seedAssignments(db, users);

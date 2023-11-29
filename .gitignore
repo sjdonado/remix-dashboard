@@ -6,3 +6,5 @@ node_modules
 .env
 
 *.sqlite*
+
+todo.md

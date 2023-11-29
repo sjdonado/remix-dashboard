@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "90a97ced-50a4-4d7d-ad9b-89aa584b909b",
+  "id": "4d2b3446-49d9-40d7-86b3-4dbdc4d5d9bd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "assignments": {
@@ -123,7 +123,7 @@
           "name": "role",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "default": "'student'"
         },

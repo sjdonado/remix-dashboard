@@ -13,6 +13,7 @@ export const usersTable = sqliteTable('users', {
   username: text('username').unique().notNull(),
   role: text('role')
     .references(() => userRolesTable.role, { onDelete: 'cascade' })
+    .notNull()
     .default(userRoles[2]),
   password: text('password', { length: 256 }).notNull(),
   createdAt: text('created_at')

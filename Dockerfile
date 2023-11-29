@@ -11,7 +11,6 @@ ENV NODE_ENV=production
 COPY --from=install /usr/src/app/node_modules node_modules
 ADD . .
 RUN npm run build
-RUN npm run seed
 
 FROM base AS release
 ENV NODE_ENV=production
