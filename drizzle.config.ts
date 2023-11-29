@@ -2,13 +2,15 @@ import 'dotenv/config';
 
 import type { Config } from 'drizzle-kit';
 
-const DATABASE_URL = process.env.DATABASE_URL;
-if (!DATABASE_URL) throw new Error('DATABASE_URL is not set');
+const DATABASE_PATH = process.env.DATABASE_PATH;
+if (!DATABASE_PATH) throw new Error('DATABASE_PATH is not set');
 
 export default {
   schema: './app/db/schema.ts',
   out: './app/db/migrations',
-  driver: 'pg',
-  dbCredentials: { connectionString: DATABASE_URL },
+  driver: 'turso',
+  dbCredentials: {
+    url: DATABASE_PATH,
+  },
   strict: true,
 } satisfies Config;

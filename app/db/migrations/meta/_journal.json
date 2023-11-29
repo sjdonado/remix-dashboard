@@ -1,26 +1,12 @@
 {
   "version": "5",
-  "dialect": "pg",
+  "dialect": "sqlite",
   "entries": [
     {
       "idx": 0,
       "version": "5",
-      "when": 1700226133548,
-      "tag": "0000_clammy_captain_cross",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1700408326770,
-      "tag": "0001_flawless_leech",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1700756590960,
-      "tag": "0002_productive_prowler",
+      "when": 1701273801045,
+      "tag": "0000_keen_rogue",
       "breakpoints": true
     }
   ]

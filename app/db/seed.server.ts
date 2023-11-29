@@ -1,29 +1,36 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import 'dotenv/config';
 
-import pg from 'pg';
 import { faker } from '@faker-js/faker';
 
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { drizzle } from 'drizzle-orm/node-postgres';
+import Database from 'better-sqlite3';
+import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
+import { drizzle } from 'drizzle-orm/better-sqlite3';
 
 import type { User } from '~/schemas/user';
-import { assignmentsTable, userRoles, usersTable } from './schema';
+import { assignmentsTable, userRoles, userRolesTable, usersTable } from './schema';
 
 import Password from '~/utils/password.server';
 
-const DATABASE_URL = process.env.DATABASE_URL;
-if (!DATABASE_URL) throw new Error('DATABASE_URL is not set');
+const DATABASE_PATH = process.env.DATABASE_PATH;
+if (!DATABASE_PATH) throw new Error('DATABASE_PATH is not set');
 
-const seedUsers = async (db: NodePgDatabase) => {
+const seedUsers = async (db: BetterSQLite3Database) => {
   const data: User[] = [];
   const password = await Password.hash('123456');
 
+  await Promise.all(
+    userRoles.map(role => db.insert(userRolesTable).values({ role: role }).returning())
+  );
+
   for (let i = 0; i < 50; i++) {
-    const role = i % 2 === 0 ? userRoles.enumValues[0] : userRoles.enumValues[1];
+    const role = i % 2 === 0 ? userRoles[0] : userRoles[1];
 
     data.push({
+      id: uuidv4(),
       name: faker.person.fullName(),
-      username: `${role === userRoles.enumValues[0] ? 'admin' : 'teacher'}${i + 1}`,
+      username: `${role === userRoles[0] ? 'admin' : 'teacher'}${i + 1}`,
       password,
       role,
     } as User);
@@ -31,10 +38,11 @@ const seedUsers = async (db: NodePgDatabase) => {
 
   for (let i = 0; i < 10; i++) {
     data.push({
+      id: uuidv4(),
       name: faker.person.fullName(),
       username: `student${i + 1}`,
       password,
-      role: userRoles.enumValues[2],
+      role: userRoles[2],
     } as User);
   }
 
@@ -49,12 +57,13 @@ const seedUsers = async (db: NodePgDatabase) => {
   return result;
 };
 
-const seedAssignments = async (db: NodePgDatabase, users: User[]) => {
+const seedAssignments = async (db: BetterSQLite3Database, users: User[]) => {
   const data = [];
 
   for (const user of users) {
     for (let i = 0; i < 10; i++) {
       data.push({
+        id: uuidv4(),
         authorId: user.id,
         title: faker.lorem.sentence(),
         content: faker.lorem.paragraphs(),
@@ -72,18 +81,14 @@ const seedAssignments = async (db: NodePgDatabase, users: User[]) => {
 };
 
 const main = async () => {
-  const client = new pg.Client(DATABASE_URL);
-  await client.connect();
-
-  const db = drizzle(client);
+  const sqlite = new Database(DATABASE_PATH);
+  const db = drizzle(sqlite);
 
   const users = await seedUsers(db);
   const assignments = await seedAssignments(db, users);
 
   console.log('[seedUsers] first 10:', users.slice(0, 10));
   console.log('[seedAssignments] first 10:', assignments.slice(0, 10));
-
-  await client.end();
 };
 
 main();
