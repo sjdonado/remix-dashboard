@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { DocumentIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
 
 import { redirectWithToast } from 'remix-toast';
@@ -39,7 +40,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const { title, content } = fieldValues.data;
 
-  await db.insert(assignmentsTable).values({ title, content, authorId: author.id });
+  await db
+    .insert(assignmentsTable)
+    .values({ id: uuidv4(), title, content, authorId: author.id });
 
   return redirectWithToast('/assignments', {
     message: 'Assignment created successfully',

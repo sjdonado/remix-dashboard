@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import {
   IdentificationIcon,
   KeyIcon,
@@ -43,7 +44,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const password = await Password.hash(fieldValues.data.password);
 
   try {
-    await db.insert(usersTable).values({ name, username, role, password });
+    await db.insert(usersTable).values({ id: uuidv4(), name, username, role, password });
   } catch (error) {
     const validationError = duplicateUsernameError(error as DatabaseError, fieldValues);
     if (validationError) return validationError;
@@ -90,7 +91,7 @@ export default function CreateUserPage() {
           <option value="" disabled>
             Select a role
           </option>
-          {userRoles.enumValues.map(role => (
+          {userRoles.map(role => (
             <option key={role} value={role}>
               {role}
             </option>

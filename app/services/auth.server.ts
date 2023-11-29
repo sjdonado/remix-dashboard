@@ -51,9 +51,9 @@ auth.use(
         username: user.username,
         role: user.role,
       },
-      isAdmin: user.role === userRoles.enumValues[0],
-      isTeacher: user.role === userRoles.enumValues[1],
-      isStudent: user.role === userRoles.enumValues[2],
+      isAdmin: user.role === userRoles[0],
+      isTeacher: user.role === userRoles[1],
+      isStudent: user.role === userRoles[2],
     };
   })
 );

@@ -5,13 +5,13 @@ export const UserSchema = z.object({
   id: z.string(),
   name: z.string().min(1, { message: 'Name is required' }),
   username: z.string().min(1, { message: 'Username is required' }),
-  role: z.enum(userRoles.enumValues),
+  role: z.enum(userRoles as [string, ...string[]]),
   password: z
     .string()
     .min(1, { message: 'Password is required' })
     .min(6, { message: 'Password must be at least 6 characters' }),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 export const UserSerializedSchema = UserSchema.pick({

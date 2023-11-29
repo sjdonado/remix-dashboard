@@ -127,7 +127,7 @@ export default function EditUserPage() {
           <option value="" disabled>
             Select a role
           </option>
-          {userRoles.enumValues.map(role => (
+          {userRoles.map(role => (
             <option key={role} value={role}>
               {role}
             </option>

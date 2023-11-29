@@ -8,12 +8,12 @@ import { userRoles } from '~/db/schema';
 import AppLogo from './AppLogo';
 
 interface SidebarProps {
-  userSessionRole: (typeof userRoles.enumValues)[number];
+  userSessionRole: (typeof userRoles)[number];
   children: React.ReactNode;
 }
 
 export default function Sidebar({ userSessionRole, children }: SidebarProps) {
-  const [adminRole, teacherRole, studentRole] = userRoles.enumValues;
+  const [adminRole, teacherRole, studentRole] = userRoles;
 
   return (
     <div className="drawer md:drawer-open">

@@ -7,25 +7,20 @@ export const AssignmentSchema = z.object({
   authorId: z.string().min(1, { message: 'Author is required' }),
   title: z.string().min(1, { message: 'Title is required' }),
   content: z.string().min(1, { message: 'Content is required' }),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 export const AssignmentSerializedSchema = AssignmentSchema.omit({
   authorId: true,
   updatedAt: true,
-})
-  .extend({
-    author: UserSerializedSchema.pick({
-      id: true,
-      name: true,
-      username: true,
-    }),
-  })
-  .transform(data => ({
-    ...data,
-    createdAt: data.createdAt.toISOString(),
-  }));
+}).extend({
+  author: UserSerializedSchema.pick({
+    id: true,
+    name: true,
+    username: true,
+  }),
+});
 
 export const AssignmentCreateSchema = AssignmentSchema.pick({
   title: true,
