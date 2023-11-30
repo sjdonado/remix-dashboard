@@ -1,13 +1,10 @@
-import Avatar from 'react-avatar';
 import React from 'react';
 
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Link, useLoaderData, useSearchParams } from '@remix-run/react';
-import { ClientOnly } from 'remix-utils/client-only';
 
 import { asc, desc, sql, eq } from 'drizzle-orm';
-import { alias } from 'drizzle-orm/pg-core/alias';
 
 import { PAGE_SIZE } from '~/config/constants.server';
 import { formatDateToLocal } from '~/utils/date';
@@ -17,6 +14,7 @@ import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
 import Pagination from '~/components/Pagination';
+import Avatar from '~/components/Avatar';
 
 const canUseDOM = !!(
   typeof window !== 'undefined' &&
@@ -31,8 +29,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const pageNumber = Number(url.searchParams.get('page') ?? 1);
 
-  const author = alias(usersTable, 'parent');
-
   const sq = db.$with('sq').as(
     db
       .select({
@@ -42,12 +38,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         createdAt: assignmentsTable.createdAt,
         author: {
           id: assignmentsTable.authorId,
-          name: author.name,
-          username: author.username,
+          name: usersTable.name,
+          username: usersTable.username,
         },
       })
       .from(assignmentsTable)
-      .leftJoin(author, eq(assignmentsTable.authorId, author.id))
+      .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
   );
 
   const [[{ count }], assignments] = await Promise.all([
@@ -95,16 +91,7 @@ export default function HomePage() {
         {assignments?.map(assignment => (
           <div key={assignment.id} className="w-full border rounded-lg bg-base-100 p-4">
             <div className="flex items-start justify-start pb-4 gap-2">
-              <ClientOnly>
-                {() => (
-                  <Avatar
-                    name={assignment.author.name}
-                    alt={assignment.author.name}
-                    round
-                    size="48"
-                  />
-                )}
-              </ClientOnly>
+              <Avatar className="!w-10 !h-10" name={assignment.author.name} />
               <div className="flex flex-col items-start gap-1">
                 <Link to={`/home/${assignment.id}/show`} className="link">
                   {assignment.title}

@@ -1,5 +1,3 @@
-import Avatar from 'react-avatar';
-
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
@@ -22,6 +20,7 @@ import {
   UpdateBtnLink,
 } from '~/components/Table';
 import Search from '~/components/Search';
+import Avatar from '~/components/Avatar';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -91,9 +90,7 @@ export default function UsersPage() {
               <div className="flex flex-col items-start gap-4">
                 <div className="flex items-center justify-between gap-2 w-full">
                   <div className="flex items-center gap-2">
-                    <ClientOnly>
-                      {() => <Avatar name={user.name} round size="32" alt={user.name} />}
-                    </ClientOnly>
+                    <Avatar name={user.name} />
                     <p className="text-sm text-gray-500">{user.name}</p>
                   </div>
                   <span className="text-xs min-w-fit">
@@ -121,16 +118,11 @@ export default function UsersPage() {
             >
               <td className="whitespace-nowrap py-3 pl-6 pr-3">
                 <div className="flex items-center gap-2">
-                  <ClientOnly>
-                    {() => <Avatar name={user.name} round size="32" alt={user.name} />}
-                  </ClientOnly>
+                  <Avatar name={user.name} />
                   <p>{user.name}</p>
                 </div>
               </td>
               <td className="flex-1 whitespace-nowrap">{user.username}</td>
-              {/* <td className="whitespace-nowrap px-3 py-3"> */}
-              {/*   {formatCurrency(invoice.amount)} */}
-              {/* </td> */}
               <td className="flex-1 whitespace-nowrap">{user.role}</td>
               <td className="whitespace-nowrap px-3 py-3">
                 {formatDateToLocal(user.createdAt)}

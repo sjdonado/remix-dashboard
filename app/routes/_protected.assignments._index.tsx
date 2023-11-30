@@ -1,12 +1,8 @@
-import Avatar from 'react-avatar';
-
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
-import { ClientOnly } from 'remix-utils/client-only';
 
 import { asc, desc, sql, eq, or, count } from 'drizzle-orm';
-import { alias } from 'drizzle-orm/pg-core/alias';
 
 import { PAGE_SIZE } from '~/config/constants.server';
 
@@ -28,6 +24,7 @@ import {
   UpdateBtnLink,
 } from '~/components/Table';
 import Search from '~/components/Search';
+import Avatar from '~/components/Avatar';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { user: userSession, isTeacher } = await auth.isAuthenticated(request, {
@@ -110,16 +107,7 @@ export default function AssignmentsPage() {
               <div className="flex flex-col items-start gap-4">
                 <div className="flex items-center justify-between gap-2 w-full">
                   <div className="flex items-center gap-2">
-                    <ClientOnly>
-                      {() => (
-                        <Avatar
-                          name={assignment.author.name}
-                          round
-                          size="32"
-                          alt={assignment.author.name}
-                        />
-                      )}
-                    </ClientOnly>
+                    <Avatar name={assignment.author.name} />
                     <p className="text-sm text-gray-500">{assignment.author.name}</p>
                   </div>
                   <span className="text-xs min-w-fit">
@@ -152,16 +140,7 @@ export default function AssignmentsPage() {
               </td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex items-center gap-2">
-                  <ClientOnly>
-                    {() => (
-                      <Avatar
-                        name={assignment.author.name}
-                        round
-                        size="32"
-                        alt={assignment.author.name}
-                      />
-                    )}
-                  </ClientOnly>
+                  <Avatar name={assignment.author.name} />
                   <p>{assignment.author.name}</p>
                 </div>
               </td>

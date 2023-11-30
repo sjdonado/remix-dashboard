@@ -1,11 +1,8 @@
-import Avatar from 'react-avatar';
-
-import { ClientOnly } from 'remix-utils/client-only';
-
 import type { AssignmentSerialized } from '~/schemas/assignment';
 import { formatDateToLocal } from '~/utils/date';
 
 import BackButton from './forms/BackButton';
+import Avatar from './Avatar';
 
 interface AssignmentProps {
   assignment: AssignmentSerialized;
@@ -20,9 +17,7 @@ export default function Assignment({ assignment }: AssignmentProps) {
         <div className="flex flex-col bg-base-100 rounded-lg gap-4 p-8">
           <div className="flex flex-col gap-6">
             <div className="flex items-center text-sm gap-2">
-              <ClientOnly>
-                {() => <Avatar name={author.name} round size="32" alt={author.name} />}
-              </ClientOnly>
+              <Avatar name={assignment.author.name} />
               <span className="font-semibold">{author.name}</span>
               <p className="text-gray-500">{formatDateToLocal(assignment.createdAt)}</p>
             </div>
