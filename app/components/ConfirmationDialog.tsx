@@ -26,7 +26,7 @@ export const DialogModal = forwardRef(function ConfirmationDialog(
           <form method="dialog">
             <button className="btn rounded-lg">Close</button>
           </form>
-          <Form method="post" action={action}>
+          <Form action={action}>
             <button className="btn btn-error error-content text-base-100 rounded-lg">
               {button}
             </button>
