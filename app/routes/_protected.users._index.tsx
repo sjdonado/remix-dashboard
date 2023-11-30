@@ -8,7 +8,7 @@ import { ClientOnly } from 'remix-utils/client-only';
 import { PAGE_SIZE } from '~/config/constants.server';
 import { formatDateToLocal } from '~/utils/date';
 
-import { asc, desc, sql } from 'drizzle-orm';
+import { asc, count, desc, sql } from 'drizzle-orm';
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
 import { UserSerializedSchema } from '~/schemas/user';
@@ -41,11 +41,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       )
   );
 
-  const [[{ count }], users] = await Promise.all([
-    db
-      .with(sq)
-      .select({ count: sql`count(*)` })
-      .from(sq),
+  const [[{ count: totalRows }], users] = await Promise.all([
+    db.with(sq).select({ count: count() }).from(sq),
     db
       .with(sq)
       .select({
@@ -70,7 +67,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 
   return json({
-    totalPages: Math.ceil(Number(count) / PAGE_SIZE),
+    totalPages: Math.ceil(Number(totalRows) / PAGE_SIZE),
     users: parsedUsers,
   });
 };

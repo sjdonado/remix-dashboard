@@ -10,10 +10,10 @@
     "typecheck": "tsc",
     "eslint": "eslint . --ext .ts,.tsx",
     "eslint:fix": "eslint ./app/**/*.{ts,tsx} --fix",
+    "db:drop": "drizzle-kit drop",
+    "db:check": "drizzle-kit check:sqlite",
     "db:migrate": "drizzle-kit generate:sqlite",
-    "db:push": "drizzle-kit push:sqlite",
     "db:seed": "tsx ./app/db/seed.server.ts",
-    "db:clean": "rm -rf app/db/migrations ./app/db/*.sqlite*",
     "db:studio": "drizzle-kit studio --port 5432"
   },
   "dependencies": {

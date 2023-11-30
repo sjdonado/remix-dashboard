@@ -5,7 +5,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { ClientOnly } from 'remix-utils/client-only';
 
-import { asc, desc, sql, eq, or } from 'drizzle-orm';
+import { asc, desc, sql, eq, or, count } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core/alias';
 
 import { PAGE_SIZE } from '~/config/constants.server';
@@ -39,8 +39,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const query = url.searchParams.get('q')?.toString();
   const pageNumber = Number(url.searchParams.get('page') ?? 1);
 
-  const author = alias(usersTable, 'parent');
-
   const sq = db.$with('sq').as(
     db
       .select({
@@ -50,29 +48,26 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         createdAt: assignmentsTable.createdAt,
         author: {
           id: assignmentsTable.authorId,
-          name: author.name,
-          username: author.username,
+          name: usersTable.name,
+          username: usersTable.username,
         },
       })
       .from(assignmentsTable)
-      .leftJoin(author, eq(assignmentsTable.authorId, author.id))
+      .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
       .where(
         or(
           isTeacher ? eq(assignmentsTable.authorId, userSession.id) : undefined,
           query
             ? sql`(${assignmentsTable.title} ilike ${`%${query}%`} 
             or ${assignmentsTable.content} ilike ${`%${query}%`})
-            or ${author.name} ilike ${`%${query}%`} `
+            or ${usersTable.name} ilike ${`%${query}%`} `
             : undefined
         )
       )
   );
 
-  const [[{ count }], assignments] = await Promise.all([
-    db
-      .with(sq)
-      .select({ count: sql`count(*)` })
-      .from(sq),
+  const [[{ count: totalRows }], assignments] = await Promise.all([
+    db.with(sq).select({ count: count() }).from(sq),
     db
       .with(sq)
       .select()
@@ -91,7 +86,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 
   return json({
-    totalPages: Math.ceil(Number(count) / PAGE_SIZE),
+    totalPages: Math.ceil(Number(totalRows) / PAGE_SIZE),
     assignments: parsedAssignments,
   });
 };
