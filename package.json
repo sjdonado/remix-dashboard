@@ -10,10 +10,9 @@
     "typecheck": "tsc",
     "eslint": "eslint . --ext .ts,.tsx",
     "eslint:fix": "eslint ./app/**/*.{ts,tsx} --fix",
-    "db:drop": "drizzle-kit drop",
+    "db:drop": "rm -rf **/*.sqlite*",
     "db:check": "drizzle-kit check:sqlite",
     "db:migrate": "drizzle-kit generate:sqlite",
-    "db:seed": "tsx ./app/db/seed.server.ts",
     "db:studio": "drizzle-kit studio --port 5432"
   },
   "dependencies": {
@@ -29,7 +28,6 @@
     "better-sqlite3": "^9.1.1",
     "clsx": "^2.0.0",
     "daisyui": "4.0.7",
-    "dotenv": "^16.3.1",
     "drizzle-orm": "^0.29.1",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
@@ -53,7 +51,6 @@
     "drizzle-kit": "^0.20.1",
     "eslint": "^8.38.0",
     "tailwindcss": "^3.3.5",
-    "tsx": "^4.4.0",
     "typescript": "^5.1.6"
   },
   "engines": {
