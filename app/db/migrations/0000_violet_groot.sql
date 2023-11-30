@@ -9,7 +9,7 @@ CREATE TABLE `assignments` (
 );
 --> statement-breakpoint
 CREATE TABLE `user_roles` (
-	`role` text NOT NULL
+	`id` text PRIMARY KEY NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `users` (
@@ -20,8 +20,7 @@ CREATE TABLE `users` (
 	`password` text(256) NOT NULL,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`updated_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	FOREIGN KEY (`role`) REFERENCES `user_roles`(`role`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`role`) REFERENCES `user_roles`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `user_roles_role_unique` ON `user_roles` (`role`);--> statement-breakpoint
 CREATE UNIQUE INDEX `users_username_unique` ON `users` (`username`);

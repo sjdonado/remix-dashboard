@@ -1,18 +1,18 @@
 import { sql } from 'drizzle-orm';
 import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-export const userRolesTable = sqliteTable('user_roles', {
-  role: text('role').notNull().unique(),
-});
-
 export const userRoles = ['admin', 'teacher', 'student'];
+
+export const userRolesTable = sqliteTable('user_roles', {
+  id: text('id').primaryKey(),
+});
 
 export const usersTable = sqliteTable('users', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   username: text('username').unique().notNull(),
   role: text('role')
-    .references(() => userRolesTable.role, { onDelete: 'cascade' })
+    .references(() => userRolesTable.id, { onDelete: 'cascade' })
     .notNull()
     .default(userRoles[2]),
   password: text('password', { length: 256 }).notNull(),

@@ -11,7 +11,9 @@
     "eslint": "eslint . --ext .ts,.tsx",
     "eslint:fix": "eslint ./app/**/*.{ts,tsx} --fix",
     "db:migrate": "drizzle-kit generate:sqlite",
+    "db:push": "drizzle-kit push:sqlite",
     "db:seed": "tsx ./app/db/seed.server.ts",
+    "db:clean": "rm -rf app/db/migrations ./app/db/*.sqlite*",
     "db:studio": "drizzle-kit studio --port 5432"
   },
   "dependencies": {
@@ -28,7 +30,7 @@
     "clsx": "^2.0.0",
     "daisyui": "4.0.7",
     "dotenv": "^16.3.1",
-    "drizzle-orm": "^0.29.0",
+    "drizzle-orm": "^0.29.1",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
     "react-avatar": "^5.0.3",

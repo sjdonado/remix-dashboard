@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "4d2b3446-49d9-40d7-86b3-4dbdc4d5d9bd",
+  "id": "95a4059e-8494-46f5-9daf-01f5e9f4cd73",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "assignments": {
@@ -74,23 +74,15 @@
     "user_roles": {
       "name": "user_roles",
       "columns": {
-        "role": {
-          "name": "role",
+        "id": {
+          "name": "id",
           "type": "text",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         }
       },
-      "indexes": {
-        "user_roles_role_unique": {
-          "name": "user_roles_role_unique",
-          "columns": [
-            "role"
-          ],
-          "isUnique": true
-        }
-      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
@@ -161,15 +153,15 @@
         }
       },
       "foreignKeys": {
-        "users_role_user_roles_role_fk": {
-          "name": "users_role_user_roles_role_fk",
+        "users_role_user_roles_id_fk": {
+          "name": "users_role_user_roles_id_fk",
           "tableFrom": "users",
           "tableTo": "user_roles",
           "columnsFrom": [
             "role"
           ],
           "columnsTo": [
-            "role"
+            "id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"

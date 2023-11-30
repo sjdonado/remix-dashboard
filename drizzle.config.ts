@@ -8,7 +8,7 @@ if (!DATABASE_PATH) throw new Error('DATABASE_PATH is not set');
 export default {
   schema: './app/db/schema.ts',
   out: './app/db/migrations',
-  driver: 'turso',
+  driver: 'better-sqlite',
   dbCredentials: {
     url: DATABASE_PATH,
   },

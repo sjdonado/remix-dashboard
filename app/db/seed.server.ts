@@ -5,7 +5,6 @@ import 'dotenv/config';
 import { faker } from '@faker-js/faker';
 
 import Database from 'better-sqlite3';
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 
@@ -21,9 +20,13 @@ const seedUsers = async (db: BetterSQLite3Database) => {
   const data: User[] = [];
   const password = await Password.hash('123456');
 
-  await Promise.all(
-    userRoles.map(role => db.insert(userRolesTable).values({ role: role }).returning())
+  console.log(
+    userRoles.map(role => ({
+      role,
+    }))
   );
+
+  await db.insert(userRolesTable).values(userRoles.map(role => ({ id: role })));
 
   for (let i = 0; i < 50; i++) {
     const role = i % 2 === 0 ? userRoles[0] : userRoles[1];
@@ -79,16 +82,13 @@ const seedAssignments = async (db: BetterSQLite3Database, users: User[]) => {
   return result;
 };
 
-const main = async () => {
-  const sqlite = new Database(DATABASE_PATH);
-  const db = drizzle(sqlite);
-  migrate(db, { migrationsFolder: './app/db/migrations' });
+const sqlite = new Database(DATABASE_PATH);
+sqlite.pragma('journal_mode = WAL');
 
-  const users = await seedUsers(db);
-  const assignments = await seedAssignments(db, users);
+const db = drizzle(sqlite);
 
-  console.log('[seedUsers] first 10:', users.slice(0, 10));
-  console.log('[seedAssignments] first 10:', assignments.slice(0, 10));
-};
+const users = await seedUsers(db);
+const assignments = await seedAssignments(db, users);
 
-main();
+console.log('[seedUsers] first 10:', users.slice(0, 10));
+console.log('[seedAssignments] first 10:', assignments.slice(0, 10));
