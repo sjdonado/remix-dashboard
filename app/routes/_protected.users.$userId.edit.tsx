@@ -42,6 +42,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   const fieldValues = await validator.validate(await request.formData());
 
+  console.log({ fieldValues });
   if (fieldValues.error) {
     return validationError(fieldValues.error);
   }
@@ -51,7 +52,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   try {
     await db
       .update(usersTable)
-      .set({ name, username, role, updatedAt: new Date() })
+      .set({ name, username, role, updatedAt: new Date().toISOString() })
       .where(eq(usersTable.id, params.userId));
   } catch (error) {
     const validationError = duplicateUsernameError(error as DatabaseError, fieldValues);

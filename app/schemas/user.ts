@@ -54,7 +54,8 @@ export const UserCreateSchema = UserSchema.omit({
 export const UserUpdateSchema = UserSchema.pick({
   name: true,
   username: true,
-  role: true,
+}).extend({
+  role: UserSchema.pick({ role: true }).optional(),
 });
 
 export const UserMeUpdateSchema = UserSchema.pick({

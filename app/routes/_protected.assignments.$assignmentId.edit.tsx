@@ -51,7 +51,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   const result = await db
     .update(assignmentsTable)
-    .set({ title, content, updatedAt: new Date() })
+    .set({ title, content, updatedAt: new Date().toISOString() })
     .where(
       and(
         isTeacher ? eq(assignmentsTable.authorId, userSession.id) : undefined,

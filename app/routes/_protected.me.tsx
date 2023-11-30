@@ -48,7 +48,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   await db
     .update(usersTable)
-    .set({ name, username, updatedAt: new Date() })
+    .set({ name, username, updatedAt: new Date().toISOString() })
     .where(eq(usersTable.id, userSession.id));
 
   return jsonWithSuccess({}, 'Profile updated successfully');
