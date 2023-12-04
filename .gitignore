@@ -5,5 +5,10 @@ node_modules
 /public/build
 .env
 
-**/*.sqlite*
+*.sqlite*
 todo.md
+
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

@@ -52,7 +52,7 @@ export default function LoginPage() {
         <Input
           name="username"
           label="Username"
-          type="username"
+          type="text"
           placeholder="Your username"
           icon={
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
