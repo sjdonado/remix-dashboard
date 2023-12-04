@@ -1,11 +1,8 @@
----
-name: 'deploy to sjdonado.de'
-
+name: Deploy to sjdonado.de
 on:
   push:
     branches:
       - master
-
 jobs:
   deploy:
     runs-on: ubuntu-latest

@@ -4,6 +4,6 @@ services:
     build: .
     env_file: .env
     environment:
-      DATABASE_URL: database.sqlite
+      DATABASE_URL: db.sqlite
     ports:
       - 3000:3000
