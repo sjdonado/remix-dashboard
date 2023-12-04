@@ -100,6 +100,17 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
               </li>
             )}
             <li className="flex-1 bg-base-200/40 rounded-lg"></li>
+            <span className="text-xs bg-base-200/40 rounded-lg p-4 text-center">
+              Source code available at{' '}
+              <a
+                className="link"
+                href="https://github.com/sjdonado/remix-dashboard"
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub
+              </a>
+            </span>
           </ul>
         </div>
       </div>
