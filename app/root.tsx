@@ -13,14 +13,12 @@ import {
 } from '@remix-run/react';
 import { useEffect } from 'react';
 
-import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 
-import stylesheet from '~/tailwind.css';
+import '~/tailwind.css';
 
 import LoadingBar from './components/LoadingBar';
-
-export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet }];
 
 export function useRouteData<T>(routeId: string): T | undefined {
   const matches = useMatches();
@@ -53,6 +51,8 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Dashboard</title>
+        <meta name="description" content="Dashboard Remix App" />
         <Meta />
         <Links />
       </head>

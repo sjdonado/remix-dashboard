@@ -4,9 +4,10 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "remix build",
-    "dev": "remix dev --manual",
+    "build": "vite build && vite build --ssr",
+    "dev": "vite dev",
     "start": "remix-serve ./build/index.js",
+    "test": "playwright test",
     "typecheck": "tsc",
     "eslint": "eslint . --ext .ts,.tsx",
     "eslint:fix": "eslint ./app/**/*.{ts,tsx} --fix",
@@ -44,14 +45,17 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.40.1",
     "@remix-run/dev": "^2.3.1",
     "@remix-run/eslint-config": "^2.3.1",
+    "@types/node": "^20.10.2",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "drizzle-kit": "^0.20.1",
     "eslint": "^8.38.0",
     "tailwindcss": "^3.3.5",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vite-tsconfig-paths": "^4.2.1"
   },
   "engines": {
     "node": ">=18.0.0"
