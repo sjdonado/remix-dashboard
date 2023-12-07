@@ -15,9 +15,9 @@ import type { AppSession } from '~/schemas/session';
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: '__session',
-    httpOnly: true,
     path: '/',
     sameSite: 'lax',
+    httpOnly: true,
     secrets: [SESSION_SECRET],
     secure: process.env.NODE_ENV === 'production',
   },
@@ -59,3 +59,5 @@ auth.use(
     };
   })
 );
+
+export const { getSession, commitSession, destroySession } = sessionStorage;

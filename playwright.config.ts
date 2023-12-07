@@ -1,7 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  // globalSetup: require.resolve('./tests/global-setup'),
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -13,9 +12,11 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   projects: [
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup'],
     },
   ],
   webServer: {

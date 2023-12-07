@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const VALID_USERNAME = 'admin1';
-const VALID_PASSWORD = '123456';
+import { VALID_PASSWORD, VALID_ADMIN_USERNAME } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
@@ -32,11 +31,11 @@ test('should login with valid credentials', async ({ page }) => {
   const passwordInput = page.getByPlaceholder('Your password');
   const submitButton = page.getByRole('button', { name: 'Login' });
 
-  await usernameInput.fill(VALID_USERNAME);
+  await usernameInput.fill(VALID_ADMIN_USERNAME);
   await passwordInput.fill(VALID_PASSWORD);
   await submitButton.click();
 
-  await expect(page.locator('.dropdown').getByText(VALID_USERNAME)).toBeVisible();
+  await expect(page.locator('.dropdown').getByText(VALID_ADMIN_USERNAME)).toBeVisible();
 });
 
 test('should not login with invalid credentials', async ({ page }) => {
@@ -44,7 +43,7 @@ test('should not login with invalid credentials', async ({ page }) => {
   const passwordInput = page.getByPlaceholder('Your password');
   const submitButton = page.getByRole('button', { name: 'Login' });
 
-  await usernameInput.fill(VALID_USERNAME);
+  await usernameInput.fill(VALID_ADMIN_USERNAME);
   await passwordInput.fill('111111');
   await submitButton.click();
 
@@ -54,9 +53,9 @@ test('should not login with invalid credentials', async ({ page }) => {
 });
 
 test('should not login with empty username', async ({ page }) => {
-  const usernameInput = page.locator('input[name="username"]');
-  const passwordInput = page.locator('input[name="password"]');
-  const submitButton = page.locator('button[type="submit"]');
+  const usernameInput = page.getByPlaceholder('Your username');
+  const passwordInput = page.getByPlaceholder('Your password');
+  const submitButton = page.getByRole('button', { name: 'Login' });
 
   await usernameInput.fill('');
   await passwordInput.fill(VALID_PASSWORD);
@@ -68,11 +67,11 @@ test('should not login with empty username', async ({ page }) => {
 });
 
 test('should not login with empty password', async ({ page }) => {
-  const usernameInput = page.locator('input[name="username"]');
-  const passwordInput = page.locator('input[name="password"]');
-  const submitButton = page.locator('button[type="submit"]');
+  const usernameInput = page.getByPlaceholder('Your username');
+  const passwordInput = page.getByPlaceholder('Your password');
+  const submitButton = page.getByRole('button', { name: 'Login' });
 
-  await usernameInput.fill(VALID_USERNAME);
+  await usernameInput.fill(VALID_ADMIN_USERNAME);
   await passwordInput.fill('');
   await submitButton.click();
 
@@ -82,11 +81,11 @@ test('should not login with empty password', async ({ page }) => {
 });
 
 test('should not login with invalid password', async ({ page }) => {
-  const usernameInput = page.locator('input[name="username"]');
-  const passwordInput = page.locator('input[name="password"]');
-  const submitButton = page.locator('button[type="submit"]');
+  const usernameInput = page.getByPlaceholder('Your username');
+  const passwordInput = page.getByPlaceholder('Your password');
+  const submitButton = page.getByRole('button', { name: 'Login' });
 
-  await usernameInput.fill(VALID_USERNAME);
+  await usernameInput.fill(VALID_ADMIN_USERNAME);
   await passwordInput.fill('1');
   await submitButton.click();
 

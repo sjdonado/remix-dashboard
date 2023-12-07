@@ -8,6 +8,7 @@
     "dev": "vite dev",
     "start": "remix-serve ./build/index.js",
     "test": "playwright test",
+    "test:ui": "playwright test --ui",
     "typecheck": "tsc",
     "eslint": "eslint . --ext .ts,.tsx",
     "eslint:fix": "eslint ./app/**/*.{ts,tsx} --fix",
