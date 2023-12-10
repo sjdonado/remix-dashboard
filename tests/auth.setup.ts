@@ -5,6 +5,7 @@ import {
   STUDENT_STORAGE_STATE,
   TEACHER_STORAGE_STATE,
   VALID_ADMIN_USERNAME,
+  VALID_STUDENT_USERNAME,
   VALID_TEACHER_USERNAME,
   mockUserSession,
 } from './helpers';
@@ -51,7 +52,7 @@ setup('authenticate as teacher', async ({ page, context }) => {
 });
 
 setup('authenticate as student', async ({ page, context }) => {
-  const mockedSession = await mockUserSession(VALID_TEACHER_USERNAME);
+  const mockedSession = await mockUserSession(VALID_STUDENT_USERNAME);
 
   await context.addCookies([
     {
@@ -61,7 +62,7 @@ setup('authenticate as student', async ({ page, context }) => {
   ]);
 
   await page.goto('/');
-  await expect(page.locator('.dropdown').getByText(VALID_TEACHER_USERNAME)).toBeVisible();
+  await expect(page.locator('.dropdown').getByText(VALID_STUDENT_USERNAME)).toBeVisible();
 
   await page.context().storageState({ path: STUDENT_STORAGE_STATE });
 });
