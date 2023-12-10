@@ -1,4 +1,8 @@
+import dotenv from 'dotenv';
+
 import { defineConfig, devices } from '@playwright/test';
+
+dotenv.config({ path: '.env.test' });
 
 export default defineConfig({
   testDir: './tests',
@@ -22,11 +26,6 @@ export default defineConfig({
   webServer: {
     command: 'npm run dev',
     port: 3333,
-    env: {
-      NODE_ENV: 'test',
-      SESSION_SECRET: 'secret_123456',
-      DATABASE_URL: 'db.sqlite',
-    },
     reuseExistingServer: !process.env.CI,
   },
 });
