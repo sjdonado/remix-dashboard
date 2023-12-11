@@ -4,6 +4,7 @@ import { redirectWithToast } from 'remix-toast';
 
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
+import type { UIMatch } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
@@ -13,6 +14,11 @@ import { AssignmentSerializedSchema } from '~/schemas/assignment';
 import { auth } from '~/services/auth.server';
 
 import Assignment from '~/components/Assignment';
+import { Breadcrumb } from '~/components/Breadcrumbs';
+
+export const handle = {
+  breadcrumb: (match: UIMatch) => <Breadcrumb pathname={match.pathname} label="Show" />,
+};
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.assignmentId, 'Missing assignmentId param');

@@ -55,7 +55,7 @@ export const seedAssignments = async (db: BetterSQLite3Database, users: User[]) 
         id: uuidv4(),
         authorId: user.id,
         title: faker.lorem.sentence(),
-        content: faker.lorem.paragraphs(),
+        content: faker.lorem.paragraphs(16, '\n'),
       });
     }
   }

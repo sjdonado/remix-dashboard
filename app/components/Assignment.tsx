@@ -22,7 +22,7 @@ export default function Assignment({ assignment }: AssignmentProps) {
               <p className="text-gray-500">{formatDateToLocal(assignment.createdAt)}</p>
             </div>
             <h1 className="text-3xl">{assignment.title}</h1>
-            <p className="border-t pt-4">{assignment.content}</p>
+            <p className="border-t pt-4 whitespace-pre-line">{assignment.content}</p>
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@
     "typecheck": "tsc",
     "eslint": "eslint . --ext .ts,.tsx",
     "eslint:fix": "eslint ./app/**/*.{ts,tsx} --fix",
-    "db:drop": "rm -rf **/*.sqlite*",
+    "db:drop": "rm -rf *.sqlite*",
     "db:check": "drizzle-kit check:sqlite",
     "db:migrate": "drizzle-kit generate:sqlite",
     "db:studio": "drizzle-kit studio --port 5432"
