@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-import { VALID_PASSWORD, VALID_ADMIN_USERNAME } from './helpers';
+import { VALID_PASSWORD, VALID_ADMIN_USERNAME } from '../helpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');

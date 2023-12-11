@@ -4,7 +4,7 @@ import {
   ADMIN_STORAGE_STATE,
   STUDENT_STORAGE_STATE,
   TEACHER_STORAGE_STATE,
-} from './helpers';
+} from '../helpers';
 
 test.describe('Home page - Admin', () => {
   test.use({ storageState: ADMIN_STORAGE_STATE });

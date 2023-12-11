@@ -7,7 +7,8 @@ import {
   VALID_ADMIN_USERNAME,
   VALID_STUDENT_USERNAME,
   VALID_TEACHER_USERNAME,
-} from './helpers';
+} from '../helpers';
+
 import { userRoles } from '~/db/schema';
 
 test.describe('Me page - Admin', () => {
