@@ -1,6 +1,6 @@
 # Remix Dashboard (kinda LMS)
 
-<img width="1400" alt="image" src="https://github.com/sjdonado/remix-dashboard/assets/27580836/7b968f4a-53a9-43af-824f-cf2297d0066c">
+<img width="1728" alt="image" src="https://github.com/sjdonado/remix-dashboard/assets/27580836/c6fdcb37-0c95-41e1-bdb1-ee79db335714">
 
 ## Features
 - Log in and sign up.
