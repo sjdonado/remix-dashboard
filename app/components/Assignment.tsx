@@ -27,7 +27,7 @@ export default function Assignment({ assignment }: AssignmentProps) {
         </div>
       </div>
       <div className="flex justify-end gap-4">
-        <BackButton message="Go back" />
+        <BackButton message="Back" />
       </div>
     </div>
   );

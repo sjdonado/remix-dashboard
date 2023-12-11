@@ -113,7 +113,7 @@ export default function MePage() {
           ></Input>
         </div>
         <div className="mt-6 flex justify-end gap-4">
-          <BackButton message="Go back" />
+          <BackButton message="Back" />
           <SubmitButton message="Save" />
         </div>
       </ValidatedForm>

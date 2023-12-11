@@ -65,6 +65,13 @@ test.describe('Me page - Admin', () => {
     await submitButton.click();
   });
 
+  test('should go back to previous page', async ({ page }) => {
+    const backButton = page.getByRole('button', { name: 'Back' });
+    await backButton.click();
+
+    await expect(page).toHaveURL('/home');
+  });
+
   test('should show error message - empty name', async ({ page }) => {
     const nameInput = page.getByPlaceholder('Your name');
     await nameInput.fill('');

@@ -30,7 +30,7 @@ export function CustomErrorBoundary({ className }: CustomErrorBoundaryProps) {
         type="button"
         onClick={() => navigate(-1)}
       >
-        Go back
+        Back
       </button>
     </div>
   );
