@@ -28,14 +28,13 @@ test.describe('Me page - Admin', () => {
   test('should have profile details', async ({ page }) => {
     const name = page.getByPlaceholder('Your name');
     const username = page.getByPlaceholder('Your username');
-    const email = page.getByPlaceholder('Your email');
     const role = page.getByText(userRoles[0]);
 
     await expect(name).toBeVisible();
-    await expect(email).toBeVisible();
+    await expect(username).toBeVisible();
     await expect(role).toBeVisible();
 
-    expect(username).toBe(VALID_ADMIN_USERNAME);
+    expect(await username.inputValue()).toBe(VALID_ADMIN_USERNAME);
   });
 
   test('should update profile - name', async ({ page }) => {
@@ -104,14 +103,13 @@ test.describe('Me page - Teacher', () => {
   test('should have profile details', async ({ page }) => {
     const name = page.getByPlaceholder('Your name');
     const username = page.getByPlaceholder('Your username');
-    const email = page.getByPlaceholder('Your email');
     const role = page.getByText(userRoles[1]);
 
     await expect(name).toBeVisible();
-    await expect(email).toBeVisible();
+    await expect(username).toBeVisible();
     await expect(role).toBeVisible();
 
-    expect(username).toBe(VALID_TEACHER_USERNAME);
+    expect(await username.inputValue()).toBe(VALID_TEACHER_USERNAME);
   });
 });
 
@@ -132,13 +130,12 @@ test.describe('Me page - Student', () => {
   test('should have profile details', async ({ page }) => {
     const name = page.getByPlaceholder('Your name');
     const username = page.getByPlaceholder('Your username');
-    const email = page.getByPlaceholder('Your email');
     const role = page.getByText(userRoles[2]);
 
     await expect(name).toBeVisible();
-    await expect(email).toBeVisible();
+    await expect(username).toBeVisible();
     await expect(role).toBeVisible();
 
-    expect(username).toBe(VALID_STUDENT_USERNAME);
+    expect(await username.inputValue()).toBe(VALID_STUDENT_USERNAME);
   });
 });

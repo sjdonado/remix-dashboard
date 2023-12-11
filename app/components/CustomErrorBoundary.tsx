@@ -3,8 +3,6 @@ import { FaceFrownIcon } from '@heroicons/react/24/outline';
 
 import { useNavigate, useRouteError } from '@remix-run/react';
 
-import { logger } from '~/utils/logger.server';
-
 interface CustomErrorBoundaryProps {
   className?: string;
 }
@@ -13,7 +11,7 @@ export function CustomErrorBoundary({ className }: CustomErrorBoundaryProps) {
   const navigate = useNavigate();
 
   const error = useRouteError() as Error;
-  logger.error(error);
+  console.error(error);
 
   return (
     <div
