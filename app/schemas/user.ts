@@ -55,7 +55,7 @@ export const UserUpdateSchema = UserSchema.pick({
   name: true,
   username: true,
 }).extend({
-  role: UserSchema.pick({ role: true }).optional(),
+  role: z.enum(userRoles as [string, ...string[]]).optional(),
 });
 
 export const UserMeUpdateSchema = UserSchema.pick({

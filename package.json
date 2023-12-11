@@ -6,6 +6,7 @@
   "scripts": {
     "build": "vite build && vite build --ssr",
     "dev": "vite dev",
+    "debug": "vite dev --debug",
     "start": "remix-serve ./build/index.js",
     "test": "NODE_ENV=test playwright test",
     "test:ui": "NODE_ENV=test playwright test --ui",

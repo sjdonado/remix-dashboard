@@ -6,7 +6,7 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { redirectWithToast } from 'remix-toast';
-import type { DatabaseError } from 'pg';
+import type { SqliteError } from 'better-sqlite3';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -42,7 +42,6 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   const fieldValues = await validator.validate(await request.formData());
 
-  console.log({ fieldValues });
   if (fieldValues.error) {
     return validationError(fieldValues.error);
   }
@@ -55,7 +54,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       .set({ name, username, role, updatedAt: new Date().toISOString() })
       .where(eq(usersTable.id, params.userId));
   } catch (error) {
-    const validationError = duplicateUsernameError(error as DatabaseError, fieldValues);
+    const validationError = duplicateUsernameError(error as SqliteError, fieldValues);
     if (validationError) return validationError;
 
     throw error;

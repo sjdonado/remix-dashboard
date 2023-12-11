@@ -6,7 +6,7 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/24/outline';
 import { redirectWithToast } from 'remix-toast';
-import type { DatabaseError } from 'pg';
+import type { SqliteError } from 'better-sqlite3';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
@@ -46,7 +46,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     await db.insert(usersTable).values({ id: uuidv4(), name, username, role, password });
   } catch (error) {
-    const validationError = duplicateUsernameError(error as DatabaseError, fieldValues);
+    const validationError = duplicateUsernameError(error as SqliteError, fieldValues);
     if (validationError) return validationError;
 
     throw error;

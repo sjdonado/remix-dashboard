@@ -1,13 +1,14 @@
-import type { DatabaseError } from 'pg';
+import type { SqliteError } from 'better-sqlite3';
 
 import type { ValidationResult } from 'remix-validated-form';
 import { validationError } from 'remix-validated-form';
 
 export function duplicateUsernameError(
-  error: DatabaseError,
+  error: SqliteError,
   fieldValues: ValidationResult<any>
 ) {
-  if (error.constraint === 'users_username_unique') {
+  // @ts-expect-error
+  if (error.message === 'UNIQUE constraint failed: users.username') {
     return validationError(
       {
         fieldErrors: {
