@@ -24,7 +24,7 @@ export const DialogModal = forwardRef(function ConfirmationDialog(
         <p className="py-4">{description}</p>
         <div className="modal-action">
           <form method="dialog">
-            <button className="btn rounded-lg">Close</button>
+            <button className="btn rounded-lg">Cancel</button>
           </form>
           <Form action={action}>
             <button className="btn btn-error error-content text-base-100 rounded-lg">

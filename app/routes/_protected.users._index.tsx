@@ -103,7 +103,7 @@ export default function UsersPage() {
                 <UpdateBtnLink to={`${user.id}/edit`} />
                 <DeleteBtnLink
                   to={`${user.id}/delete`}
-                  title="Delete Assignment"
+                  title="Delete User"
                   recordName={user.name}
                 />
               </div>

@@ -39,6 +39,17 @@ test.describe('Home page - Admin', () => {
 
     expect(firstAssignment).not.toBe(secondAssignment);
   });
+
+  test('should go to assignment details page', async ({ page }) => {
+    const assignmentLink = page.locator('#assignments a').first();
+    const assignmentTitle = await assignmentLink.innerText();
+    const assignmentUrl = await assignmentLink.getAttribute('href');
+
+    await assignmentLink.click();
+
+    await expect(page).toHaveURL(assignmentUrl!);
+    await expect(page.locator('h1')).toHaveText(assignmentTitle);
+  });
 });
 
 test.describe('Home page should not be visible - Teacher', () => {
