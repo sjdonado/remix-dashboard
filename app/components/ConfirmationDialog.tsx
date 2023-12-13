@@ -8,10 +8,11 @@ interface ModalProps {
   description: string;
   button: string;
   action: string;
+  method: 'post' | undefined;
 }
 
 export const DialogModal = forwardRef(function ConfirmationDialog(
-  { title, description, button, action }: ModalProps,
+  { title, description, button, action, method }: ModalProps,
   ref
 ) {
   return (
@@ -26,7 +27,7 @@ export const DialogModal = forwardRef(function ConfirmationDialog(
           <form method="dialog">
             <button className="btn rounded-lg">Cancel</button>
           </form>
-          <Form action={action}>
+          <Form action={action} {...{ method }}>
             <button className="btn btn-error error-content text-base-100 rounded-lg">
               {button}
             </button>
@@ -42,6 +43,7 @@ interface DialogModalButtonProps {
   description: string;
   button: string;
   action: string;
+  method?: 'post' | undefined;
   className?: string;
   children: React.ReactNode;
 }
@@ -51,6 +53,7 @@ export function DialogModalButton({
   description,
   button,
   action,
+  method,
   className,
   children,
 }: DialogModalButtonProps) {
@@ -67,6 +70,7 @@ export function DialogModalButton({
               description={description}
               button={button}
               action={action}
+              method={method}
             />,
             document.body
           )}

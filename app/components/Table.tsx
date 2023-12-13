@@ -110,6 +110,7 @@ export function DeleteBtnLink({
       title="Delete User"
       description={`Are you sure you want to delete ${recordName}?`}
       button="Delete"
+      method="post"
       action={`${to}?${searchParams.toString()}`}
       className="rounded-lg border p-2 hover:bg-base-200"
     >
