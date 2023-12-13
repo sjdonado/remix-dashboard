@@ -9,11 +9,16 @@ import {
   VALID_PASSWORD,
 } from '../helpers';
 
+import { db } from '~/db/config.server';
+import { usersTable } from '~/db/schema';
+
+import { PAGE_SIZE } from '~/config/constants.server';
+
 test.describe('Users page - Admin', () => {
   test.use({ storageState: ADMIN_STORAGE_STATE });
 
   const USER_ROW = 1;
-  const TABLE_ROWS_LENGTH = 11;
+  const TABLE_ROWS_LENGTH = PAGE_SIZE + 1;
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/users');
@@ -54,6 +59,42 @@ test.describe('Users page - Admin', () => {
       await expect(page.getByRole('row').nth(1).getByRole('cell').first()).not.toHaveText(
         firstUserName!
       );
+    });
+  });
+
+  test.describe('Search Users', () => {
+    let name: string | null;
+    let username: string | null;
+
+    test.beforeAll(async () => {
+      [{ name, username }] = await db
+        .select({ name: usersTable.name, username: usersTable.username })
+        .from(usersTable)
+        .offset(PAGE_SIZE * 2)
+        .limit(1);
+    });
+
+    test('should filter by name', async ({ page }) => {
+      const searchBar = page.getByPlaceholder('Search users...');
+
+      await searchBar.fill(name!);
+      await searchBar.press('Enter');
+
+      await expect(page.getByRole('row')).toHaveCount(2);
+
+      const user = page.getByRole('row').nth(1);
+      await expect(user.getByRole('cell').first().locator('p')).toHaveText(name!);
+    });
+
+    test('should filter by username', async ({ page }) => {
+      const searchBar = page.getByPlaceholder('Search users...');
+
+      await searchBar.fill(username!);
+      await searchBar.press('Enter');
+
+      await expect(page.getByRole('row')).toHaveCount(2);
+      const user = page.getByRole('row').nth(1);
+      await expect(user.getByRole('cell').nth(1)).toHaveText(username!);
     });
   });
 
@@ -163,7 +204,7 @@ test.describe('Users page - Admin', () => {
       await submitButton.click();
     });
 
-    test('should edit Username HERE', async ({ page }) => {
+    test('should edit Username', async ({ page }) => {
       const newUsername = 'New Username';
 
       const usernameInput = page.getByLabel('Username');

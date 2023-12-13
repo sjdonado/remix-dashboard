@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { eq, ne } from 'drizzle-orm';
 
 import type { Locator } from '@playwright/test';
 import { test, expect } from '@playwright/test';
@@ -10,17 +11,17 @@ import {
   getAppSession,
 } from '../helpers';
 
-import type { AppSession } from '~/schemas/session';
-import { assignmentsTable, usersTable } from '~/db/schema';
 import { db } from '~/db/config.server';
-import { eq, ne } from 'drizzle-orm';
-import type { Assignment, AssignmentSerialized } from '~/schemas/assignment';
+import { assignmentsTable, usersTable } from '~/db/schema';
+import type { AppSession } from '~/schemas/session';
+import type { AssignmentSerialized } from '~/schemas/assignment';
+import { PAGE_SIZE } from '~/config/constants.server';
 
 test.describe('Assignments page - Admin', () => {
   test.use({ storageState: ADMIN_STORAGE_STATE });
 
   const ASSIGNMENT_ROW = 1;
-  const TABLE_ROWS_LENGTH = 11;
+  const TABLE_ROWS_LENGTH = PAGE_SIZE + 1;
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/assignments');
@@ -60,6 +61,63 @@ test.describe('Assignments page - Admin', () => {
       await expect(page.getByRole('row')).toHaveCount(TABLE_ROWS_LENGTH);
       await expect(page.getByRole('row').nth(1).getByRole('cell').first()).not.toHaveText(
         firstAssignmentTitle!
+      );
+    });
+  });
+
+  test.describe('Search Assignments', () => {
+    let title: string | null;
+    let content: string | null;
+    let authorName: string | null;
+
+    test.beforeAll(async () => {
+      [{ title, content, authorName }] = await db
+        .select({
+          title: assignmentsTable.title,
+          content: assignmentsTable.content,
+          authorName: usersTable.name,
+        })
+        .from(assignmentsTable)
+        .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
+        .offset(PAGE_SIZE * 2)
+        .limit(1);
+    });
+
+    test('should filter by title', async ({ page }) => {
+      const searchBar = page.getByPlaceholder('Search assignments...');
+
+      await searchBar.fill(title!);
+      await searchBar.press('Enter');
+
+      await expect(page.getByRole('row')).toHaveCount(2);
+
+      const assignment = page.getByRole('row').nth(1);
+      await expect(assignment.getByRole('cell').first()).toHaveText(title!);
+    });
+
+    test('should filter by content', async ({ page }) => {
+      const searchBar = page.getByPlaceholder('Search assignments...');
+
+      await searchBar.fill(content!.slice(0, 10));
+      await searchBar.press('Enter');
+
+      await expect(page.getByRole('row')).toHaveCount(2);
+      const assignment = page.getByRole('row').nth(1);
+      await expect(assignment.getByRole('cell').nth(2).locator('p')).toHaveText(
+        new RegExp(`${content!.slice(0, 10)}`)
+      );
+    });
+
+    test('should filter by authorName', async ({ page }) => {
+      const searchBar = page.getByPlaceholder('Search assignments...');
+
+      await searchBar.fill(authorName!);
+      await searchBar.press('Enter');
+
+      await expect(page.getByRole('row')).toHaveCount(PAGE_SIZE + 1);
+      const assignment = page.getByRole('row').nth(1);
+      await expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(
+        authorName!
       );
     });
   });
@@ -280,7 +338,7 @@ test.describe('Assignments page - Teacher', () => {
   test.use({ storageState: TEACHER_STORAGE_STATE });
 
   const ASSIGNMENT_ROW = 1;
-  const TABLE_ROWS_LENGTH = 11;
+  const TABLE_ROWS_LENGTH = PAGE_SIZE + 1;
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/assignments');
