@@ -109,7 +109,7 @@ export default function CreateUserPage() {
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <BackButton message="Cancel" />
-        <SubmitButton message="Create User" />
+        <SubmitButton message="Save" />
       </div>
     </ValidatedForm>
   );
