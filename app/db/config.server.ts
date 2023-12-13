@@ -20,8 +20,9 @@ logger.info('[drizzle] Database connected');
 
 if ((await db.select({ count: count() }).from(usersTable))[0].count === 0) {
   const users = await seedUsers(db);
-  logger.info(`[drizzle] Seeded ${users.length} users`);
-
   const assignments = await seedAssignments(db, users);
-  logger.info(`[drizzle] Seeded ${assignments.length} assignments`);
+
+  logger.info(
+    `[drizzle] Seeded users:${users.length} - assignments:${assignments.length}`
+  );
 }

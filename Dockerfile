@@ -5,9 +5,9 @@ WORKDIR /usr/src/app
 RUN apk update && apk add nodejs npm
 
 FROM base as install
-COPY package.json .
+COPY package.json package-lock.json .
 # TEMPFIX
-RUN npm install
+RUN npm ci
 
 FROM install AS prerelease
 ENV NODE_ENV=production
