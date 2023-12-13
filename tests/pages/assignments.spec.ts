@@ -98,13 +98,13 @@ test.describe('Assignments page - Admin', () => {
     test('should filter by content', async ({ page }) => {
       const searchBar = page.getByPlaceholder('Search assignments...');
 
-      await searchBar.fill(content!.slice(0, 10));
+      await searchBar.fill(content!.slice(0, 20));
       await searchBar.press('Enter');
 
       await expect(page.getByRole('row')).toHaveCount(2);
       const assignment = page.getByRole('row').nth(1);
       await expect(assignment.getByRole('cell').nth(2).locator('p')).toHaveText(
-        new RegExp(`${content!.slice(0, 10)}`)
+        new RegExp(`${content!.slice(0, 20)}`)
       );
     });
 
