@@ -50,7 +50,7 @@ export const seedAssignments = async (db: BetterSQLite3Database, users: User[]) 
   const data = [];
 
   for (const user of users) {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 12; i++) {
       data.push({
         id: uuidv4(),
         authorId: user.id,

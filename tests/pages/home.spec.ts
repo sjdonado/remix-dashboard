@@ -24,7 +24,7 @@ test.describe('Home page - Admin', () => {
 
   test('should have pagination', async ({ page }) => {
     await expect(page.locator('a[href*="/home?page=3"]')).toBeVisible();
-    await expect(page.locator('a[href*="/home?page=60"]')).toBeVisible();
+    await expect(page.locator('a[href*="/home?page=72"]')).toBeVisible();
   });
 
   test('should paginate assignments', async ({ page }) => {
@@ -82,7 +82,7 @@ test.describe('Home page - Student', () => {
 
   test('should have pagination', async ({ page }) => {
     await expect(page.locator('a[href*="/home?page=3"]')).toBeVisible();
-    await expect(page.locator('a[href*="/home?page=60"]')).toBeVisible();
+    await expect(page.locator('a[href*="/home?page=72"]')).toBeVisible();
   });
 
   test('should paginate assignments', async ({ page }) => {

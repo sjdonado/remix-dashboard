@@ -36,7 +36,7 @@ test.describe('Assignments page - Admin', () => {
 
     test('should have pagination', async ({ page }) => {
       await expect(page.locator('a[href*="/assignments?page=3"]')).toBeVisible();
-      await expect(page.locator('a[href*="/assignments?page=60"]')).toBeVisible();
+      await expect(page.locator('a[href*="/assignments?page=72"]')).toBeVisible();
     });
 
     test('should paginate assignments', async ({ page }) => {
@@ -193,9 +193,8 @@ test.describe('Assignments page - Admin', () => {
       await submitButton.click();
 
       await expect(page).toHaveURL('/assignments');
-      await expect(
-        page.getByRole('row').nth(ASSIGNMENT_ROW).getByRole('cell').nth(2)
-      ).toHaveText(newContent);
+      const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
+      await expect(assignment.getByRole('cell').nth(2)).toHaveText(newContent);
 
       // restore previous content
       await page.goto(editAssignmentUrl!);
@@ -230,13 +229,15 @@ test.describe('Assignments page - Admin', () => {
   });
 
   test.describe('Delete Assignment', () => {
+    const DELETE_ASSIGNMENT_ROW = 1;
+
     test.beforeEach(async ({ page }) => {
-      await page.goto('/assignments?page=4');
+      await page.goto('/assignments?page=2');
       await page.waitForLoadState('networkidle');
     });
 
     test('should successfully delete assignment', async ({ page }) => {
-      const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
+      const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
       const assignmentTitle = await assignment.getByRole('cell').first().textContent();
       const deleteAssignmentButton = assignment.getByRole('button');
 
@@ -248,12 +249,12 @@ test.describe('Assignments page - Admin', () => {
       const deleteButton = deleteModal.getByRole('button', { name: 'Delete' });
       await deleteButton.click();
 
-      await expect(page).toHaveURL('/assignments?page=4');
+      await expect(page).toHaveURL('/assignments?page=2');
       await expect(page.getByText(assignmentTitle!).nth(1)).not.toBeVisible();
     });
 
     test('should go back from delete confirmation modal', async ({ page }) => {
-      const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
+      const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
       const assignmentTitle = await assignment.getByRole('cell').first().textContent();
       const deleteAssignmentButton = assignment.getByRole('button');
 
@@ -265,7 +266,7 @@ test.describe('Assignments page - Admin', () => {
       const cancelButton = deleteModal.getByRole('button', { name: 'Cancel' });
       await cancelButton.click();
 
-      await expect(page).toHaveURL('/assignments?page=4');
+      await expect(page).toHaveURL('/assignments?page=2');
       await expect(page.getByText(assignmentTitle!).nth(1)).toBeVisible();
     });
   });
@@ -274,7 +275,7 @@ test.describe('Assignments page - Admin', () => {
 test.describe('Assignments page - Teacher', () => {
   test.use({ storageState: TEACHER_STORAGE_STATE });
 
-  const ASSIGNMENT_ROW = 2;
+  const ASSIGNMENT_ROW = 1;
   const TABLE_ROWS_LENGTH = 11;
 
   test.beforeEach(async ({ page }) => {
@@ -484,6 +485,49 @@ test.describe('Assignments page - Teacher', () => {
       await submitButton.click();
 
       await expect(page.getByText('Content is required')).toBeVisible();
+    });
+  });
+
+  test.describe('Delete Assignment', () => {
+    const DELETE_ASSIGNMENT_ROW = 1;
+
+    test.beforeEach(async ({ page }) => {
+      await page.goto('/assignments?page=2');
+      await page.waitForLoadState('networkidle');
+    });
+
+    test('should successfully delete assignment', async ({ page }) => {
+      const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
+      const assignmentTitle = await assignment.getByRole('cell').first().textContent();
+      const deleteAssignmentButton = assignment.getByRole('button');
+
+      await deleteAssignmentButton.click();
+
+      const deleteModal = page.locator('dialog[open]');
+      await expect(deleteModal.locator('h3')).toHaveText('Delete User');
+
+      const deleteButton = deleteModal.getByRole('button', { name: 'Delete' });
+      await deleteButton.click();
+
+      await expect(page).toHaveURL('/assignments?page=2');
+      await expect(page.getByText(assignmentTitle!).nth(1)).not.toBeVisible();
+    });
+
+    test('should go back from delete confirmation modal', async ({ page }) => {
+      const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
+      const assignmentTitle = await assignment.getByRole('cell').first().textContent();
+      const deleteAssignmentButton = assignment.getByRole('button');
+
+      await deleteAssignmentButton.click();
+
+      const deleteModal = page.locator('dialog[open]');
+      await expect(deleteModal.locator('h3')).toHaveText('Delete User');
+
+      const cancelButton = deleteModal.getByRole('button', { name: 'Cancel' });
+      await cancelButton.click();
+
+      await expect(page).toHaveURL('/assignments?page=2');
+      await expect(page.getByText(assignmentTitle!).nth(1)).toBeVisible();
     });
   });
 });
