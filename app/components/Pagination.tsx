@@ -24,11 +24,11 @@ export default function Pagination({ totalPages, currentPage }: PaginationProps)
   return (
     <div className="inline-flex mb-4 mx-4">
       <PaginationArrow
+        id="pagination-previous"
         direction="left"
         href={createPageURL(currentPage - 1)}
         isDisabled={currentPage <= 1}
       />
-
       <div className="flex -space-x-px">
         {allPages.map((page, index) => {
           let position: 'first' | 'last' | 'single' | 'middle' | undefined;
@@ -49,8 +49,8 @@ export default function Pagination({ totalPages, currentPage }: PaginationProps)
           );
         })}
       </div>
-
       <PaginationArrow
+        id="pagination-next"
         direction="right"
         href={createPageURL(currentPage + 1)}
         isDisabled={currentPage >= totalPages}
@@ -88,10 +88,12 @@ function PaginationNumber({
 }
 
 function PaginationArrow({
+  id,
   href,
   direction,
   isDisabled,
 }: {
+  id: string;
   href: string;
   direction: 'left' | 'right';
   isDisabled?: boolean;
@@ -111,9 +113,11 @@ function PaginationArrow({
     );
 
   return isDisabled ? (
-    <div className={className}>{icon}</div>
+    <div id={id} className={className}>
+      {icon}
+    </div>
   ) : (
-    <Link className={className} to={href}>
+    <Link id={id} className={className} to={href}>
       {icon}
     </Link>
   );
