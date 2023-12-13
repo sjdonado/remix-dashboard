@@ -1,16 +1,15 @@
 import { faker } from '@faker-js/faker';
+
 import type { Locator } from '@playwright/test';
 import { test, expect } from '@playwright/test';
-
-import type { AppSession } from '~/schemas/session';
-
-import { getSession } from '~/services/auth.server';
 
 import {
   ADMIN_STORAGE_STATE,
   STUDENT_STORAGE_STATE,
   TEACHER_STORAGE_STATE,
 } from '../helpers';
+
+import type { AppSession } from '~/schemas/session';
 
 test.describe('Assignments page - Admin', () => {
   test.use({ storageState: ADMIN_STORAGE_STATE });
@@ -73,14 +72,11 @@ test.describe('Assignments page - Admin', () => {
   });
 
   test.describe('Create Assignment', () => {
-    let userSession: AppSession;
+    let appSession: AppSession;
 
     test.beforeEach(async ({ page, context }) => {
       const cookies = await context.cookies();
-      const session = await getSession(
-        `__session=${cookies.find(cookie => cookie.name === '__session')?.value}`
-      );
-      userSession = session.data.user as AppSession;
+      appSession = await getAppSession(cookies);
 
       const newAssignmentButton = page.getByRole('link', { name: 'New Assignment' });
       await newAssignmentButton.click();
@@ -104,7 +100,7 @@ test.describe('Assignments page - Admin', () => {
       const assignment = page.getByRole('row').nth(1);
       await expect(assignment.getByRole('cell').first()).toHaveText(assignmentTitle);
       await expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(
-        userSession.user.name
+        appSession.user.name
       );
     });
 
@@ -296,14 +292,11 @@ test.describe('Assignments page - Teacher', () => {
   });
 
   test.describe('Show Assignment', () => {
-    let userSession: AppSession;
+    let appSession: AppSession;
 
     test.beforeEach(async ({ context }) => {
       const cookies = await context.cookies();
-      const session = await getSession(
-        `__session=${cookies.find(cookie => cookie.name === '__session')?.value}`
-      );
-      userSession = session.data.user as AppSession;
+      appSession = await getAppSession(cookies);
     });
 
     test('should go to show assignment page', async ({ page }) => {
@@ -331,7 +324,7 @@ test.describe('Assignments page - Teacher', () => {
           .slice(1)
           .map((assignment: Locator) =>
             expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(
-              userSession.user.name
+              appSession.user.name
             )
           )
       );

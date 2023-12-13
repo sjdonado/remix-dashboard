@@ -4,17 +4,20 @@ import {
   ADMIN_STORAGE_STATE,
   STUDENT_STORAGE_STATE,
   TEACHER_STORAGE_STATE,
-  VALID_ADMIN_USERNAME,
-  VALID_STUDENT_USERNAME,
-  VALID_TEACHER_USERNAME,
+  getAppSession,
 } from '../helpers';
 
-import { userRoles } from '~/db/schema';
+import type { AppSession } from '~/schemas/session';
 
 test.describe('Me page - Admin', () => {
   test.use({ storageState: ADMIN_STORAGE_STATE });
 
-  test.beforeEach(async ({ page }) => {
+  let appSession: AppSession;
+
+  test.beforeEach(async ({ page, context }) => {
+    const cookies = await context.cookies();
+    appSession = await getAppSession(cookies);
+
     await page.goto('/me');
   });
 
@@ -28,13 +31,11 @@ test.describe('Me page - Admin', () => {
   test('should have profile details', async ({ page }) => {
     const name = page.getByPlaceholder('Your name');
     const username = page.getByPlaceholder('Your username');
-    const role = page.getByText(userRoles[0]);
+    const role = page.getByText(appSession.user.role);
 
-    await expect(name).toBeVisible();
-    await expect(username).toBeVisible();
+    await expect(name).toHaveValue(appSession.user.name);
+    await expect(username).toHaveValue(appSession.user.username);
     await expect(role).toBeVisible();
-
-    expect(await username.inputValue()).toBe(VALID_ADMIN_USERNAME);
   });
 
   test('should update profile - name', async ({ page }) => {
@@ -47,6 +48,10 @@ test.describe('Me page - Admin', () => {
     await submitButton.click();
 
     await expect(nameInput).toHaveValue(newUsername);
+
+    // restore previous name
+    await nameInput.fill(appSession.user.name);
+    await submitButton.click();
   });
 
   test('should update profile - username', async ({ page }) => {
@@ -61,7 +66,7 @@ test.describe('Me page - Admin', () => {
     await expect(nameInput).toHaveValue(newUsername);
 
     // restore previous username
-    await nameInput.fill(VALID_ADMIN_USERNAME);
+    await nameInput.fill(appSession.user.username);
     await submitButton.click();
   });
 
@@ -96,7 +101,12 @@ test.describe('Me page - Admin', () => {
 test.describe('Me page - Teacher', () => {
   test.use({ storageState: TEACHER_STORAGE_STATE });
 
-  test.beforeEach(async ({ page }) => {
+  let appSession: AppSession;
+
+  test.beforeEach(async ({ page, context }) => {
+    const cookies = await context.cookies();
+    appSession = await getAppSession(cookies);
+
     await page.goto('/me');
   });
 
@@ -110,20 +120,23 @@ test.describe('Me page - Teacher', () => {
   test('should have profile details', async ({ page }) => {
     const name = page.getByPlaceholder('Your name');
     const username = page.getByPlaceholder('Your username');
-    const role = page.getByText(userRoles[1]);
+    const role = page.getByText(appSession.user.role);
 
-    await expect(name).toBeVisible();
-    await expect(username).toBeVisible();
+    await expect(name).toHaveValue(appSession.user.name);
+    await expect(username).toHaveValue(appSession.user.username);
     await expect(role).toBeVisible();
-
-    expect(await username.inputValue()).toBe(VALID_TEACHER_USERNAME);
   });
 });
 
 test.describe('Me page - Student', () => {
   test.use({ storageState: STUDENT_STORAGE_STATE });
 
-  test.beforeEach(async ({ page }) => {
+  let appSession: AppSession;
+
+  test.beforeEach(async ({ page, context }) => {
+    const cookies = await context.cookies();
+    appSession = await getAppSession(cookies);
+
     await page.goto('/me');
   });
 
@@ -137,12 +150,10 @@ test.describe('Me page - Student', () => {
   test('should have profile details', async ({ page }) => {
     const name = page.getByPlaceholder('Your name');
     const username = page.getByPlaceholder('Your username');
-    const role = page.getByText(userRoles[2]);
+    const role = page.getByText(appSession.user.role);
 
-    await expect(name).toBeVisible();
-    await expect(username).toBeVisible();
+    await expect(name).toHaveValue(appSession.user.name);
+    await expect(username).toHaveValue(appSession.user.username);
     await expect(role).toBeVisible();
-
-    expect(await username.inputValue()).toBe(VALID_STUDENT_USERNAME);
   });
 });

@@ -5,6 +5,7 @@ import { db } from '~/db/config.server';
 import { userRoles, usersTable } from '~/db/schema';
 
 import { commitSession, getSession } from '~/services/auth.server';
+import type { Cookie } from 'playwright/test';
 
 export const VALID_ADMIN_USERNAME = 'admin1';
 export const VALID_TEACHER_USERNAME = 'teacher2';
@@ -46,4 +47,11 @@ export const mockUserSession = async (username: string) => {
   const cookies = await commitSession(session);
 
   return parse(cookies).__session;
+};
+
+export const getAppSession = async (cookies: Cookie) => {
+  const session = await getSession(
+    `__session=${cookies.find(cookie => cookie.name === '__session')?.value}`
+  );
+  return session.data.user as AppSession;
 };
