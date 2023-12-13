@@ -74,7 +74,7 @@ export default function NewAssignmentPage() {
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <BackButton message="Cancel" />
-        <SubmitButton message="New Assignment" />
+        <SubmitButton message="Save" />
       </div>
     </ValidatedForm>
   );
