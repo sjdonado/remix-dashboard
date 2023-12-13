@@ -7,10 +7,7 @@ import {
   STUDENT_STORAGE_STATE,
   TEACHER_STORAGE_STATE,
   VALID_PASSWORD,
-  getAppSession,
 } from '../helpers';
-
-import type { AppSession } from '~/schemas/session';
 
 test.describe('Users page - Admin', () => {
   test.use({ storageState: ADMIN_STORAGE_STATE });

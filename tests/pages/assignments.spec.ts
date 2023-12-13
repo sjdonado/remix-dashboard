@@ -11,6 +11,10 @@ import {
 } from '../helpers';
 
 import type { AppSession } from '~/schemas/session';
+import { assignmentsTable, usersTable } from '~/db/schema';
+import { db } from '~/db/config.server';
+import { eq, ne } from 'drizzle-orm';
+import type { Assignment, AssignmentSerialized } from '~/schemas/assignment';
 
 test.describe('Assignments page - Admin', () => {
   test.use({ storageState: ADMIN_STORAGE_STATE });
@@ -528,6 +532,39 @@ test.describe('Assignments page - Teacher', () => {
 
       await expect(page).toHaveURL('/assignments?page=2');
       await expect(page.getByText(assignmentTitle!).nth(1)).toBeVisible();
+    });
+  });
+
+  test.describe('Forbidden Access', () => {
+    let assignment: AssignmentSerialized;
+
+    test.beforeEach(async ({ context }) => {
+      const cookies = await context.cookies();
+      const appSession = await getAppSession(cookies);
+
+      const [row] = await db
+        .select({
+          id: assignmentsTable.id,
+          title: assignmentsTable.title,
+          content: assignmentsTable.content,
+          createdAt: assignmentsTable.createdAt,
+          author: {
+            id: assignmentsTable.authorId,
+            name: usersTable.name,
+            username: usersTable.username,
+          },
+        })
+        .from(assignmentsTable)
+        .where(ne(assignmentsTable.authorId, appSession.user.id))
+        .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
+        .limit(1);
+
+      assignment = row as AssignmentSerialized;
+    });
+
+    test('should not be visible', async ({ page }) => {
+      await page.goto(`/assignments/${assignment.id}/show`);
+      await expect(page).toHaveURL('/assignments');
     });
   });
 });
