@@ -4,6 +4,7 @@ import { UserSchema } from './user';
 
 export const AppUserSessionSchema = UserSchema.pick({
   id: true,
+  name: true,
   username: true,
   role: true,
 });

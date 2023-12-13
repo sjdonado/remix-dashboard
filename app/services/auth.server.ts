@@ -33,6 +33,7 @@ auth.use(
     const [user] = await db
       .select({
         id: usersTable.id,
+        name: usersTable.name,
         username: usersTable.username,
         password: usersTable.password,
         role: usersTable.role,
@@ -50,6 +51,7 @@ auth.use(
     return {
       user: {
         id: user.id,
+        name: user.name,
         username: user.username,
         role: user.role,
       },

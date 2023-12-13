@@ -1,5 +1,10 @@
+import { faker } from '@faker-js/faker';
 import type { Locator } from '@playwright/test';
 import { test, expect } from '@playwright/test';
+
+import type { AppSession } from '~/schemas/session';
+
+import { getSession } from '~/services/auth.server';
 
 import {
   ADMIN_STORAGE_STATE,
@@ -67,6 +72,63 @@ test.describe('Assignments page - Admin', () => {
     });
   });
 
+  test.describe('Create Assignment', () => {
+    let userSession: AppSession;
+
+    test.beforeEach(async ({ page, context }) => {
+      const cookies = await context.cookies();
+      const session = await getSession(
+        `__session=${cookies.find(cookie => cookie.name === '__session')?.value}`
+      );
+      userSession = session.data.user as AppSession;
+
+      const newAssignmentButton = page.getByRole('link', { name: 'New Assignment' });
+      await newAssignmentButton.click();
+    });
+
+    test('should create a new assignment', async ({ page }) => {
+      const assignmentTitle = faker.lorem.words();
+      const assignmentContent = faker.lorem.paragraph();
+
+      const titleInput = page.getByLabel('Title');
+      const contentInput = page.getByLabel('Content');
+      const submitButton = page.getByRole('button', { name: 'Save' });
+
+      await titleInput.fill(assignmentTitle);
+      await contentInput.fill(assignmentContent);
+
+      await submitButton.click();
+
+      await expect(page).toHaveURL('/assignments');
+
+      const assignment = page.getByRole('row').nth(1);
+      await expect(assignment.getByRole('cell').first()).toHaveText(assignmentTitle);
+      await expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(
+        userSession.user.name
+      );
+    });
+
+    test('should throw error message - empty title', async ({ page }) => {
+      const titleInput = page.getByPlaceholder('Title');
+      await titleInput.fill('');
+
+      const submitButton = page.getByRole('button', { name: 'Save' });
+      await submitButton.click();
+
+      await expect(page.getByText('Title is required')).toBeVisible();
+    });
+
+    test('should throw error message - empty content', async ({ page }) => {
+      const contentInput = page.getByPlaceholder('Content');
+      await contentInput.fill('');
+
+      const submitButton = page.getByRole('button', { name: 'Save' });
+      await submitButton.click();
+
+      await expect(page.getByText('Content is required')).toBeVisible();
+    });
+  });
+
   test.describe('Edit Assignment', () => {
     let assignmentTitle: string | null;
     let assignmentAuthor: string | null;
@@ -99,8 +161,8 @@ test.describe('Assignments page - Admin', () => {
     test('should edit Title', async ({ page }) => {
       const newTitle = 'New Title';
 
-      const assignmentTitleInput = page.getByPlaceholder('Title');
-      await assignmentTitleInput.fill(newTitle);
+      const titleInput = page.getByPlaceholder('Title');
+      await titleInput.fill(newTitle);
 
       const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
       await submitButton.click();
@@ -112,15 +174,15 @@ test.describe('Assignments page - Admin', () => {
 
       // restore previous title
       await page.goto(editAssignmentUrl!);
-      await assignmentTitleInput.fill(assignmentTitle!);
+      await titleInput.fill(assignmentTitle!);
       await submitButton.click();
     });
 
     test('should edit Content', async ({ page }) => {
       const newContent = 'New Content';
 
-      const assignmentContentInput = page.getByPlaceholder('Content');
-      await assignmentContentInput.fill(newContent);
+      const contentInput = page.getByPlaceholder('Content');
+      await contentInput.fill(newContent);
 
       const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
       await submitButton.click();
@@ -132,7 +194,7 @@ test.describe('Assignments page - Admin', () => {
 
       // restore previous content
       await page.goto(editAssignmentUrl!);
-      await assignmentContentInput.fill(assignmentAuthor!);
+      await contentInput.fill(assignmentAuthor!);
       await submitButton.click();
     });
 
@@ -142,8 +204,8 @@ test.describe('Assignments page - Admin', () => {
     });
 
     test('should throw error message - empty title', async ({ page }) => {
-      const assignmentTitleInput = page.getByPlaceholder('Title');
-      await assignmentTitleInput.fill('');
+      const titleInput = page.getByPlaceholder('Title');
+      await titleInput.fill('');
 
       const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
       await submitButton.click();
@@ -152,8 +214,8 @@ test.describe('Assignments page - Admin', () => {
     });
 
     test('should throw error message - empty content', async ({ page }) => {
-      const assignmentTitleInput = page.getByPlaceholder('Content');
-      await assignmentTitleInput.fill('');
+      const contentInput = page.getByPlaceholder('Content');
+      await contentInput.fill('');
 
       const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
       await submitButton.click();
@@ -234,6 +296,16 @@ test.describe('Assignments page - Teacher', () => {
   });
 
   test.describe('Show Assignment', () => {
+    let userSession: AppSession;
+
+    test.beforeEach(async ({ context }) => {
+      const cookies = await context.cookies();
+      const session = await getSession(
+        `__session=${cookies.find(cookie => cookie.name === '__session')?.value}`
+      );
+      userSession = session.data.user as AppSession;
+    });
+
     test('should go to show assignment page', async ({ page }) => {
       const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
       const showAssignmentButton = assignment.locator('a').first();
@@ -252,18 +324,15 @@ test.describe('Assignments page - Teacher', () => {
     });
 
     test('should show only author assignments', async ({ page }) => {
-      await page.goto('/me');
-      const author = await page.getByPlaceholder('Your name').inputValue();
-
-      await page.goto('/Assignments');
-
       const assignments = await page.getByRole('row').all();
 
       await Promise.all(
         assignments
           .slice(1)
           .map((assignment: Locator) =>
-            expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(author)
+            expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(
+              userSession.user.name
+            )
           )
       );
     });
@@ -300,8 +369,8 @@ test.describe('Assignments page - Teacher', () => {
     test('should edit Title', async ({ page }) => {
       const newTitle = 'New Title';
 
-      const assignmentTitleInput = page.getByPlaceholder('Title');
-      await assignmentTitleInput.fill(newTitle);
+      const titleInput = page.getByPlaceholder('Title');
+      await titleInput.fill(newTitle);
 
       const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
       await submitButton.click();
@@ -313,15 +382,15 @@ test.describe('Assignments page - Teacher', () => {
 
       // restore previous title
       await page.goto(editAssignmentUrl!);
-      await assignmentTitleInput.fill(assignmentTitle!);
+      await titleInput.fill(assignmentTitle!);
       await submitButton.click();
     });
 
     test('should edit Content', async ({ page }) => {
       const newContent = 'New Content';
 
-      const assignmentContentInput = page.getByPlaceholder('Content');
-      await assignmentContentInput.fill(newContent);
+      const contentInput = page.getByPlaceholder('Content');
+      await contentInput.fill(newContent);
 
       const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
       await submitButton.click();
@@ -333,7 +402,7 @@ test.describe('Assignments page - Teacher', () => {
 
       // restore previous content
       await page.goto(editAssignmentUrl!);
-      await assignmentContentInput.fill(assignmentAuthor!);
+      await contentInput.fill(assignmentAuthor!);
       await submitButton.click();
     });
 
@@ -343,8 +412,8 @@ test.describe('Assignments page - Teacher', () => {
     });
 
     test('should throw error message - empty title', async ({ page }) => {
-      const assignmentTitleInput = page.getByPlaceholder('Title');
-      await assignmentTitleInput.fill('');
+      const titleInput = page.getByPlaceholder('Title');
+      await titleInput.fill('');
 
       const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
       await submitButton.click();
@@ -353,8 +422,8 @@ test.describe('Assignments page - Teacher', () => {
     });
 
     test('should throw error message - empty content', async ({ page }) => {
-      const assignmentTitleInput = page.getByPlaceholder('Content');
-      await assignmentTitleInput.fill('');
+      const contentInput = page.getByPlaceholder('Content');
+      await contentInput.fill('');
 
       const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
       await submitButton.click();

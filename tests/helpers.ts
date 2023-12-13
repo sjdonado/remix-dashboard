@@ -22,6 +22,7 @@ export const mockUserSession = async (username: string) => {
   const [user] = await db
     .select({
       id: usersTable.id,
+      name: usersTable.name,
       username: usersTable.username,
       role: usersTable.role,
     })
@@ -33,6 +34,7 @@ export const mockUserSession = async (username: string) => {
   session.set('user', {
     user: {
       id: user.id,
+      name: user.name,
       username: user.username,
       role: user.role,
     },
