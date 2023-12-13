@@ -1,7 +1,6 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
-import { ClientOnly } from 'remix-utils/client-only';
 
 import { PAGE_SIZE } from '~/config/constants.server';
 import { formatDateToLocal } from '~/utils/date';
@@ -34,8 +33,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .from(usersTable)
       .where(
         query
-          ? sql`(${usersTable.name} ilike ${`%${query}%`} 
-            or ${usersTable.username} ilike ${`%${query}%`} )`
+          ? sql`${usersTable.name} COLLATE NOCASE LIKE ${`%${query}%`} 
+            or ${usersTable.username} COLLATE NOCASE LIKE ${`%${query}%`}`
           : undefined
       )
   );

@@ -55,9 +55,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         or(
           isTeacher ? eq(assignmentsTable.authorId, userSession.id) : undefined,
           query
-            ? sql`(${assignmentsTable.title} ilike ${`%${query}%`} 
-            or ${assignmentsTable.content} ilike ${`%${query}%`})
-            or ${usersTable.name} ilike ${`%${query}%`} `
+            ? sql`(${assignmentsTable.title} COLLATE NOCASE LIKE ${`%${query}%`} 
+            or ${assignmentsTable.content} COLLATE NOCASE LIKE ${`%${query}%`})
+            or ${usersTable.name} COLLATE NOCASE LIKE ${`%${query}%`}`
             : undefined
         )
       )
