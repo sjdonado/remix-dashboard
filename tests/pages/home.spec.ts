@@ -31,13 +31,13 @@ test.describe('Home page - Admin', () => {
     await expect(page.locator('#assignments p')).toHaveCount(10);
     const firstAssignment = await page.locator('#assignments p').first().textContent();
 
-    await page.locator('a[href*="/home?page=2"]').first().click();
+    await expect(page.locator('a[href*="/home?page=2"]').first()).toBeVisible();
+
+    await page.locator('#pagination-next').click();
     await page.waitForURL('/home?page=2');
 
     await expect(page.locator('#assignments p')).toHaveCount(10);
-    const secondAssignment = await page.locator('#assignments p').first().textContent();
-
-    expect(firstAssignment).not.toBe(secondAssignment);
+    await expect(page.locator('#assignments p').first()).not.toHaveText(firstAssignment!);
   });
 
   test('should go to assignment details page', async ({ page }) => {
@@ -89,12 +89,12 @@ test.describe('Home page - Student', () => {
     await expect(page.locator('#assignments p')).toHaveCount(10);
     const firstAssignment = await page.locator('#assignments p').first().textContent();
 
-    await page.locator('a[href*="/home?page=2"]').first().click();
+    await expect(page.locator('a[href*="/home?page=2"]').first()).toBeVisible();
+
+    await page.locator('#pagination-next').click();
     await page.waitForURL('/home?page=2');
 
     await expect(page.locator('#assignments p')).toHaveCount(10);
-    const secondAssignment = await page.locator('#assignments p').first().textContent();
-
-    expect(firstAssignment).not.toBe(secondAssignment);
+    await expect(page.locator('#assignments p').first()).not.toHaveText(firstAssignment!);
   });
 });
