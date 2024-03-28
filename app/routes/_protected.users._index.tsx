@@ -2,13 +2,13 @@ import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
-import { PAGE_SIZE } from '~/config/constants.server';
-import { formatDateToLocal } from '~/utils/date';
-
 import { asc, count, desc, sql } from 'drizzle-orm';
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
 import { UserSerializedSchema } from '~/schemas/user';
+
+import { PAGE_SIZE } from '~/constants/search.server';
+import { formatDateToLocal } from '~/utils/date';
 
 import {
   CreateBtnLink,

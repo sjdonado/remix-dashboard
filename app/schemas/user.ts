@@ -1,11 +1,12 @@
 import { z } from 'zod';
-import { userRoles } from '~/db/schema';
+
+import { ALL_USER_ROLES } from '~/constants/user';
 
 export const UserSchema = z.object({
   id: z.string(),
   name: z.string().min(1, { message: 'Name is required' }),
   username: z.string().min(1, { message: 'Username is required' }),
-  role: z.enum(userRoles as [string, ...string[]]),
+  role: z.enum(ALL_USER_ROLES),
   password: z
     .string()
     .min(1, { message: 'Password is required' })
@@ -55,7 +56,7 @@ export const UserUpdateSchema = UserSchema.pick({
   name: true,
   username: true,
 }).extend({
-  role: z.enum(userRoles as [string, ...string[]]).optional(),
+  role: z.enum(ALL_USER_ROLES).optional(),
 });
 
 export const UserMeUpdateSchema = UserSchema.pick({

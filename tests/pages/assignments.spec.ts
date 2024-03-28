@@ -15,7 +15,8 @@ import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import type { AppSession } from '~/schemas/session';
 import type { AssignmentSerialized } from '~/schemas/assignment';
-import { PAGE_SIZE } from '~/config/constants.server';
+
+import { PAGE_SIZE } from '~/constants/search.server';
 
 test.describe('Assignments page - Admin', () => {
   test.use({ storageState: ADMIN_STORAGE_STATE });

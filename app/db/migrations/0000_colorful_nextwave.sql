@@ -8,19 +8,14 @@ CREATE TABLE `assignments` (
 	FOREIGN KEY (`author_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE TABLE `user_roles` (
-	`id` text PRIMARY KEY NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE `users` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
 	`username` text NOT NULL,
-	`role` text DEFAULT 'student' NOT NULL,
+	`role` text DEFAULT 'STUDENT' NOT NULL,
 	`password` text(256) NOT NULL,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	`updated_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	FOREIGN KEY (`role`) REFERENCES `user_roles`(`id`) ON UPDATE no action ON DELETE cascade
+	`updated_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `users_username_unique` ON `users` (`username`);

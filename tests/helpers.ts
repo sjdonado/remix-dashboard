@@ -3,10 +3,12 @@ import { parse } from 'cookie';
 import type { Cookie } from 'playwright/test';
 
 import { db } from '~/db/config.server';
-import { userRoles, usersTable } from '~/db/schema';
+import { usersTable } from '~/db/schema';
+import type { AppSession } from '~/schemas/session';
+
+import { UserRole } from '~/constants/user';
 
 import { commitSession, getSession } from '~/services/auth.server';
-import type { AppSession } from '~/schemas/session';
 
 export const VALID_ADMIN_USERNAME = 'admin1';
 export const VALID_TEACHER_USERNAME = 'teacher2';
@@ -40,9 +42,9 @@ export const mockUserSession = async (username: string) => {
       username: user.username,
       role: user.role,
     },
-    isAdmin: user.role === userRoles[0],
-    isTeacher: user.role === userRoles[1],
-    isStudent: user.role === userRoles[2],
+    isAdmin: user.role === UserRole.Admin,
+    isTeacher: user.role === UserRole.Teacher,
+    isStudent: user.role === UserRole.Student,
   });
 
   const cookies = await commitSession(session);

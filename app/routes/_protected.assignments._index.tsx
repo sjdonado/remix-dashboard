@@ -4,13 +4,12 @@ import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { asc, desc, sql, eq, or, count } from 'drizzle-orm';
 
-import { PAGE_SIZE } from '~/config/constants.server';
-
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
 import { formatDateToLocal } from '~/utils/date';
+import { PAGE_SIZE } from '~/constants/search.server';
 
 import { auth } from '~/services/auth.server';
 

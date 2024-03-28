@@ -1,6 +1,6 @@
 {
   "name": "remix-dashboard",
-  "private": true,
+  "version": "1.0.0",
   "sideEffects": false,
   "type": "module",
   "scripts": {

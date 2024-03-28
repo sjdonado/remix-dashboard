@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "d4d1f985-7d42-48a8-8c6f-ee9f7c57f384",
+  "id": "2713bb15-d83a-42c8-9dec-d59e2f244acb",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "assignments": {
@@ -71,22 +71,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "user_roles": {
-      "name": "user_roles",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "users": {
       "name": "users",
       "columns": {
@@ -117,7 +101,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'student'"
+          "default": "'STUDENT'"
         },
         "password": {
           "name": "password",
@@ -152,21 +136,7 @@
           "isUnique": true
         }
       },
-      "foreignKeys": {
-        "users_role_user_roles_id_fk": {
-          "name": "users_role_user_roles_id_fk",
-          "tableFrom": "users",
-          "tableTo": "user_roles",
-          "columnsFrom": [
-            "role"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }

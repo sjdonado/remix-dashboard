@@ -10,14 +10,17 @@ import type { SqliteError } from 'better-sqlite3';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
-
+import type { UIMatch } from '@remix-run/react';
 import type { ActionFunctionArgs } from '@remix-run/node';
 
 import { db } from '~/db/config.server';
-import { userRoles, usersTable } from '~/db/schema';
+import { usersTable } from '~/db/schema';
 import { UserCreateSchema } from '~/schemas/user';
 
+import type { UserRole } from '~/constants/user';
+import { ALL_USER_ROLES } from '~/constants/user';
 import Password from '~/utils/password.server';
+
 import { duplicateUsernameError } from '~/errors/form.server';
 
 import { Breadcrumb } from '~/components/Breadcrumbs';
@@ -25,7 +28,6 @@ import { Input } from '~/components/forms/Input';
 import { Select } from '~/components/forms/Select';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
-import type { UIMatch } from '@remix-run/react';
 
 const validator = withZod(UserCreateSchema);
 
@@ -44,7 +46,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const password = await Password.hash(fieldValues.data.password);
 
   try {
-    await db.insert(usersTable).values({ id: uuidv4(), name, username, role, password });
+    await db
+      .insert(usersTable)
+      .values({ id: uuidv4(), name, username, role: role as UserRole, password });
   } catch (error) {
     const validationError = duplicateUsernameError(error as SqliteError, fieldValues);
     if (validationError) return validationError;
@@ -91,7 +95,7 @@ export default function CreateUserPage() {
           <option value="" disabled>
             Select a role
           </option>
-          {userRoles.map(role => (
+          {ALL_USER_ROLES.map(role => (
             <option key={role} value={role}>
               {role}
             </option>

@@ -4,17 +4,16 @@ import { NavLink } from '@remix-run/react';
 
 import { HomeIcon, InboxIcon, UsersIcon } from '@heroicons/react/24/outline';
 
-import { userRoles } from '~/db/schema';
+import { UserRole } from '~/constants/user';
+
 import AppLogo from './AppLogo';
 
 interface SidebarProps {
-  userSessionRole: (typeof userRoles)[number];
+  userSessionRole: UserRole;
   children: React.ReactNode;
 }
 
 export default function Sidebar({ userSessionRole, children }: SidebarProps) {
-  const [adminRole, teacherRole, studentRole] = userRoles;
-
   return (
     <div className="drawer md:drawer-open">
       <input id="header" type="checkbox" className="drawer-toggle" />
@@ -29,9 +28,7 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
             <AppLogo />
           </div>
           <ul className="flex-1 flex flex-col gap-2">
-            {[adminRole, studentRole].includes(
-              userSessionRole as typeof adminRole | typeof studentRole
-            ) && (
+            {[UserRole.Admin, UserRole.Student].includes(userSessionRole) && (
               <li
                 className="bg-base-200/40 rounded-lg"
                 onClick={() => (document.activeElement as HTMLInputElement).blur()}
@@ -53,9 +50,7 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
                 </NavLink>
               </li>
             )}
-            {[adminRole, teacherRole].includes(
-              userSessionRole as typeof adminRole | typeof teacherRole
-            ) && (
+            {[UserRole.Admin, UserRole.Teacher].includes(userSessionRole) && (
               <li
                 className="bg-base-200/40 rounded-lg"
                 onClick={() => (document.activeElement as HTMLInputElement).blur()}
@@ -77,7 +72,7 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
                 </NavLink>
               </li>
             )}
-            {adminRole === userSessionRole && (
+            {UserRole.Admin === userSessionRole && (
               <li
                 className="bg-base-200/40 rounded-lg"
                 onClick={() => (document.activeElement as HTMLInputElement).blur()}

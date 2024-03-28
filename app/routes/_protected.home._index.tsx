@@ -6,12 +6,12 @@ import { Link, useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { asc, desc, sql, eq } from 'drizzle-orm';
 
-import { PAGE_SIZE } from '~/config/constants.server';
-import { formatDateToLocal } from '~/utils/date';
-
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema } from '~/schemas/assignment';
+
+import { PAGE_SIZE } from '~/constants/search.server';
+import { formatDateToLocal } from '~/utils/date';
 
 import Pagination from '~/components/Pagination';
 import Avatar from '~/components/Avatar';

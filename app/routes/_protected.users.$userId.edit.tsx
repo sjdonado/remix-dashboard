@@ -16,19 +16,21 @@ import { json } from '@remix-run/node';
 import type { UIMatch } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 
-import { duplicateUsernameError } from '~/errors/form.server';
-
 import { db } from '~/db/config.server';
-import { userRoles, usersTable } from '~/db/schema';
+import { usersTable } from '~/db/schema';
 import type { AppUserSession } from '~/schemas/session';
 import { UserUpdateSchema } from '~/schemas/user';
+
+import { ALL_USER_ROLES, type UserRole } from '~/constants/user';
+import { duplicateUsernameError } from '~/errors/form.server';
+
+import { useRouteData } from '~/root';
 
 import { Breadcrumb } from '~/components/Breadcrumbs';
 import { Input } from '~/components/forms/Input';
 import { Select } from '~/components/forms/Select';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
-import { useRouteData } from '~/root';
 
 const validator = withZod(UserUpdateSchema);
 
@@ -51,7 +53,12 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   try {
     await db
       .update(usersTable)
-      .set({ name, username, role, updatedAt: new Date().toISOString() })
+      .set({
+        name,
+        username,
+        role: role as UserRole,
+        updatedAt: new Date().toISOString(),
+      })
       .where(eq(usersTable.id, params.userId));
   } catch (error) {
     const validationError = duplicateUsernameError(error as SqliteError, fieldValues);
@@ -127,7 +134,7 @@ export default function EditUserPage() {
           <option value="" disabled>
             Select a role
           </option>
-          {userRoles.map(role => (
+          {ALL_USER_ROLES.map(role => (
             <option key={role} value={role}>
               {role}
             </option>

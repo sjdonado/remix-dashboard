@@ -12,7 +12,7 @@ import {
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
 
-import { PAGE_SIZE } from '~/config/constants.server';
+import { PAGE_SIZE } from '~/constants/search.server';
 
 test.describe('Users page - Admin', () => {
   test.use({ storageState: ADMIN_STORAGE_STATE });

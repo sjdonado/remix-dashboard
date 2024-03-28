@@ -4,13 +4,14 @@ import { createCookieSessionStorage } from '@remix-run/node';
 import { Authenticator, AuthorizationError } from 'remix-auth';
 import { FormStrategy } from 'remix-auth-form';
 
+import { db } from '~/db/config.server';
+import { usersTable } from '~/db/schema';
+import type { AppSession } from '~/schemas/session';
+
 import { SESSION_SECRET } from '~/config/env.server';
 
 import Password from '~/utils/password.server';
-
-import { db } from '~/db/config.server';
-import { userRoles, usersTable } from '~/db/schema';
-import type { AppSession } from '~/schemas/session';
+import { UserRole } from '~/constants/user';
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -55,11 +56,29 @@ auth.use(
         username: user.username,
         role: user.role,
       },
-      isAdmin: user.role === userRoles[0],
-      isTeacher: user.role === userRoles[1],
-      isStudent: user.role === userRoles[2],
+      isAdmin: user.role === UserRole.Admin,
+      isTeacher: user.role === UserRole.Teacher,
+      isStudent: user.role === UserRole.Student,
     };
   })
 );
+
+// export async function isAuthorized(
+//   request: Request,
+//   allowedRoles: UserRole[],
+//   failureRedirect = '/unauthorized'
+// ): Promise<UserSession> {
+//   const userSession = await getUserSessionData(request);
+//
+//   if (!userSession) {
+//     throw redirect(`/login?redirectTo=${encodeURIComponent(request.url)}`);
+//   }
+//
+//   if (!allowedRoles.includes(userSession.role)) {
+//     throw redirect(failureRedirect);
+//   }
+//
+//   return userSession;
+// }
 
 export const { getSession, commitSession, destroySession } = sessionStorage;
