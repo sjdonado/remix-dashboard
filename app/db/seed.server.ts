@@ -2,12 +2,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { faker } from '@faker-js/faker';
 
-import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
+import { drizzle, type BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 
 import type { User } from '~/schemas/user';
 import { assignmentsTable, userRoles, userRolesTable, usersTable } from './schema';
 
 import Password from '~/utils/password.server';
+import { connectToDatabase } from './config.server';
 
 export const seedUsers = async (db: BetterSQLite3Database) => {
   const data: User[] = [];
@@ -46,7 +47,14 @@ export const seedUsers = async (db: BetterSQLite3Database) => {
   return result;
 };
 
-export const seedAssignments = async (db: BetterSQLite3Database, users: User[]) => {
+export const seedAssignments = async (db: BetterSQLite3Database) => {
+  const users = await db.select().from(usersTable);
+
+  if (!users.length) {
+    console.error('No users found');
+    return [];
+  }
+
   const data = [];
 
   for (const user of users) {
@@ -68,3 +76,25 @@ export const seedAssignments = async (db: BetterSQLite3Database, users: User[]) 
 
   return result;
 };
+
+const main = async () => {
+  const client = connectToDatabase();
+
+  const db = drizzle(client);
+
+  const args = process.argv.slice(2);
+
+  if (args.includes('users') || args.includes('all')) {
+    const users = await seedUsers(db);
+    console.log('[seedUsers]', users, `Total: ${users.length}`);
+  }
+
+  if (args.includes('assignments') || args.includes('all')) {
+    const assignments = await seedAssignments(db);
+    console.log('[seedAssignments]', assignments, `Total: ${assignments.length}`);
+  }
+
+  client.close();
+};
+
+await main();
