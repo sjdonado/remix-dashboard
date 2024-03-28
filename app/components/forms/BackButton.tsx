@@ -8,7 +8,6 @@ export default function BackButton({ message }: BackButtonProps) {
   const navigate = useNavigate();
 
   const handleOnClick = () => {
-    console.log(window, window.history, window.history.length);
     return window.history.length > 2 ? navigate(-1) : navigate('..');
   };
 

@@ -21,7 +21,7 @@ export const TextArea: FC<TextAreaProps> = ({ name, label, icon, ...rest }) => {
         <div className="relative">
           <textarea
             className={clsx(
-              'peer textarea textarea-sm textarea-bordered rounded-md w-full leading-5 py-2 h-20 !pl-9',
+              'peer textarea textarea-sm textarea-bordered rounded-md w-full test-5 py-2 h-20 !pl-9',
               error && 'textarea-error'
             )}
             {...rest}

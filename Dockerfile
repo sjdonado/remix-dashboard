@@ -1,13 +1,9 @@
 FROM oven/bun:1-alpine AS base
 WORKDIR /usr/src/app
 
-# TEMPFIX
-RUN apk update && apk add nodejs npm
-
 FROM base as install
-COPY package.json package-lock.json .
-# TEMPFIX
-RUN npm ci
+COPY package.json bun.lockb .
+RUN bun install --frozen-lockfile
 
 FROM install AS prerelease
 ENV NODE_ENV=production

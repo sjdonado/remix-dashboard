@@ -4,27 +4,25 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "vite build && vite build --ssr",
-    "dev": "vite dev",
-    "debug": "vite dev --debug",
-    "start": "remix-serve ./build/index.js",
+    "build": "remix vite:build",
+    "dev": "remix vite:dev",
+    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "start": "remix-serve ./build/server/index.js",
+    "typecheck": "tsc",
     "test": "NODE_ENV=test playwright test",
     "test:ui": "NODE_ENV=test playwright test --ui",
-    "typecheck": "tsc",
-    "eslint": "eslint . --ext .ts,.tsx",
-    "eslint:fix": "eslint ./app/**/*.{ts,tsx} --fix",
     "db:drop": "rm -rf *.sqlite*",
     "db:check": "drizzle-kit check:sqlite",
     "db:migrate": "drizzle-kit generate:sqlite",
-    "db:studio": "drizzle-kit studio --port 5432"
+    "db:studio": "drizzle-kit studio --port 3000 --verbose"
   },
   "dependencies": {
     "@faker-js/faker": "^8.3.1",
     "@heroicons/react": "^2.0.18",
-    "@remix-run/css-bundle": "^2.3.1",
-    "@remix-run/node": "^2.3.1",
-    "@remix-run/react": "^2.3.1",
-    "@remix-run/serve": "^2.3.1",
+    "@remix-run/css-bundle": "^2.8.1",
+    "@remix-run/node": "^2.8.1",
+    "@remix-run/react": "^2.8.1",
+    "@remix-run/serve": "^2.8.1",
     "@remix-validated-form/with-zod": "^2.0.7",
     "@types/better-sqlite3": "^7.6.8",
     "@types/uuid": "^9.0.7",
@@ -32,7 +30,7 @@
     "clsx": "^2.0.0",
     "daisyui": "4.0.7",
     "drizzle-orm": "^0.29.1",
-    "isbot": "^3.6.8",
+    "isbot": "^3.8.0",
     "pino": "^8.16.2",
     "pino-pretty": "^10.2.3",
     "playwright": "^1.40.1",
@@ -50,8 +48,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.40.1",
-    "@remix-run/dev": "^2.3.1",
-    "@remix-run/eslint-config": "^2.3.1",
+    "@remix-run/dev": "^2.8.1",
+    "@remix-run/eslint-config": "^2.8.1",
     "@types/node": "^20.10.2",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
@@ -59,7 +57,8 @@
     "eslint": "^8.38.0",
     "tailwindcss": "^3.3.5",
     "typescript": "^5.1.6",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite": "^5.2.6",
+    "vite-tsconfig-paths": "^4.3.2"
   },
   "engines": {
     "node": ">=18.0.0"
