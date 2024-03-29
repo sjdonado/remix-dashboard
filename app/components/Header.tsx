@@ -7,7 +7,7 @@ import {
   UserIcon,
 } from '@heroicons/react/24/outline';
 
-import { DialogModalButton } from './ConfirmationDialog';
+import { DialogModalButton } from './dialog/ConfirmationDialog';
 import { Link } from '@remix-run/react';
 
 interface HeaderProps {

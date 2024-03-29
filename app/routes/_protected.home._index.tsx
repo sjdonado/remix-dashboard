@@ -38,7 +38,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         createdAt: assignmentsTable.createdAt,
         author: {
           id: assignmentsTable.authorId,
-          name: usersTable.name,
           username: usersTable.username,
         },
       })
@@ -93,7 +92,7 @@ export default function HomePage() {
             <div className="flex items-start justify-start pb-4 gap-2">
               <Avatar
                 className="!w-10 !h-10 [&>span]:text-sm"
-                name={assignment.author.name}
+                name={assignment.author.username}
               />
               <div className="flex flex-col items-start gap-1">
                 <Link to={`/home/${assignment.id}/show`} className="link">

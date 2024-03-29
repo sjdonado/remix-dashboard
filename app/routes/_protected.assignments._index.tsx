@@ -11,7 +11,7 @@ import { AssignmentSerializedSchema } from '~/schemas/assignment';
 import { formatDateToLocal } from '~/utils/date';
 import { PAGE_SIZE } from '~/constants/search.server';
 
-import { auth } from '~/services/auth.server';
+import { auth, isAuthenticated, isAuthorized } from '~/services/auth.server';
 
 import {
   CreateBtnLink,
@@ -24,11 +24,10 @@ import {
 } from '~/components/Table';
 import Search from '~/components/Search';
 import Avatar from '~/components/Avatar';
+import { UserRole } from '~/constants/user';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { user: userSession, isTeacher } = await auth.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
+  const userSession = await isAuthenticated(request);
 
   const url = new URL(request.url);
 
@@ -44,7 +43,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         createdAt: assignmentsTable.createdAt,
         author: {
           id: assignmentsTable.authorId,
-          name: usersTable.name,
           username: usersTable.username,
         },
       })
@@ -52,7 +50,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
       .where(
         or(
-          isTeacher ? eq(assignmentsTable.authorId, userSession.id) : undefined,
+          userSession.isTeacher
+            ? eq(assignmentsTable.authorId, userSession.id)
+            : undefined,
           query
             ? sql`(${assignmentsTable.title} COLLATE NOCASE LIKE ${`%${query}%`} 
             or ${assignmentsTable.content} COLLATE NOCASE LIKE ${`%${query}%`})
@@ -106,8 +106,8 @@ export default function AssignmentsPage() {
               <div className="flex flex-col items-start gap-4">
                 <div className="flex items-center justify-between gap-2 w-full">
                   <div className="flex items-center gap-2">
-                    <Avatar name={assignment.author.name} />
-                    <p className="text-sm text-gray-500">{assignment.author.name}</p>
+                    <Avatar name={assignment.author.username} />
+                    <p className="text-sm text-gray-500">{assignment.author.username}</p>
                   </div>
                   <span className="text-xs min-w-fit">
                     {formatDateToLocal(assignment.createdAt)}
@@ -139,8 +139,8 @@ export default function AssignmentsPage() {
               </td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex items-center gap-2">
-                  <Avatar name={assignment.author.name} />
-                  <p>{assignment.author.name}</p>
+                  <Avatar name={assignment.author.username} />
+                  <p>{assignment.author.username}</p>
                 </div>
               </td>
               <td className="flex-1">

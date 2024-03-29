@@ -1,20 +1,15 @@
 import { Outlet } from '@remix-run/react';
-import { redirect, type LoaderFunctionArgs, json } from '@remix-run/node';
+import { type LoaderFunctionArgs } from '@remix-run/node';
 
-import { auth } from '~/services/auth.server';
+import { isAuthorized } from '~/services/auth.server';
 
 import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
+import { UserRole } from '~/constants/user';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { isAdmin, isStudent } = await auth.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
+  await isAuthorized(request, [UserRole.Admin, UserRole.Student], '/assignments');
 
-  if (!isAdmin && !isStudent) {
-    return redirect('/assignments');
-  }
-
-  return json({});
+  return null;
 };
 
 export default function AssignmentsLayout() {

@@ -1,17 +1,7 @@
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { Outlet } from '@remix-run/react';
-
-import { auth } from '~/services/auth.server';
 
 import AppLogo from '~/components/AppLogo';
 import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await auth.isAuthenticated(request, { successRedirect: '/' });
-
-  return json({});
-};
 
 export default function Login() {
   return (

@@ -20,17 +20,15 @@ export function CustomErrorBoundary({ className }: CustomErrorBoundaryProps) {
         className
       )}
     >
-      <FaceFrownIcon className="w-16 h-16 text-error" />
-      <h2 className="text-error text-xl font-semibold">Oh snap! There was an error</h2>
-      <p className="text-error text-sm mb-4 mx-4 text-center">
-        Error message: {error.message}
-      </p>
+      <FaceFrownIcon className="size-16 text-error" />
+      <h2 className="text-xl font-semibold text-error">Oh snap! Something went wrong</h2>
+      <p className="mx-4 mb-4 text-center text-sm text-error">Details: {error.message}</p>
       <button
-        className="btn btn-outline btn-error rounded-lg btn-sm"
+        className="btn btn-outline btn-error btn-sm rounded-lg"
         type="button"
         onClick={() => navigate(-1)}
       >
-        Back
+        Go back to previous page
       </button>
     </div>
   );

@@ -17,7 +17,6 @@ export const AssignmentSerializedSchema = AssignmentSchema.omit({
 }).extend({
   author: UserSerializedSchema.pick({
     id: true,
-    name: true,
     username: true,
   }),
 });

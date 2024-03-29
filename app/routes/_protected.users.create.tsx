@@ -1,10 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
-import {
-  IdentificationIcon,
-  KeyIcon,
-  UserCircleIcon,
-  UserGroupIcon,
-} from '@heroicons/react/24/outline';
+import { IdentificationIcon, KeyIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { redirectWithToast } from 'remix-toast';
 import type { SqliteError } from 'better-sqlite3';
 
@@ -19,7 +13,6 @@ import { UserCreateSchema } from '~/schemas/user';
 
 import type { UserRole } from '~/constants/user';
 import { ALL_USER_ROLES } from '~/constants/user';
-import Password from '~/utils/password.server';
 
 import { duplicateUsernameError } from '~/errors/form.server';
 
@@ -42,13 +35,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return validationError(fieldValues.error);
   }
 
-  const { name, username, role } = fieldValues.data;
-  const password = await Password.hash(fieldValues.data.password);
+  const { username, role } = fieldValues.data;
 
   try {
-    await db
-      .insert(usersTable)
-      .values({ id: uuidv4(), name, username, role: role as UserRole, password });
+    await db.insert(usersTable).values({ username, role: role as UserRole });
   } catch (error) {
     const validationError = duplicateUsernameError(error as SqliteError, fieldValues);
     if (validationError) return validationError;
@@ -67,21 +57,12 @@ export default function CreateUserPage() {
     <ValidatedForm validator={validator} method="post">
       <div className="rounded-lg bg-base-200/30 p-4 md:p-6">
         <Input
-          name="name"
-          label="Name"
-          type="text"
-          placeholder="Name"
-          icon={
-            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
-        />
-        <Input
           name="username"
           label="Username"
           type="text"
           placeholder="Username"
           icon={
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
+            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         />
         <Select

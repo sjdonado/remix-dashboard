@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "2713bb15-d83a-42c8-9dec-d59e2f244acb",
+  "id": "cfbbad58-fc7e-4a4d-8ae6-a98304c26037",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "assignments": {
@@ -81,13 +81,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "username": {
           "name": "username",
           "type": "text",
@@ -102,13 +95,6 @@
           "notNull": true,
           "autoincrement": false,
           "default": "'STUDENT'"
-        },
-        "password": {
-          "name": "password",
-          "type": "text(256)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
         },
         "created_at": {
           "name": "created_at",

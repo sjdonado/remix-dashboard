@@ -4,16 +4,17 @@ import { NavLink } from '@remix-run/react';
 
 import { HomeIcon, InboxIcon, UsersIcon } from '@heroicons/react/24/outline';
 
+import type { UserSession } from '~/schemas/user';
 import { UserRole } from '~/constants/user';
 
 import AppLogo from './AppLogo';
 
 interface SidebarProps {
-  userSessionRole: UserRole;
+  userSession: UserSession;
   children: React.ReactNode;
 }
 
-export default function Sidebar({ userSessionRole, children }: SidebarProps) {
+export default function Sidebar({ userSession, children }: SidebarProps) {
   return (
     <div className="drawer md:drawer-open">
       <input id="header" type="checkbox" className="drawer-toggle" />
@@ -28,7 +29,7 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
             <AppLogo />
           </div>
           <ul className="flex-1 flex flex-col gap-2">
-            {[UserRole.Admin, UserRole.Student].includes(userSessionRole) && (
+            {[UserRole.Admin, UserRole.Student].includes(userSession.role) && (
               <li
                 className="bg-base-200/40 rounded-lg"
                 onClick={() => (document.activeElement as HTMLInputElement).blur()}
@@ -50,7 +51,7 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
                 </NavLink>
               </li>
             )}
-            {[UserRole.Admin, UserRole.Teacher].includes(userSessionRole) && (
+            {[UserRole.Admin, UserRole.Teacher].includes(userSession.role) && (
               <li
                 className="bg-base-200/40 rounded-lg"
                 onClick={() => (document.activeElement as HTMLInputElement).blur()}
@@ -72,7 +73,7 @@ export default function Sidebar({ userSessionRole, children }: SidebarProps) {
                 </NavLink>
               </li>
             )}
-            {UserRole.Admin === userSessionRole && (
+            {UserRole.Admin === userSession.role && (
               <li
                 className="bg-base-200/40 rounded-lg"
                 onClick={() => (document.activeElement as HTMLInputElement).blur()}

@@ -4,7 +4,6 @@ import { ALL_USER_ROLES } from '~/constants/user';
 
 export const UserSchema = z.object({
   id: z.string(),
-  name: z.string().min(1, { message: 'Name is required' }),
   username: z.string().min(1, { message: 'Username is required' }),
   role: z.enum(ALL_USER_ROLES),
   createdAt: z.string(),
@@ -14,6 +13,8 @@ export const UserSchema = z.object({
 export const UserLoginSchema = UserSchema.pick({
   username: true,
   password: true,
+}).extend({
+  redirectTo: z.string().nullish(),
 });
 
 export const UserCreateSchema = UserSchema.omit({
@@ -23,7 +24,6 @@ export const UserCreateSchema = UserSchema.omit({
 });
 
 export const UserUpdateSchema = UserSchema.pick({
-  name: true,
   username: true,
 }).extend({
   role: z.enum(ALL_USER_ROLES).optional(),
@@ -33,6 +33,10 @@ export const UserSessionSchema = UserSchema.pick({
   id: true,
   username: true,
   role: true,
+}).extend({
+  isAdmin: z.boolean(),
+  isTeacher: z.boolean(),
+  isStudent: z.boolean(),
 });
 
 export const UserSerializedSchema = UserSchema.pick({

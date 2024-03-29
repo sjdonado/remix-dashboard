@@ -1,45 +1,59 @@
-import { LockClosedIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { UserCircleIcon } from '@heroicons/react/24/outline';
 
-import type { ActionFunctionArgs } from '@remix-run/node';
-import { Link } from '@remix-run/react';
-import { AuthorizationError } from 'remix-auth';
+import { redirect, type ActionFunctionArgs } from '@remix-run/node';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
 
+import { db } from '~/db/config.server';
+import { usersTable } from '~/db/schema';
 import { UserLoginSchema } from '~/schemas/user';
 
+import { logger } from '~/utils/logger.server';
+
+import { getUserSessionData } from '~/services/session.server';
+
 import { Input } from '~/components/forms/Input';
+import { authenticate } from '~/services/auth.server';
+import { eq } from 'drizzle-orm';
+import { UserRole } from '~/constants/user';
 
 const validator = withZod(UserLoginSchema);
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const data = await validator.validate(
-    await request.clone().formData() // only if FormStrategy is used otherwise request.formData() is ok
-  );
+  const userSession = await getUserSessionData(request);
 
-  if (data.error) return validationError(data.error);
-
-  try {
-    await auth.authenticate('form', request, {
-      successRedirect: '/',
-      throwOnError: true,
-    });
-  } catch (err) {
-    if (err instanceof Response) return err;
-
-    if (err instanceof AuthorizationError) {
-      return validationError({
-        fieldErrors: {
-          username: 'Invalid username or password',
-          password: 'Invalid username or password',
-        },
-        formId: data.formId,
-      });
-    }
-
-    throw err;
+  if (userSession) {
+    return redirect('/');
   }
+
+  const fieldValues = await validator.validate(await request.formData());
+
+  if (fieldValues.error) {
+    logger.error(`[_public.login] ${JSON.stringify(fieldValues.error)}`);
+    return validationError(fieldValues.error);
+  }
+
+  const { username, redirectTo } = fieldValues.data;
+
+  await db.insert(usersTable).values({ username }).onConflictDoNothing();
+
+  const [user] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.username, username))
+    .limit(1);
+
+  const session = {
+    id: user.id,
+    username: user.username,
+    role: user.role,
+    isAdmin: user.role === UserRole.Admin,
+    isTeacher: user.role === UserRole.Teacher,
+    isStudent: user.role === UserRole.Student,
+  };
+
+  return authenticate(request, session, redirectTo);
 };
 
 export default function LoginPage() {
@@ -56,15 +70,6 @@ export default function LoginPage() {
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
           }
         />
-        <Input
-          name="password"
-          label="Password"
-          type="password"
-          placeholder="Your password"
-          icon={
-            <LockClosedIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
-        />
         <button
           className="btn bg-primary text-base-100 rounded-lg mt-4 w-full"
           type="submit"
@@ -72,12 +77,6 @@ export default function LoginPage() {
           Login
         </button>
       </ValidatedForm>
-      <div className="mt-4 text-center text-sm">
-        Don't have an account?{' '}
-        <Link to="/signup" className="underline">
-          Create one
-        </Link>
-      </div>
     </div>
   );
 }

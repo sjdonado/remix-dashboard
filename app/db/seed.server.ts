@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { faker } from '@faker-js/faker';
 
 import { drizzle, type BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
@@ -9,30 +7,22 @@ import { assignmentsTable, usersTable } from './schema';
 
 import { UserRole } from '~/constants/user';
 import { connectToDatabase } from './config.server';
-import Password from '~/utils/password.server';
 
 export const seedUsers = async (db: BetterSQLite3Database) => {
   const data: User[] = [];
-  const password = await Password.hash('123456');
 
   for (let i = 0; i < 50; i++) {
     const role = i % 2 === 0 ? UserRole.Admin : UserRole.Teacher;
 
     data.push({
-      id: uuidv4(),
-      name: faker.person.fullName(),
       username: `${role === UserRole.Admin ? 'admin' : 'teacher'}${i + 1}`,
-      password,
       role,
     } as User);
   }
 
   for (let i = 0; i < 10; i++) {
     data.push({
-      id: uuidv4(),
-      name: faker.person.fullName(),
       username: `student${i + 1}`,
-      password,
       role: UserRole.Student,
     } as User);
   }
@@ -59,7 +49,6 @@ export const seedAssignments = async (db: BetterSQLite3Database) => {
   for (const user of users) {
     for (let i = 0; i < 12; i++) {
       data.push({
-        id: uuidv4(),
         authorId: user.id,
         title: faker.lorem.words(),
         content: faker.lorem.paragraphs(16, '\n'),

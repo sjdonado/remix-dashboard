@@ -7,4 +7,7 @@ installGlobals();
 
 export default defineConfig({
   plugins: [remix(), tsconfigPaths()],
+  server: {
+    port: 3333,
+  },
 });

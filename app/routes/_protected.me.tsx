@@ -1,9 +1,5 @@
 import { eq } from 'drizzle-orm';
-import {
-  IdentificationIcon,
-  UserCircleIcon,
-  UserGroupIcon,
-} from '@heroicons/react/24/outline';
+import { IdentificationIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { jsonWithSuccess } from 'remix-toast';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
@@ -16,16 +12,16 @@ import { useLoaderData } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
-import { UserMeUpdateSchema } from '~/schemas/user';
+import { UserUpdateSchema } from '~/schemas/user';
 
-import { auth } from '~/services/auth.server';
+import { isAuthenticated } from '~/services/auth.server';
 
 import { Input } from '~/components/forms/Input';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
 import { Breadcrumb, Breadcrumbs } from '~/components/Breadcrumbs';
 
-const validator = withZod(UserMeUpdateSchema);
+const validator = withZod(UserUpdateSchema);
 
 export const handle = {
   breadcrumb: (match: UIMatch) => (
@@ -34,9 +30,7 @@ export const handle = {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { user: userSession } = await auth.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
+  const userSession = await isAuthenticated(request);
 
   const fieldValues = await validator.validate(await request.formData());
 
@@ -44,24 +38,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return validationError(fieldValues.error);
   }
 
-  const { name, username } = fieldValues.data;
+  const { username } = fieldValues.data;
 
   await db
     .update(usersTable)
-    .set({ name, username, updatedAt: new Date().toISOString() })
+    .set({ username, updatedAt: new Date().toISOString() })
     .where(eq(usersTable.id, userSession.id));
 
   return jsonWithSuccess({}, 'Profile updated successfully');
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { user: userSession } = await auth.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
+  const userSession = await isAuthenticated(request);
 
   const [user] = await db
     .select({
-      name: usersTable.name,
       username: usersTable.username,
       role: usersTable.role,
       createdAt: usersTable.createdAt,
@@ -82,23 +73,13 @@ export default function MePage() {
       <ValidatedForm validator={validator} method="post">
         <div className="rounded-lg bg-base-200/30 p-4 md:p-6">
           <Input
-            name="name"
-            label="Name"
-            type="text"
-            placeholder="Your name"
-            defaultValue={user.name}
-            icon={
-              <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-            }
-          />
-          <Input
             name="username"
             label="Username"
             type="text"
             placeholder="Your username"
             defaultValue={user.username}
             icon={
-              <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
+              <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
             }
           />
           <Input

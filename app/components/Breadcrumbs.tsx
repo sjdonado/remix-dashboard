@@ -11,7 +11,7 @@ export function Breadcrumbs() {
   const matches = useMatches();
 
   return (
-    <nav aria-label="Breadcrumb" className="breadcrumbs text-2xl">
+    <nav aria-label="Breadcrumb" className="breadcrumbs mb-4 min-h-12 text-2xl">
       <ul>
         {matches
           .filter(match => match.handle && (match.handle as BreadcrumbHandle).breadcrumb)
@@ -31,7 +31,7 @@ export function Breadcrumb({ pathname, label }: { pathname: string; label: strin
     <Link
       to={pathname}
       aria-current={active}
-      className={clsx(active ? '' : 'text-gray-500')}
+      className={clsx('font-medium', !active && 'text-gray-500')}
     >
       {label}
     </Link>

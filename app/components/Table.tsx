@@ -3,7 +3,7 @@ import { EyeIcon, PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/ou
 import { Link, useSearchParams } from '@remix-run/react';
 
 import Pagination from './Pagination';
-import { DialogModalButton } from './ConfirmationDialog';
+import { DialogModalButton } from './dialog/ConfirmationDialog';
 
 interface TableProps {
   totalPages: number;

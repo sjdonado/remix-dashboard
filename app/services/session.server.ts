@@ -1,9 +1,10 @@
 import type { SessionData } from '@remix-run/node';
 import { createCookieSessionStorage } from '@remix-run/node';
 
-import { HOST, SECRET_KEY } from '~/config/env.server';
+import { UserSessionSchema, type UserSession } from '~/schemas/user';
 
-import type { UserSession } from '~/schemas/user';
+import { serialize } from '~/utils/zod.server';
+import { HOST, SECRET_KEY } from '~/config/env.server';
 
 export const COOKIES_DEFAULTS = {
   name: '__session',
@@ -25,9 +26,15 @@ export const userSessionStorage = createCookieSessionStorage({
 export const getUserSessionData = async (request: Request) => {
   const userSession = await userSessionStorage.getSession(request.headers.get('Cookie'));
 
-  const data = userSession.get('data') as UserSession;
+  const data = userSession.get('data');
 
-  return data;
+  if (!data) {
+    return;
+  }
+
+  const serializedSession = await serialize(UserSessionSchema, data);
+
+  return serializedSession;
 };
 
 export const updateUserSessionData = async (

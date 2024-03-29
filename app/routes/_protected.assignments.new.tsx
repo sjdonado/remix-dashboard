@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { DocumentIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
 
 import { redirectWithToast } from 'remix-toast';
@@ -13,13 +12,14 @@ import { db } from '~/db/config.server';
 import { assignmentsTable } from '~/db/schema';
 import { AssignmentCreateSchema } from '~/schemas/assignment';
 
-import { auth } from '~/services/auth.server';
+import { isAuthorized } from '~/services/auth.server';
 
 import { Breadcrumb } from '~/components/Breadcrumbs';
 import { Input } from '~/components/forms/Input';
 import { TextArea } from '~/components/forms/TextArea';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
+import { UserRole } from '~/constants/user';
 
 const validator = withZod(AssignmentCreateSchema);
 
@@ -28,9 +28,7 @@ export const handle = {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { user: author } = await auth.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
+  const userSession = await isAuthorized(request, [UserRole.Admin, UserRole.Teacher]);
 
   const fieldValues = await validator.validate(await request.formData());
 
@@ -40,9 +38,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const { title, content } = fieldValues.data;
 
-  await db
-    .insert(assignmentsTable)
-    .values({ id: uuidv4(), title, content, authorId: author.id });
+  await db.insert(assignmentsTable).values({ title, content, authorId: userSession.id });
 
   return redirectWithToast('/assignments', {
     message: 'Assignment created successfully',

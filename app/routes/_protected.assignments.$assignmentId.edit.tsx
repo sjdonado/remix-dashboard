@@ -19,13 +19,14 @@ import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema, AssignmentUpdateSchema } from '~/schemas/assignment';
 
-import { auth } from '~/services/auth.server';
+import { isAuthorized } from '~/services/auth.server';
 
 import { Input } from '~/components/forms/Input';
 import { TextArea } from '~/components/forms/TextArea';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
 import { Breadcrumb } from '~/components/Breadcrumbs';
+import { UserRole } from '~/constants/user';
 
 const validator = withZod(AssignmentUpdateSchema);
 
@@ -35,9 +36,7 @@ export const handle = {
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.assignmentId, 'Missing assignmentId param');
-  const { user: userSession, isTeacher } = await auth.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
+  const userSession = await isAuthorized(request, [UserRole.Teacher]);
 
   const { searchParams } = new URL(request.url);
 
@@ -54,7 +53,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     .set({ title, content, updatedAt: new Date().toISOString() })
     .where(
       and(
-        isTeacher ? eq(assignmentsTable.authorId, userSession.id) : undefined,
+        eq(assignmentsTable.authorId, userSession.id),
         eq(assignmentsTable.id, params.assignmentId)
       )
     )
@@ -62,7 +61,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
   if (!result.length) {
     return redirectWithToast(`/assignments?${searchParams.toString()}`, {
-      message: 'Assignment not found or not authorized to update',
+      message: 'Assignment not found or you are not authorized to update this assignment',
       type: 'error',
     });
   }
@@ -84,7 +83,6 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       createdAt: assignmentsTable.createdAt,
       author: {
         id: assignmentsTable.authorId,
-        name: usersTable.name,
         username: usersTable.username,
       },
     })

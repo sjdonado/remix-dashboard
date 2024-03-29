@@ -1,14 +1,39 @@
 import { redirect } from '@remix-run/node';
 
 import type { UserRole } from '~/constants/user';
-import { getUserSessionData } from './session.server';
+
+import { getUserSessionData, updateUserSessionData } from './session.server';
 import type { UserSession } from '~/schemas/user';
+
+export const authenticate = async (
+  request: Request,
+  sessionData: Partial<UserSession>,
+  redirectTo?: string | null
+) => {
+  return redirect(redirectTo || '/', {
+    headers: {
+      'Set-Cookie': await updateUserSessionData(request, sessionData),
+    },
+  });
+};
+
+export async function isAuthenticated(request: Request, failureRedirect?: string) {
+  const userSession = await getUserSessionData(request);
+
+  if (!userSession) {
+    throw redirect(
+      failureRedirect ?? `/login?redirectTo=${encodeURIComponent(request.url)}`
+    );
+  }
+
+  return userSession!;
+}
 
 export async function isAuthorized(
   request: Request,
   allowedRoles: UserRole[],
   failureRedirect = '/unauthorized'
-): Promise<UserSession> {
+) {
   const userSession = await getUserSessionData(request);
 
   if (!userSession) {
@@ -19,5 +44,5 @@ export async function isAuthorized(
     throw redirect(failureRedirect);
   }
 
-  return userSession;
+  return userSession!;
 }

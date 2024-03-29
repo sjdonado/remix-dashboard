@@ -11,7 +11,7 @@ import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
-import { auth } from '~/services/auth.server';
+import { isAuthenticated } from '~/services/auth.server';
 
 import Assignment from '~/components/Assignment';
 import { Breadcrumb } from '~/components/Breadcrumbs';
@@ -22,9 +22,7 @@ export const handle = {
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.assignmentId, 'Missing assignmentId param');
-  const { user: userSession, isTeacher } = await auth.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
+  const userSession = await isAuthenticated(request);
 
   const [row] = await db
     .select({
@@ -34,14 +32,13 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
       createdAt: assignmentsTable.createdAt,
       author: {
         id: assignmentsTable.authorId,
-        name: usersTable.name,
         username: usersTable.username,
       },
     })
     .from(assignmentsTable)
     .where(
       and(
-        isTeacher ? eq(assignmentsTable.authorId, userSession.id) : undefined,
+        userSession.isTeacher ? eq(assignmentsTable.authorId, userSession.id) : undefined,
         eq(assignmentsTable.id, params.assignmentId)
       )
     )
