@@ -10,8 +10,6 @@ import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
-import { flatSafeParseAsync } from '~/utils/zod.server';
-
 import { Breadcrumb } from '~/components/Breadcrumbs';
 import Assignment from '~/components/Assignment';
 
@@ -47,7 +45,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     });
   }
 
-  const assignment = await flatSafeParseAsync(AssignmentSerializedSchema, row);
+  const assignment = await AssignmentSerializedSchema.parseAsync(row);
 
   return { assignment };
 };

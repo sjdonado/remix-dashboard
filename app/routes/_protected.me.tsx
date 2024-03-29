@@ -78,9 +78,7 @@ export default function MePage() {
             type="text"
             placeholder="Your username"
             defaultValue={user.username}
-            icon={
-              <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-            }
+            icon={<IdentificationIcon className="form-input-icon" />}
           />
           <Input
             id="role"
@@ -88,9 +86,7 @@ export default function MePage() {
             label="Your role"
             defaultValue={user.role}
             disabled
-            icon={
-              <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-            }
+            icon={<UserGroupIcon className="form-input-icon" />}
           ></Input>
         </div>
         <div className="mt-6 flex justify-end gap-4">

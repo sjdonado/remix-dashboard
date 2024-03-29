@@ -55,17 +55,13 @@ export default function NewAssignmentPage() {
           label="Title"
           type="text"
           placeholder="Title"
-          icon={
-            <DocumentIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
+          icon={<DocumentIcon className="form-input-icon" />}
         />
         <TextArea
           name="content"
           label="Content"
           placeholder="Content"
-          icon={
-            <DocumentTextIcon className="pointer-events-none absolute left-3 top-[0.55rem] h-[18px] w-[18px]" />
-          }
+          icon={<DocumentTextIcon className="form-input-icon" />}
         />
       </div>
       <div className="mt-6 flex justify-end gap-4">

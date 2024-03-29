@@ -11,14 +11,12 @@ import Sidebar from '~/components/Sidebar';
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userSession = await isAuthenticated(request);
 
-  return {
-    userSession,
-  };
+  return userSession;
 };
 
 export default function ProtectedLayout() {
   const navigation = useNavigation();
-  const { userSession } = useLoaderData<typeof loader>();
+  const userSession = useLoaderData<typeof loader>();
 
   const isLoading = navigation.state === 'loading';
 

@@ -66,12 +66,10 @@ export default function LoginPage() {
           label="Username"
           type="text"
           placeholder="Your username"
-          icon={
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
+          icon={<UserCircleIcon className="form-input-icon" />}
         />
         <button
-          className="btn bg-primary text-base-100 rounded-lg mt-4 w-full"
+          className="btn mt-4 w-full rounded-lg bg-primary text-base-100"
           type="submit"
         >
           Login

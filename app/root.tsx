@@ -15,16 +15,20 @@ import { useEffect } from 'react';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 
-import '~/tailwind.css';
+import '~/index.css';
 
 import LoadingBar from './components/LoadingBar';
 
-export function useRouteData<T>(routeId: string): T | undefined {
+export function useRouteData<T>(routeId: string): T {
   const matches = useMatches();
 
   const data = matches.find(match => match.id === routeId)?.data;
 
-  return data as T | undefined;
+  if (!data) {
+    throw new Error(`Route ${routeId} does not exist`);
+  }
+
+  return data as T;
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {

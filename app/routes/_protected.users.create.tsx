@@ -61,17 +61,13 @@ export default function CreateUserPage() {
           label="Username"
           type="text"
           placeholder="Username"
-          icon={
-            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
+          icon={<IdentificationIcon className="form-input-icon" />}
         />
         <Select
           id="role"
           name="role"
           label="Choose role"
-          icon={
-            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
+          icon={<UserGroupIcon className="form-input-icon" />}
         >
           <option value="" disabled>
             Select a role
@@ -87,9 +83,7 @@ export default function CreateUserPage() {
           label="Password"
           type="password"
           placeholder="Password"
-          icon={
-            <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
+          icon={<KeyIcon className="form-input-icon" />}
         />
       </div>
       <div className="mt-6 flex justify-end gap-4">

@@ -18,8 +18,6 @@ import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema, AssignmentUpdateSchema } from '~/schemas/assignment';
 
-import { flatSafeParseAsync } from '~/utils/zod.server';
-
 import { isAuthorized } from '~/services/auth.server';
 
 import { Input } from '~/components/forms/Input';
@@ -96,7 +94,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     throw new Response('Assignment Not Found', { status: 404 });
   }
 
-  const assignment = await flatSafeParseAsync(AssignmentSerializedSchema, row);
+  const assignment = await AssignmentSerializedSchema.parseAsync(row);
 
   return { assignment };
 };
@@ -113,9 +111,7 @@ export default function EditAssignmentPage() {
           type="text"
           placeholder="Title"
           defaultValue={assignment.title}
-          icon={
-            <DocumentIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
+          icon={<DocumentIcon className="form-input-icon" />}
         />
         <Input
           name="author"
@@ -123,18 +119,14 @@ export default function EditAssignmentPage() {
           type="text"
           defaultValue={assignment.author.username!}
           disabled
-          icon={
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
+          icon={<UserCircleIcon className="form-input-icon" />}
         />
         <TextArea
           name="content"
           label="Content"
           placeholder="Content"
           defaultValue={assignment.content}
-          icon={
-            <DocumentTextIcon className="pointer-events-none absolute left-3 top-[0.55rem] h-[18px] w-[18px]" />
-          }
+          icon={<DocumentTextIcon className="form-input-icon" />}
         />
       </div>
       <div className="mt-6 flex justify-end gap-4">

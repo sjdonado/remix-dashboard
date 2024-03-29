@@ -20,7 +20,6 @@ import {
 } from '~/components/Table';
 import Search from '~/components/Search';
 import Avatar from '~/components/Avatar';
-import { flatSafeParseAsyncAll } from '~/utils/zod.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -56,7 +55,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .limit(PAGE_SIZE),
   ]);
 
-  const serializedUsers = await flatSafeParseAsyncAll(UserSerializedSchema, users);
+  const serializedUsers = await Promise.all(
+    users.map(user => UserSerializedSchema.parseAsync(user))
+  );
 
   return json({
     totalPages: Math.ceil(Number(totalRows) / PAGE_SIZE),
@@ -79,14 +80,14 @@ export default function UsersPage() {
       <TableContainer totalPages={totalPages} currentPage={currentPage}>
         <MobileTable>
           {users?.map(user => (
-            <div key={user.id} className="w-full bg-base-100 border-b p-4">
+            <div key={user.id} className="w-full border-b bg-base-100 p-4">
               <div className="flex flex-col items-start gap-4">
-                <div className="flex items-center justify-between gap-2 w-full">
+                <div className="flex w-full items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <Avatar name={user.username} />
                     <p className="text-sm text-gray-500">{user.username}</p>
                   </div>
-                  <span className="text-xs min-w-fit">
+                  <span className="min-w-fit text-xs">
                     {formatDateToLocal(user.createdAt)}
                   </span>
                 </div>
@@ -116,7 +117,7 @@ export default function UsersPage() {
                 </div>
               </td>
               <td className="flex-1 whitespace-nowrap">{user.role}</td>
-              <td className="whitespace-nowrap px-3 py-3">
+              <td className="whitespace-nowrap p-3">
                 {formatDateToLocal(user.createdAt)}
               </td>
               <td className="flex-1 whitespace-nowrap">

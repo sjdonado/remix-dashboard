@@ -24,7 +24,6 @@ import {
 } from '~/components/Table';
 import Search from '~/components/Search';
 import Avatar from '~/components/Avatar';
-import { flatSafeParseAsyncAll } from '~/utils/zod.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userSession = await isAuthenticated(request);
@@ -73,9 +72,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .limit(PAGE_SIZE),
   ]);
 
-  const serializedAssignments = await flatSafeParseAsyncAll(
-    AssignmentSerializedSchema,
-    assignments
+  const serializedAssignments = await Promise.all(
+    assignments.map(assignment => AssignmentSerializedSchema.parseAsync(assignment))
   );
 
   return json({
@@ -99,19 +97,19 @@ export default function AssignmentsPage() {
       <TableContainer totalPages={totalPages} currentPage={currentPage}>
         <MobileTable>
           {assignments?.map(assignment => (
-            <div key={assignment.id} className="w-full bg-base-100 border-b p-4">
+            <div key={assignment.id} className="w-full border-b bg-base-100 p-4">
               <div className="flex flex-col items-start gap-4">
-                <div className="flex items-center justify-between gap-2 w-full">
+                <div className="flex w-full items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <Avatar name={assignment.author.username!} />
                     <p className="text-sm text-gray-500">{assignment.author.username}</p>
                   </div>
-                  <span className="text-xs min-w-fit">
+                  <span className="min-w-fit text-xs">
                     {formatDateToLocal(assignment.createdAt)}
                   </span>
                 </div>
                 <p>{assignment.title}</p>
-                <p className="text-sm line-clamp-3">{assignment.content}</p>
+                <p className="line-clamp-3 text-sm">{assignment.content}</p>
               </div>
               <div className="flex items-center justify-end gap-2 pt-4">
                 <ShowBtnLink to={`${assignment.id}/show`} />
@@ -143,7 +141,7 @@ export default function AssignmentsPage() {
               <td className="flex-1">
                 <p className="line-clamp-2 max-w-sm">{assignment.content}</p>
               </td>
-              <td className="whitespace-nowrap px-3 py-3">
+              <td className="whitespace-nowrap p-3">
                 {formatDateToLocal(assignment.createdAt)}
               </td>
               <td className="flex-1 whitespace-nowrap">

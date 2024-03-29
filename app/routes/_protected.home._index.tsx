@@ -12,7 +12,6 @@ import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
 import { PAGE_SIZE } from '~/constants/search.server';
 import { formatDateToLocal } from '~/utils/date';
-import { flatSafeParseAsyncAll } from '~/utils/zod.server';
 
 import Pagination from '~/components/Pagination';
 import Avatar from '~/components/Avatar';
@@ -60,9 +59,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .limit(PAGE_SIZE),
   ]);
 
-  const serializedAssignments = await flatSafeParseAsyncAll(
-    AssignmentSerializedSchema,
-    assignments
+  const serializedAssignments = await Promise.all(
+    assignments.map(assignment => AssignmentSerializedSchema.parseAsync(assignment))
   );
 
   return json({
@@ -83,31 +81,34 @@ export default function HomePage() {
   }, [searchParams]);
 
   return (
-    <div id="assignments" className="flex flex-col gap-4 overflow-y-auto h-[92vh]">
+    <div id="assignments" className="flex h-[92vh] flex-col gap-4 overflow-y-auto">
       <div className="flex flex-col gap-2">
         {assignments?.map(assignment => (
-          <div key={assignment.id} className="w-full border rounded-lg bg-base-100 p-4">
-            <div className="flex items-start justify-start pb-4 gap-2">
+          <div
+            key={assignment.id}
+            className="w-full rounded-lg border border-base-200 bg-base-100 p-4"
+          >
+            <div className="flex items-start justify-start gap-2 pb-4">
               <Avatar
-                className="!w-10 !h-10 [&>span]:text-sm"
+                className="!h-10 !w-10 [&>span]:text-sm"
                 name={assignment.author.username!}
               />
               <div className="flex flex-col items-start gap-1">
                 <Link to={`/home/${assignment.id}/show`} className="link">
                   {assignment.title}
                 </Link>
-                <span className="text-xs min-w-fit">
+                <span className="min-w-fit text-xs">
                   {formatDateToLocal(assignment.createdAt)}
                 </span>
               </div>
             </div>
             <div className="flex w-full items-center justify-between pt-1">
-              <p className="text-sm line-clamp-3">{assignment.content}</p>
+              <p className="line-clamp-3 text-sm">{assignment.content}</p>
             </div>
           </div>
         ))}
       </div>
-      <div className="flex-1 flex justify-center">
+      <div className="flex flex-1 justify-center">
         <Pagination totalPages={totalPages} currentPage={currentPage} />
       </div>
     </div>

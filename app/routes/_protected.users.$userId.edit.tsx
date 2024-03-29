@@ -1,10 +1,6 @@
 import { eq } from 'drizzle-orm';
 import invariant from 'tiny-invariant';
-import {
-  IdentificationIcon,
-  UserCircleIcon,
-  UserGroupIcon,
-} from '@heroicons/react/24/outline';
+import { IdentificationIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { redirectWithToast } from 'remix-toast';
 import type { SqliteError } from 'better-sqlite3';
 
@@ -18,7 +14,7 @@ import { useLoaderData } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
-import type { AppUserSession } from '~/schemas/session';
+import type { UserSession } from '~/schemas/user';
 import { UserUpdateSchema } from '~/schemas/user';
 
 import { ALL_USER_ROLES, type UserRole } from '~/constants/user';
@@ -48,13 +44,12 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     return validationError(fieldValues.error);
   }
 
-  const { name, username, role } = fieldValues.data;
+  const { username, role } = fieldValues.data;
 
   try {
     await db
       .update(usersTable)
       .set({
-        name,
         username,
         role: role as UserRole,
         updatedAt: new Date().toISOString(),
@@ -79,7 +74,6 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const [user] = await db
     .select({
       id: usersTable.id,
-      name: usersTable.name,
       username: usersTable.username,
       role: usersTable.role,
     })
@@ -96,30 +90,18 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function EditUserPage() {
   const { user } = useLoaderData<typeof loader>();
-  const userSession = useRouteData<AppUserSession>('routes/_protected');
+  const userSession = useRouteData<UserSession>('routes/_protected');
 
   return (
     <ValidatedForm validator={validator} method="post">
       <div className="rounded-lg bg-base-200/30 p-4 md:p-6">
-        <Input
-          name="name"
-          label="Name"
-          type="text"
-          placeholder="Your name"
-          defaultValue={user.name}
-          icon={
-            <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
-        />
         <Input
           name="username"
           label="Username"
           type="text"
           placeholder="Your username"
           defaultValue={user.username}
-          icon={
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
+          icon={<IdentificationIcon className="form-input-icon" />}
         />
         <Select
           id="role"
@@ -127,12 +109,10 @@ export default function EditUserPage() {
           label="Choose role"
           defaultValue={user.role}
           disabled={userSession?.role === user.role}
-          icon={
-            <UserGroupIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />
-          }
+          icon={<UserGroupIcon className="form-input-icon" />}
         >
           <option value="" disabled>
-            Select a role
+            -- Select --
           </option>
           {ALL_USER_ROLES.map(role => (
             <option key={role} value={role}>
