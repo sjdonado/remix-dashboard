@@ -9,8 +9,6 @@ import { withZod } from '@remix-validated-form/with-zod';
 
 import { UserLoginSchema } from '~/schemas/user';
 
-import { auth } from '~/services/auth.server';
-
 import { Input } from '~/components/forms/Input';
 
 const validator = withZod(UserLoginSchema);
