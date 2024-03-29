@@ -11,13 +11,14 @@ import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
 
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import type { UIMatch } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema, AssignmentUpdateSchema } from '~/schemas/assignment';
+
+import { flatSafeParseAsync } from '~/utils/zod.server';
 
 import { isAuthorized } from '~/services/auth.server';
 
@@ -87,20 +88,17 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       },
     })
     .from(assignmentsTable)
-    .where(eq(assignmentsTable.id, params.assignmentId))
     .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
+    .where(eq(assignmentsTable.id, params.assignmentId))
     .limit(1);
 
   if (!row) {
-    throw new Response('Not Found', { status: 404 });
+    throw new Response('Assignment Not Found', { status: 404 });
   }
 
-  const result = AssignmentSerializedSchema.safeParse(row);
-  if (!result.success) {
-    throw new Error(result.error.toString());
-  }
+  const assignment = await flatSafeParseAsync(AssignmentSerializedSchema, row);
 
-  return json({ assignment: result.data });
+  return { assignment };
 };
 
 export default function EditAssignmentPage() {
@@ -123,7 +121,7 @@ export default function EditAssignmentPage() {
           name="author"
           label="Author"
           type="text"
-          defaultValue={assignment.author?.name}
+          defaultValue={assignment.author.username!}
           disabled
           icon={
             <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2" />

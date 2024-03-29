@@ -3,7 +3,7 @@ import { createCookieSessionStorage } from '@remix-run/node';
 
 import { UserSessionSchema, type UserSession } from '~/schemas/user';
 
-import { serialize } from '~/utils/zod.server';
+import { flatSafeParseAsync } from '~/utils/zod.server';
 import { HOST, SECRET_KEY } from '~/config/env.server';
 
 export const COOKIES_DEFAULTS = {
@@ -32,7 +32,7 @@ export const getUserSessionData = async (request: Request) => {
     return;
   }
 
-  const serializedSession = await serialize(UserSessionSchema, data);
+  const serializedSession = await flatSafeParseAsync(UserSessionSchema, data);
 
   return serializedSession;
 };

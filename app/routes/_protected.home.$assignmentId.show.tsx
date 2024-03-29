@@ -3,13 +3,14 @@ import invariant from 'tiny-invariant';
 import { redirectWithToast } from 'remix-toast';
 
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import type { UIMatch } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema } from '~/schemas/assignment';
+
+import { flatSafeParseAsync } from '~/utils/zod.server';
 
 import { Breadcrumb } from '~/components/Breadcrumbs';
 import Assignment from '~/components/Assignment';
@@ -31,7 +32,6 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       createdAt: assignmentsTable.createdAt,
       author: {
         id: assignmentsTable.authorId,
-        name: usersTable.name,
         username: usersTable.username,
       },
     })
@@ -47,12 +47,9 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     });
   }
 
-  const result = AssignmentSerializedSchema.safeParse(row);
-  if (!result.success) {
-    throw new Error(result.error.toString());
-  }
+  const assignment = await flatSafeParseAsync(AssignmentSerializedSchema, row);
 
-  return json({ assignment: result.data });
+  return { assignment };
 };
 
 export default function HomeShowAssignmentPage() {

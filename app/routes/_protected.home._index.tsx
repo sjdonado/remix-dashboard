@@ -12,6 +12,7 @@ import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
 import { PAGE_SIZE } from '~/constants/search.server';
 import { formatDateToLocal } from '~/utils/date';
+import { flatSafeParseAsyncAll } from '~/utils/zod.server';
 
 import Pagination from '~/components/Pagination';
 import Avatar from '~/components/Avatar';
@@ -59,17 +60,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .limit(PAGE_SIZE),
   ]);
 
-  const parsedAssignments = assignments.map(assignment => {
-    const result = AssignmentSerializedSchema.safeParse(assignment);
-    if (!result.success) {
-      throw new Error(result.error.toString());
-    }
-    return result.data;
-  });
+  const serializedAssignments = await flatSafeParseAsyncAll(
+    AssignmentSerializedSchema,
+    assignments
+  );
 
   return json({
     totalPages: Math.ceil(Number(count) / PAGE_SIZE),
-    assignments: parsedAssignments,
+    assignments: serializedAssignments,
   });
 };
 
@@ -92,7 +90,7 @@ export default function HomePage() {
             <div className="flex items-start justify-start pb-4 gap-2">
               <Avatar
                 className="!w-10 !h-10 [&>span]:text-sm"
-                name={assignment.author.username}
+                name={assignment.author.username!}
               />
               <div className="flex flex-col items-start gap-1">
                 <Link to={`/home/${assignment.id}/show`} className="link">

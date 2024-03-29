@@ -20,6 +20,7 @@ import {
 } from '~/components/Table';
 import Search from '~/components/Search';
 import Avatar from '~/components/Avatar';
+import { flatSafeParseAsyncAll } from '~/utils/zod.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -33,8 +34,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .from(usersTable)
       .where(
         query
-          ? sql`${usersTable.name} COLLATE NOCASE LIKE ${`%${query}%`} 
-            or ${usersTable.username} COLLATE NOCASE LIKE ${`%${query}%`}`
+          ? sql`${usersTable.username} COLLATE NOCASE LIKE ${`%${query}%`} 
+            or ${usersTable.role} COLLATE NOCASE LIKE ${`%${query}%`}`
           : undefined
       )
   );
@@ -45,7 +46,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .with(sq)
       .select({
         id: sq.id,
-        name: sq.name,
         username: sq.username,
         role: sq.role,
         createdAt: sq.createdAt,
@@ -56,17 +56,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .limit(PAGE_SIZE),
   ]);
 
-  const parsedUsers = users.map(user => {
-    const result = UserSerializedSchema.safeParse(user);
-    if (!result.success) {
-      throw new Error(result.error.toString());
-    }
-    return result.data;
-  });
+  const serializedUsers = await flatSafeParseAsyncAll(UserSerializedSchema, users);
 
   return json({
     totalPages: Math.ceil(Number(totalRows) / PAGE_SIZE),
-    users: parsedUsers,
+    users: serializedUsers,
   });
 };
 
@@ -89,8 +83,8 @@ export default function UsersPage() {
               <div className="flex flex-col items-start gap-4">
                 <div className="flex items-center justify-between gap-2 w-full">
                   <div className="flex items-center gap-2">
-                    <Avatar name={user.name} />
-                    <p className="text-sm text-gray-500">{user.name}</p>
+                    <Avatar name={user.username} />
+                    <p className="text-sm text-gray-500">{user.username}</p>
                   </div>
                   <span className="text-xs min-w-fit">
                     {formatDateToLocal(user.createdAt)}
@@ -103,13 +97,13 @@ export default function UsersPage() {
                 <DeleteBtnLink
                   to={`${user.id}/delete`}
                   title="Delete User"
-                  recordName={user.name}
+                  recordName={user.username}
                 />
               </div>
             </div>
           ))}
         </MobileTable>
-        <ResponsiveTable headers={['Full Name', 'Username', 'Role', 'Created At']}>
+        <ResponsiveTable headers={['Username', 'Role', 'Created At']}>
           {users?.map(user => (
             <tr
               key={user.id}
@@ -117,11 +111,10 @@ export default function UsersPage() {
             >
               <td className="whitespace-nowrap py-3 pl-6 pr-3">
                 <div className="flex items-center gap-2">
-                  <Avatar name={user.name} />
-                  <p>{user.name}</p>
+                  <Avatar name={user.username} />
+                  <p>{user.username}</p>
                 </div>
               </td>
-              <td className="flex-1 whitespace-nowrap">{user.username}</td>
               <td className="flex-1 whitespace-nowrap">{user.role}</td>
               <td className="whitespace-nowrap px-3 py-3">
                 {formatDateToLocal(user.createdAt)}
@@ -132,7 +125,7 @@ export default function UsersPage() {
                   <DeleteBtnLink
                     to={`${user.id}/delete`}
                     title="Delete User"
-                    recordName={user.name}
+                    recordName={user.username}
                   />
                 </div>
               </td>

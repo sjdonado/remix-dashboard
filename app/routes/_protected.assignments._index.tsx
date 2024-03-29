@@ -11,7 +11,7 @@ import { AssignmentSerializedSchema } from '~/schemas/assignment';
 import { formatDateToLocal } from '~/utils/date';
 import { PAGE_SIZE } from '~/constants/search.server';
 
-import { auth, isAuthenticated, isAuthorized } from '~/services/auth.server';
+import { isAuthenticated } from '~/services/auth.server';
 
 import {
   CreateBtnLink,
@@ -24,7 +24,7 @@ import {
 } from '~/components/Table';
 import Search from '~/components/Search';
 import Avatar from '~/components/Avatar';
-import { UserRole } from '~/constants/user';
+import { flatSafeParseAsyncAll } from '~/utils/zod.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userSession = await isAuthenticated(request);
@@ -56,7 +56,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
           query
             ? sql`(${assignmentsTable.title} COLLATE NOCASE LIKE ${`%${query}%`} 
             or ${assignmentsTable.content} COLLATE NOCASE LIKE ${`%${query}%`})
-            or ${usersTable.name} COLLATE NOCASE LIKE ${`%${query}%`}`
+            or ${usersTable.username} COLLATE NOCASE LIKE ${`%${query}%`}`
             : undefined
         )
       )
@@ -73,17 +73,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       .limit(PAGE_SIZE),
   ]);
 
-  const parsedAssignments = assignments.map(assignment => {
-    const result = AssignmentSerializedSchema.safeParse(assignment);
-    if (!result.success) {
-      throw new Error(result.error.toString());
-    }
-    return result.data;
-  });
+  const serializedAssignments = await flatSafeParseAsyncAll(
+    AssignmentSerializedSchema,
+    assignments
+  );
 
   return json({
     totalPages: Math.ceil(Number(totalRows) / PAGE_SIZE),
-    assignments: parsedAssignments,
+    assignments: serializedAssignments,
   });
 };
 
@@ -106,7 +103,7 @@ export default function AssignmentsPage() {
               <div className="flex flex-col items-start gap-4">
                 <div className="flex items-center justify-between gap-2 w-full">
                   <div className="flex items-center gap-2">
-                    <Avatar name={assignment.author.username} />
+                    <Avatar name={assignment.author.username!} />
                     <p className="text-sm text-gray-500">{assignment.author.username}</p>
                   </div>
                   <span className="text-xs min-w-fit">
@@ -139,7 +136,7 @@ export default function AssignmentsPage() {
               </td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex items-center gap-2">
-                  <Avatar name={assignment.author.username} />
+                  <Avatar name={assignment.author.username!} />
                   <p>{assignment.author.username}</p>
                 </div>
               </td>
