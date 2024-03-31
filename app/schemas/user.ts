@@ -12,7 +12,7 @@ export const UserSchema = z.object({
 
 export const UserLoginSchema = UserSchema.pick({
   username: true,
-  password: true,
+  role: true,
 }).extend({
   redirectTo: z.string().nullish(),
 });
@@ -25,8 +25,7 @@ export const UserCreateSchema = UserSchema.omit({
 
 export const UserUpdateSchema = UserSchema.pick({
   username: true,
-}).extend({
-  role: z.enum(ALL_USER_ROLES).optional(),
+  role: true,
 });
 
 export const UserSessionSchema = UserSchema.pick({

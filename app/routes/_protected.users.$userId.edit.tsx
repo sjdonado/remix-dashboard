@@ -94,7 +94,7 @@ export default function EditUserPage() {
 
   return (
     <ValidatedForm validator={validator} method="post">
-      <div className="rounded-lg bg-base-200/30 p-4 md:p-6">
+      <div className="rounded-lg border border-base-300 bg-base-200/50 p-4 md:p-6">
         <Input
           name="username"
           label="Username"

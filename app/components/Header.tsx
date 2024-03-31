@@ -1,14 +1,4 @@
-import {
-  ArrowLeftOnRectangleIcon,
-  Bars3Icon,
-  ChevronDownIcon,
-  MoonIcon,
-  SunIcon,
-  UserIcon,
-} from '@heroicons/react/24/outline';
-
-import { DialogModalButton } from './dialog/ConfirmationDialog';
-import { Link } from '@remix-run/react';
+import { Bars3Icon, MoonIcon, SunIcon } from '@heroicons/react/24/outline';
 
 interface HeaderProps {
   username: string;
@@ -16,52 +6,19 @@ interface HeaderProps {
 
 export default function Header({ username }: HeaderProps) {
   return (
-    <header className="navbar flex items-center justify-between h-12 px-4 md:px-12 md:justify-end">
+    <header className="navbar flex h-12 items-center justify-between px-4 md:justify-end md:px-12">
       <label
         htmlFor="header"
-        className="btn btn-ghost rounded-lg drawer-button md:hidden"
+        className="btn btn-ghost drawer-button rounded-lg md:hidden"
       >
-        <Bars3Icon className="h-6 w-6" />
+        <Bars3Icon className="size-6" />
       </label>
-      <div className="flex items-center justify-center ms:gap-1">
-        <label className="btn btn-ghost rounded-lg swap swap-rotate">
+      <div className="ms:gap-1 flex items-center justify-center">
+        <label className="btn btn-ghost swap swap-rotate rounded-lg">
           <input type="checkbox" className="theme-controller" value="dark" />
-          <SunIcon className="swap-off fill-current w-6 h-6" />
-          <MoonIcon className="swap-on fill-current w-6 h-6" />
+          <SunIcon className="swap-off size-6 fill-current" />
+          <MoonIcon className="swap-on size-6 fill-current" />
         </label>
-        <div className="dropdown dropdown-end">
-          <label tabIndex={0} className="btn btn-ghost rounded-lg p-2">
-            {username}
-            <ChevronDownIcon className="h-4 w-4" />
-          </label>
-          <ul
-            tabIndex={0}
-            className="menu dropdown-content z-[1] shadow-lg bg-base-100 rounded-box rounded-lg w-52 right-0 mt-1 p-2"
-          >
-            <li onClick={() => (document.activeElement as HTMLInputElement).blur()}>
-              <Link
-                to="/me"
-                className="flex items-center justify-start block rounded-lg px-4 py-2 text-sm hover:bg-content-200"
-                role="menuitem"
-              >
-                <UserIcon className="w-6 h-6" />
-                My Profile
-              </Link>
-            </li>
-            <li>
-              <DialogModalButton
-                title="Logout"
-                description="Are you sure you want to log out? You will be redirected to the login page."
-                button="Logout"
-                action="/logout"
-                className="flex items-center justify-start block rounded-lg px-4 py-2 text-sm hover:bg-content-200"
-              >
-                <ArrowLeftOnRectangleIcon className="w-6 h-6" />
-                Logout
-              </DialogModalButton>
-            </li>
-          </ul>
-        </div>
       </div>
     </header>
   );

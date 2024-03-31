@@ -33,7 +33,7 @@ export default function LoadingBar() {
     >
       <div
         ref={ref}
-        className={clsx('h-full bg-secondary transition-all duration-300 ease-in-out', {
+        className={clsx('h-full bg-primary transition-all duration-300 ease-in-out', {
           'w-0 opacity-0 transition-none': isIdle && animationComplete,
           'w-full': isIdle && !animationComplete,
           'w-4/12': isSubmitting,

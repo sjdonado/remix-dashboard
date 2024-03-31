@@ -33,7 +33,7 @@ export const DialogModal = forwardRef(function ConfirmationDialog(
             Cancel
           </button>
           <Form action={action} {...{ method }}>
-            <button className="btn btn-error btn-sm h-10 w-[90px] rounded-lg text-white">
+            <button className="btn btn-error btn-sm h-10 w-[90px] rounded-lg text-base-100">
               {button}
             </button>
           </Form>
