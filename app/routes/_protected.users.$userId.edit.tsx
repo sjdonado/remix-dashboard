@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import invariant from 'tiny-invariant';
-import { IdentificationIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { IdentificationIcon } from '@heroicons/react/24/outline';
 import { redirectWithToast } from 'remix-toast';
 import type { SqliteError } from 'better-sqlite3';
 
@@ -17,16 +17,16 @@ import { usersTable } from '~/db/schema';
 import type { UserSession } from '~/schemas/user';
 import { UserUpdateSchema } from '~/schemas/user';
 
-import { ALL_USER_ROLES, type UserRole } from '~/constants/user';
+import { type UserRole } from '~/constants/user';
 import { duplicateUsernameError } from '~/errors/form.server';
 
 import { useRouteData } from '~/root';
 
 import { Breadcrumb } from '~/components/Breadcrumbs';
 import { Input } from '~/components/forms/Input';
-import { Select } from '~/components/forms/Select';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
+import UserRoleSelect from '~/components/select/UserRoleSelect';
 
 const validator = withZod(UserUpdateSchema);
 
@@ -103,23 +103,11 @@ export default function EditUserPage() {
           defaultValue={user.username}
           icon={<IdentificationIcon className="form-input-icon" />}
         />
-        <Select
-          id="role"
+        <UserRoleSelect
           name="role"
-          label="Choose role"
           defaultValue={user.role}
-          disabled={userSession?.role === user.role}
-          icon={<UserGroupIcon className="form-input-icon" />}
-        >
-          <option value="" disabled>
-            -- Select --
-          </option>
-          {ALL_USER_ROLES.map(role => (
-            <option key={role} value={role}>
-              {role}
-            </option>
-          ))}
-        </Select>
+          disabled={userSession.role === user.role}
+        />
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <BackButton message="Cancel" />

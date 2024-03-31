@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { IdentificationIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { IdentificationIcon } from '@heroicons/react/24/outline';
 import { jsonWithSuccess } from 'remix-toast';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
@@ -20,6 +20,7 @@ import { Input } from '~/components/forms/Input';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
 import { Breadcrumb, Breadcrumbs } from '~/components/Breadcrumbs';
+import UserRoleSelect from '~/components/select/UserRoleSelect';
 
 const validator = withZod(UserUpdateSchema);
 
@@ -38,11 +39,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return validationError(fieldValues.error);
   }
 
-  const { username } = fieldValues.data;
+  const { username, role } = fieldValues.data;
 
   await db
     .update(usersTable)
-    .set({ username, updatedAt: new Date().toISOString() })
+    .set({ username, role })
     .where(eq(usersTable.id, userSession.id));
 
   return jsonWithSuccess({}, 'Profile updated successfully');
@@ -80,14 +81,7 @@ export default function MePage() {
             defaultValue={user.username}
             icon={<IdentificationIcon className="form-input-icon" />}
           />
-          <Input
-            id="role"
-            name="role"
-            label="Your role"
-            defaultValue={user.role}
-            disabled
-            icon={<UserGroupIcon className="form-input-icon" />}
-          ></Input>
+          <UserRoleSelect name="role" defaultValue={user.role} />
         </div>
         <div className="mt-6 flex justify-end gap-4">
           <BackButton message="Back" />

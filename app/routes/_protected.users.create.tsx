@@ -18,7 +18,7 @@ import { duplicateUsernameError } from '~/errors/form.server';
 
 import { Breadcrumb } from '~/components/Breadcrumbs';
 import { Input } from '~/components/forms/Input';
-import { Select } from '~/components/forms/Select';
+import { Select } from '~/components/select/Select';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
 
