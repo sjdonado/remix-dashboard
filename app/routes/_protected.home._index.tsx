@@ -86,7 +86,7 @@ export default function HomePage() {
         {assignments?.map(assignment => (
           <div
             key={assignment.id}
-            className="w-full rounded-lg border border-base-200 bg-base-100 p-4"
+            className="w-full rounded-lg border border-base-300 bg-base-100 p-4"
           >
             <div className="flex items-start justify-start gap-2 pb-4">
               <Avatar

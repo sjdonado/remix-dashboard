@@ -5,11 +5,11 @@ import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
 
 export default function Login() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-base-200/50 p-4">
-      <div className="flex items-center p-auto bg-primary rounded-md w-full h-32 sm:w-96">
-        <AppLogo />
+    <div className="flex min-h-screen flex-col items-center justify-center bg-base-200/50 p-4">
+      <div className="flex h-32 w-full items-center justify-center rounded-md bg-primary sm:w-96">
+        <AppLogo className="text-3xl text-white" />
       </div>
-      <div className="card rounded-md w-full bg-base-100 shadow-xl m-4 sm:w-96">
+      <div className="card m-4 w-full rounded-md bg-base-100 shadow-xl sm:w-96">
         <Outlet />
       </div>
     </div>
@@ -17,5 +17,5 @@ export default function Login() {
 }
 
 export function ErrorBoundary() {
-  return <CustomErrorBoundary className="w-full h-full" />;
+  return <CustomErrorBoundary className="size-full" />;
 }

@@ -17,6 +17,7 @@ import { Input } from '~/components/forms/Input';
 import { authenticate } from '~/services/auth.server';
 import { eq } from 'drizzle-orm';
 import { UserRole } from '~/constants/user';
+import UserRoleSelect from '~/components/select/UserRoleSelect';
 
 const validator = withZod(UserLoginSchema);
 
@@ -34,9 +35,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return validationError(fieldValues.error);
   }
 
-  const { username, redirectTo } = fieldValues.data;
+  const { username, role, redirectTo } = fieldValues.data;
 
-  await db.insert(usersTable).values({ username }).onConflictDoNothing();
+  await db.insert(usersTable).values({ username, role }).onConflictDoNothing();
 
   const [user] = await db
     .select()
@@ -68,6 +69,7 @@ export default function LoginPage() {
           placeholder="Your username"
           icon={<UserCircleIcon className="form-input-icon" />}
         />
+        <UserRoleSelect name="role" />
         <button
           className="btn mt-4 w-full rounded-lg bg-primary text-base-100"
           type="submit"

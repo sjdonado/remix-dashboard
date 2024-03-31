@@ -1,12 +1,16 @@
-import { AcademicCapIcon } from '@heroicons/react/24/outline';
+import { AcademicCapIcon } from '@heroicons/react/24/solid';
+import clsx from 'clsx';
 
-export default function AppLogo() {
+export default function AppLogo({ className }: { className?: string }) {
   return (
     <div
-      className={`flex justify-center items-center gap-1 leading-none text-white w-full`}
+      className={clsx(
+        'flex items-center justify-center gap-2 rounded-lg p-1 text-primary',
+        className
+      )}
     >
-      <AcademicCapIcon className="h-10 w-10 rotate-[15deg]" />
-      <p className="text-3xl">Dashboard</p>
+      <AcademicCapIcon className="size-8 rotate-[15deg] font-medium" />
+      <span>Dashboard</span>
     </div>
   );
 }

@@ -12,14 +12,14 @@ interface TableProps {
 }
 
 export function TableContainer({ totalPages, currentPage, children }: TableProps) {
-  if (totalPages === 0) return <p className="text-center m-4">No results</p>;
+  if (totalPages === 0) return <p className="m-4 text-center">No results</p>;
 
   return (
     <div className="flex flex-col gap-4">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-base-200/50 p-2 md:pt-0">{children}</div>
       </div>
-      <div className="flex-1 flex justify-center">
+      <div className="flex flex-1 justify-center">
         <Pagination totalPages={totalPages} currentPage={currentPage} />
       </div>
     </div>
@@ -64,7 +64,7 @@ export function ShowBtnLink({ to }: { to: string }) {
       to={`${to}?${searchParams.toString()}`}
       className="rounded-lg border p-2 hover:bg-base-200"
     >
-      <EyeIcon className="h-5" />
+      <EyeIcon className="size-5" />
     </Link>
   );
 }
@@ -73,10 +73,10 @@ export function CreateBtnLink({ to, title }: { to: string; title: string }) {
   return (
     <Link
       to={to}
-      className="flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-white hover:bg-primary/50"
+      className="flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-white"
     >
+      <PlusIcon className="size-5" />
       <span className="hidden md:block">{title}</span>
-      <PlusIcon className="h-5" />
     </Link>
   );
 }

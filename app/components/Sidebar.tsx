@@ -33,12 +33,11 @@ export default function Sidebar({ userSession, children }: SidebarProps) {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <div className="flex min-h-full w-60 flex-col gap-2 border-r p-4 text-base-content sm:w-64">
-          <div className="m-auto mb-2 flex shrink-0 items-center">
+        <div className="flex min-h-full w-60 flex-col gap-2 border-r p-2 text-base-content sm:w-64">
+          <div className="m-auto rounded-lg">
             <AppLogo />
-            <span className="font-medium text-primary">Dashboard</span>
           </div>
-          <ul className="flex flex-1 flex-col gap-2">
+          <ul className="flex flex-1 flex-col gap-2 p-4">
             <li>
               <div className="flex flex-wrap items-center justify-start gap-2 p-3">
                 <Avatar name={userSession.username} />

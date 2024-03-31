@@ -13,7 +13,7 @@ export default function Assignment({ assignment }: AssignmentProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="rounded-lg border border-base-200 bg-base-200/50 p-2">
+      <div className="rounded-lg border border-base-300 bg-base-200/50 p-2">
         <div className="flex flex-col gap-4 rounded-lg bg-base-100 p-8">
           <div className="flex flex-col gap-6">
             <div className="flex items-center gap-2 text-sm">
