@@ -34,5 +34,9 @@ export const AssignmentUpdateSchema = AssignmentSchema.pick({
   type: true,
 });
 
+export const AssignmentUpdateStatusSchema = AssignmentSchema.pick({
+  status: true,
+});
+
 export type Assignment = z.infer<typeof AssignmentSchema>;
 export type AssignmentSerialized = z.infer<typeof AssignmentSerializedSchema>;

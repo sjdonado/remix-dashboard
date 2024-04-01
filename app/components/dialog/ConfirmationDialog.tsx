@@ -19,6 +19,7 @@ export const DialogModal = forwardRef(function ConfirmationDialog(
 ) {
   return (
     <dialog
+      id="confirmation-modal"
       ref={ref as MutableRefObject<HTMLDialogElement>}
       className="modal modal-bottom sm:modal-middle sm:rounded-lg"
     >

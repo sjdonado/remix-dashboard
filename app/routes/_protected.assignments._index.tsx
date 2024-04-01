@@ -24,6 +24,7 @@ import {
 import Search from '~/components/Search';
 import Avatar from '~/components/Avatar';
 import { AssignmentTypeBadge } from '~/components/badge/AssignmentTypeBadge';
+import { AssignmentUpdateStatusDialogButton } from '~/components/dialog/AssignmentUpdateStatusDialog';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userSession = await isAuthenticated(request);
@@ -133,13 +134,13 @@ export default function AssignmentsPage() {
         <ResponsiveTable
           headers={[
             'Title',
+            'Status',
             'Type',
             'Author',
             'Content',
             'Points',
             'Due At',
             'Created At',
-            'Updated At',
           ]}
         >
           {assignments?.map(assignment => (
@@ -147,15 +148,21 @@ export default function AssignmentsPage() {
               key={assignment.id}
               className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
             >
-              <td className="flex-1">
+              <td className="w-44">
                 <Link to={`${assignment.id}/show`} className="link">
                   <p className="line-clamp-1">{assignment.title}</p>
                 </Link>
               </td>
               <td>
+                <AssignmentUpdateStatusDialogButton
+                  assignmentId={assignment.id}
+                  status={assignment.status}
+                />
+              </td>
+              <td>
                 <AssignmentTypeBadge type={assignment.type} />
               </td>
-              <td className="flex-1 whitespace-nowrap">
+              <td className="whitespace-nowrap">
                 <div className="flex items-center gap-2">
                   <Avatar
                     name={assignment.author.username!}
@@ -164,10 +171,10 @@ export default function AssignmentsPage() {
                   <p className="text-sm">{assignment.author.username}</p>
                 </div>
               </td>
-              <td className="flex-1">
+              <td>
                 <p className="line-clamp-2 max-w-sm">{assignment.content}</p>
               </td>
-              <td className="flex-1">
+              <td>
                 <p>{assignment.points}</p>
               </td>
               <td className="whitespace-nowrap p-3">
@@ -175,9 +182,6 @@ export default function AssignmentsPage() {
               </td>
               <td className="whitespace-nowrap p-3">
                 {formatDateToLocal(assignment.createdAt)}
-              </td>
-              <td className="whitespace-nowrap p-3">
-                {formatDateToLocal(assignment.updatedAt)}
               </td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex justify-end gap-2">

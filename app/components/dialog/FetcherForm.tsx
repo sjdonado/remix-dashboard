@@ -3,14 +3,15 @@ import { useFetcher } from '@remix-run/react';
 import { useState, useEffect, createContext, useContext } from 'react';
 
 const FetcherFormContext = createContext<
-  [(formData: FormData) => void, (callback?: () => void) => void, string?]
->([() => null, () => null]);
+  [(formData: FormData) => void, (callback?: () => void) => void, boolean, string?]
+>([() => null, () => null, false]);
 
 export const useFetcherForm = () => {
-  const [onChange, submitForm, error] = useContext(FetcherFormContext);
+  const [onChange, submitForm, isSubmitted, error] = useContext(FetcherFormContext);
   return {
     onChange,
     submitForm,
+    isSubmitted,
     error,
   };
 };
@@ -30,10 +31,9 @@ export default function FetcherFormProvider({
   const [error, setError] = useState<string>();
 
   const [formData, setFormData] = useState<FormData>();
-  const [registeredCallback, setRegisteredCallback] = useState<() => void>();
 
   useEffect(() => {
-    const response = fetcher.data as { error: string } | undefined;
+    const response = fetcher.data as { error: string; message: string } | undefined;
 
     if (isSubmitted || error) return;
 
@@ -43,9 +43,8 @@ export default function FetcherFormProvider({
         return;
       }
       setIsSubmitted(true);
-      registeredCallback?.();
     }
-  }, [fetcher, action, formData, isSubmitted, error, registeredCallback]);
+  }, [fetcher, action, formData, isSubmitted, error]);
 
   return (
     <FetcherFormContext.Provider
@@ -54,15 +53,15 @@ export default function FetcherFormProvider({
           setFormData(formData);
           setError(undefined);
         },
-        callback => {
+        () => {
           if (formData) {
             fetcher.submit(formData, {
               method,
               action,
             });
-            setRegisteredCallback(() => callback);
           }
         },
+        isSubmitted,
         error,
       ]}
     >
