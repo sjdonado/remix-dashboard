@@ -1,19 +1,23 @@
 import { z } from 'zod';
 
 import { UserSerializedSchema } from './user';
+import { ALL_ASSIGNMENT_STATUSES, ALL_ASSIGNMENT_TYPES } from '~/constants/assignment';
 
 export const AssignmentSchema = z.object({
   id: z.string(),
   authorId: z.string().min(1, { message: 'Author is required' }),
+  type: z.enum(ALL_ASSIGNMENT_TYPES),
+  status: z.enum(ALL_ASSIGNMENT_STATUSES),
   title: z.string().min(1, { message: 'Title is required' }),
   content: z.string().min(1, { message: 'Content is required' }),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  points: z.number().min(1, { message: 'Points is required' }),
+  dueAt: z.date(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export const AssignmentSerializedSchema = AssignmentSchema.omit({
   authorId: true,
-  updatedAt: true,
 }).extend({
   author: UserSerializedSchema.pick({
     id: true,
@@ -23,13 +27,11 @@ export const AssignmentSerializedSchema = AssignmentSchema.omit({
 });
 
 export const AssignmentCreateSchema = AssignmentSchema.pick({
-  title: true,
-  content: true,
+  type: true,
 });
 
 export const AssignmentUpdateSchema = AssignmentSchema.pick({
-  title: true,
-  content: true,
+  type: true,
 });
 
 export type Assignment = z.infer<typeof AssignmentSchema>;

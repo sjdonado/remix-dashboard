@@ -1,10 +1,5 @@
 import { and, eq } from 'drizzle-orm';
 import invariant from 'tiny-invariant';
-import {
-  DocumentIcon,
-  DocumentTextIcon,
-  UserCircleIcon,
-} from '@heroicons/react/24/outline';
 import { redirectWithToast } from 'remix-toast';
 
 import { ValidatedForm, validationError } from 'remix-validated-form';
@@ -18,14 +13,15 @@ import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema, AssignmentUpdateSchema } from '~/schemas/assignment';
 
+import { UserRole } from '~/constants/user';
+import { MOCKED_ASSIGNMENT_BY_TYPE } from '~/constants/assignment';
+
 import { isAuthorized } from '~/services/auth.server';
 
-import { Input } from '~/components/forms/Input';
-import { TextArea } from '~/components/forms/TextArea';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
 import { Breadcrumb } from '~/components/Breadcrumbs';
-import { UserRole } from '~/constants/user';
+import AssignmentTypeSelect from '~/components/select/AssignmentTypeSelect';
 
 const validator = withZod(AssignmentUpdateSchema);
 
@@ -35,7 +31,7 @@ export const handle = {
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.assignmentId, 'Missing assignmentId param');
-  const userSession = await isAuthorized(request, [UserRole.Teacher]);
+  const userSession = await isAuthorized(request, [UserRole.Admin, UserRole.Teacher]);
 
   const { searchParams } = new URL(request.url);
 
@@ -45,14 +41,16 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     return validationError(fieldValues.error);
   }
 
-  const { title, content } = fieldValues.data;
+  const { type } = fieldValues.data;
+
+  const { title, content, points, dueAt } = MOCKED_ASSIGNMENT_BY_TYPE[type];
 
   const result = await db
     .update(assignmentsTable)
-    .set({ title, content, updatedAt: new Date().toISOString() })
+    .set({ title, type, content, points, dueAt, updatedAt: new Date() })
     .where(
       and(
-        eq(assignmentsTable.authorId, userSession.id),
+        userSession.isTeacher ? eq(assignmentsTable.authorId, userSession.id) : undefined,
         eq(assignmentsTable.id, params.assignmentId)
       )
     )
@@ -77,9 +75,14 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const [row] = await db
     .select({
       id: assignmentsTable.id,
+      status: assignmentsTable.status,
+      type: assignmentsTable.type,
       title: assignmentsTable.title,
       content: assignmentsTable.content,
+      points: assignmentsTable.points,
+      dueAt: assignmentsTable.dueAt,
       createdAt: assignmentsTable.createdAt,
+      updatedAt: assignmentsTable.updatedAt,
       author: {
         id: assignmentsTable.authorId,
         username: usersTable.username,
@@ -105,29 +108,7 @@ export default function EditAssignmentPage() {
   return (
     <ValidatedForm validator={validator} method="post">
       <div className="rounded-lg border border-base-300 bg-base-200/50 p-4 md:p-6">
-        <Input
-          name="title"
-          label="Title"
-          type="text"
-          placeholder="Title"
-          defaultValue={assignment.title}
-          icon={<DocumentIcon className="form-input-icon" />}
-        />
-        <Input
-          name="author"
-          label="Author"
-          type="text"
-          defaultValue={assignment.author.username!}
-          disabled
-          icon={<UserCircleIcon className="form-input-icon" />}
-        />
-        <TextArea
-          name="content"
-          label="Content"
-          placeholder="Content"
-          defaultValue={assignment.content}
-          icon={<DocumentTextIcon className="form-input-icon" />}
-        />
+        <AssignmentTypeSelect name="type" defaultValue={assignment.type} />
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <BackButton message="Cancel" />

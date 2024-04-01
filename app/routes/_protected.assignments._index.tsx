@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { useLoaderData, useSearchParams } from '@remix-run/react';
+import { Link, useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { asc, desc, sql, eq, or, count } from 'drizzle-orm';
 
@@ -18,12 +18,12 @@ import {
   DeleteBtnLink,
   MobileTable,
   ResponsiveTable,
-  ShowBtnLink,
   TableContainer,
   UpdateBtnLink,
 } from '~/components/Table';
 import Search from '~/components/Search';
 import Avatar from '~/components/Avatar';
+import { AssignmentTypeBadge } from '~/components/badge/AssignmentTypeBadge';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userSession = await isAuthenticated(request);
@@ -37,9 +37,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     db
       .select({
         id: assignmentsTable.id,
+        status: assignmentsTable.status,
+        type: assignmentsTable.type,
         title: assignmentsTable.title,
         content: assignmentsTable.content,
+        points: assignmentsTable.points,
+        dueAt: assignmentsTable.dueAt,
         createdAt: assignmentsTable.createdAt,
+        updatedAt: assignmentsTable.updatedAt,
         author: {
           id: assignmentsTable.authorId,
           username: usersTable.username,
@@ -101,7 +106,10 @@ export default function AssignmentsPage() {
               <div className="flex flex-col items-start gap-4">
                 <div className="flex w-full items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <Avatar name={assignment.author.username!} />
+                    <Avatar
+                      name={assignment.author.username!}
+                      className="!size-8 min-w-8"
+                    />
                     <p className="text-sm text-gray-500">{assignment.author.username}</p>
                   </div>
                   <span className="min-w-fit text-xs">
@@ -112,7 +120,6 @@ export default function AssignmentsPage() {
                 <p className="line-clamp-3 text-sm">{assignment.content}</p>
               </div>
               <div className="flex items-center justify-end gap-2 pt-4">
-                <ShowBtnLink to={`${assignment.id}/show`} />
                 <UpdateBtnLink to={`${assignment.id}/edit`} />
                 <DeleteBtnLink
                   to={`${assignment.id}/delete`}
@@ -123,19 +130,29 @@ export default function AssignmentsPage() {
             </div>
           ))}
         </MobileTable>
-        <ResponsiveTable headers={['Title', 'Author', 'Content', 'Created At']}>
+        <ResponsiveTable
+          headers={['Title', 'Type', 'Author', 'Content', 'Created At', 'Updated At']}
+        >
           {assignments?.map(assignment => (
             <tr
               key={assignment.id}
               className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
             >
               <td className="flex-1">
-                <p className="line-clamp-2">{assignment.title}</p>
+                <Link to={`${assignment.id}/show`} className="link">
+                  <p className="line-clamp-1">{assignment.title}</p>
+                </Link>
+              </td>
+              <td>
+                <AssignmentTypeBadge type={assignment.type} />
               </td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex items-center gap-2">
-                  <Avatar name={assignment.author.username!} />
-                  <p>{assignment.author.username}</p>
+                  <Avatar
+                    name={assignment.author.username!}
+                    className="!size-8 min-w-8"
+                  />
+                  <p className="text-sm">{assignment.author.username}</p>
                 </div>
               </td>
               <td className="flex-1">
@@ -144,9 +161,11 @@ export default function AssignmentsPage() {
               <td className="whitespace-nowrap p-3">
                 {formatDateToLocal(assignment.createdAt)}
               </td>
+              <td className="whitespace-nowrap p-3">
+                {formatDateToLocal(assignment.updatedAt)}
+              </td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex justify-end gap-2">
-                  <ShowBtnLink to={`${assignment.id}/show`} />
                   <UpdateBtnLink to={`${assignment.id}/edit`} />
                   <DeleteBtnLink
                     to={`${assignment.id}/delete`}

@@ -33,8 +33,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     db
       .select({
         id: assignmentsTable.id,
+        status: assignmentsTable.status,
+        type: assignmentsTable.type,
         title: assignmentsTable.title,
         content: assignmentsTable.content,
+        points: assignmentsTable.points,
+        dueAt: assignmentsTable.dueAt,
         createdAt: assignmentsTable.createdAt,
         author: {
           id: assignmentsTable.authorId,

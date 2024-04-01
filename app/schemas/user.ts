@@ -6,8 +6,8 @@ export const UserSchema = z.object({
   id: z.string(),
   username: z.string().min(1, { message: 'Username is required' }),
   role: z.enum(ALL_USER_ROLES),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export const UserLoginSchema = UserSchema.pick({

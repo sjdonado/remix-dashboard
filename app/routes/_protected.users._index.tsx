@@ -20,6 +20,7 @@ import {
 } from '~/components/Table';
 import Search from '~/components/Search';
 import Avatar from '~/components/Avatar';
+import { UserRoleBadge } from '~/components/badge/UserRoleBadge';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -84,14 +85,17 @@ export default function UsersPage() {
               <div className="flex flex-col items-start gap-4">
                 <div className="flex w-full items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <Avatar name={user.username} />
+                    <Avatar name={user.username} className="!size-8 min-w-8" />
                     <p className="text-sm text-gray-500">{user.username}</p>
                   </div>
-                  <span className="min-w-fit text-xs">
-                    {formatDateToLocal(user.createdAt)}
-                  </span>
+                  <UserRoleBadge role={user.role} />
                 </div>
-                <p>{user.role}</p>
+              </div>
+              <div className="flex flex-col py-2">
+                <label className="text-sm text-gray-500">Created At</label>
+                <span className="min-w-fit text-xs">
+                  {formatDateToLocal(user.createdAt)}
+                </span>
               </div>
               <div className="flex items-center justify-end gap-2 pt-4">
                 <UpdateBtnLink to={`${user.id}/edit`} />
@@ -112,11 +116,13 @@ export default function UsersPage() {
             >
               <td className="whitespace-nowrap py-3 pl-6 pr-3">
                 <div className="flex items-center gap-2">
-                  <Avatar name={user.username} />
-                  <p>{user.username}</p>
+                  <Avatar name={user.username} className="!size-8 min-w-8" />
+                  <p className="text-sm">{user.username}</p>
                 </div>
               </td>
-              <td className="flex-1 whitespace-nowrap">{user.role}</td>
+              <td className="flex-1 whitespace-nowrap">
+                <UserRoleBadge role={user.role} />
+              </td>
               <td className="whitespace-nowrap p-3">
                 {formatDateToLocal(user.createdAt)}
               </td>

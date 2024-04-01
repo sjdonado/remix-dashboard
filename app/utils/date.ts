@@ -1,4 +1,4 @@
-export const formatDateToLocal = (dateStr: string, locale: string = 'en-GB') => {
+export const formatDateToLocal = (dateStr: Date, locale: string = 'en-GB') => {
   const date = new Date(dateStr);
 
   const options: Intl.DateTimeFormatOptions = {

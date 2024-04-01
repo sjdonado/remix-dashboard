@@ -6,6 +6,7 @@ import type { User } from '~/schemas/user';
 import { assignmentsTable, usersTable } from './schema';
 
 import { UserRole } from '~/constants/user';
+import { AssignmentType, MOCKED_ASSIGNMENT_BY_TYPE } from '~/constants/assignment';
 import { connectToDatabase } from './config.server';
 
 export const seedUsers = async (db: BetterSQLite3Database) => {
@@ -48,10 +49,21 @@ export const seedAssignments = async (db: BetterSQLite3Database) => {
 
   for (const user of users) {
     for (let i = 0; i < 12; i++) {
+      const mockedAssignment =
+        MOCKED_ASSIGNMENT_BY_TYPE[
+          faker.helpers.arrayElement([
+            AssignmentType.Homework,
+            AssignmentType.Quiz,
+            AssignmentType.Project,
+          ])
+        ];
+
       data.push({
         authorId: user.id,
-        title: faker.lorem.words(),
-        content: faker.lorem.paragraphs(16, '\n'),
+        title: mockedAssignment.title,
+        content: mockedAssignment.content,
+        points: mockedAssignment.points,
+        dueAt: mockedAssignment.dueAt,
       });
     }
   }
