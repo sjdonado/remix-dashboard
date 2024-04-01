@@ -4,11 +4,10 @@ import type { Cookie } from 'playwright/test';
 
 import { db } from '~/db/config.server';
 import { usersTable } from '~/db/schema';
-import type { AppSession } from '~/schemas/session';
 
 import { UserRole } from '~/constants/user';
-
-import { commitSession, getSession } from '~/services/auth.server';
+import { commitSession, getSession } from '~/services/session.server';
+import type { UserSession } from '~/schemas/user';
 
 export const VALID_ADMIN_USERNAME = 'admin1';
 export const VALID_TEACHER_USERNAME = 'teacher2';
@@ -26,7 +25,6 @@ export const mockUserSession = async (username: string) => {
   const [user] = await db
     .select({
       id: usersTable.id,
-      name: usersTable.name,
       username: usersTable.username,
       role: usersTable.role,
     })
@@ -34,14 +32,10 @@ export const mockUserSession = async (username: string) => {
     .where(eq(usersTable.username, username))
     .limit(1);
 
-  session.set('strategy', 'form');
-  session.set('user', {
-    user: {
-      id: user.id,
-      name: user.name,
-      username: user.username,
-      role: user.role,
-    },
+  session.set('data', {
+    id: user.id,
+    username: user.username,
+    role: user.role,
     isAdmin: user.role === UserRole.Admin,
     isTeacher: user.role === UserRole.Teacher,
     isStudent: user.role === UserRole.Student,
@@ -49,12 +43,13 @@ export const mockUserSession = async (username: string) => {
 
   const cookies = await commitSession(session);
 
-  return parse(cookies).__session;
+  return parse(cookies).__user_session;
 };
 
-export const getAppSession = async (cookies: Cookie[]) => {
+export const getUserSession = async (cookies: Cookie[]) => {
   const session = await getSession(
-    `__session=${cookies.find(cookie => cookie.name === '__session')?.value}`
+    `__user_session=${cookies.find(cookie => cookie.name === '__user_session')?.value}`
   );
-  return session.data.user as AppSession;
+
+  return session.data.user as UserSession;
 };

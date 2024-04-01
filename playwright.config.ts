@@ -4,6 +4,9 @@ import { defineConfig, devices } from '@playwright/test';
 
 dotenv.config({ path: '.env.test' });
 
+const host = process.env.HOST || '127.0.0.1';
+const port = process.env.PORT || 3333;
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -12,20 +15,24 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'list',
   use: {
-    baseURL: 'http://127.0.0.1:3333',
+    baseURL: `http://${host}:${port}`,
     trace: 'on-first-retry',
   },
   projects: [
-    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+    {
+      name: 'setup db',
+      testMatch: /db\.setup\.ts/,
+    },
+    { name: 'setup auth', testMatch: /auth\.setup\.ts/, dependencies: ['setup db'] },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-      dependencies: ['setup'],
+      dependencies: ['setup auth'],
     },
   ],
   webServer: {
     command: 'npm run dev',
-    port: 3333,
+    port: Number(port),
     reuseExistingServer: !process.env.CI,
   },
 });

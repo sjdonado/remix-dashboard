@@ -14,9 +14,7 @@ export const connectToDatabase = () => {
   }
 
   client = new Database(DATABASE_URL);
-
   logger.info('[drizzle] Database connected');
-
   return client;
 };
 

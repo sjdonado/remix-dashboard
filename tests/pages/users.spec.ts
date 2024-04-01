@@ -21,6 +21,7 @@ test.describe('Users page - Admin', () => {
   const TABLE_ROWS_LENGTH = PAGE_SIZE + 1;
 
   test.beforeEach(async ({ page }) => {
+    console.log('page cookies', await page.context().cookies());
     await page.goto('/users');
   });
 
@@ -63,27 +64,14 @@ test.describe('Users page - Admin', () => {
   });
 
   test.describe('Search Users', () => {
-    let name: string | null;
     let username: string | null;
 
     test.beforeAll(async () => {
-      [{ name, username }] = await db
-        .select({ name: usersTable.name, username: usersTable.username })
+      [{ username }] = await db
+        .select({ username: usersTable.username })
         .from(usersTable)
         .offset(PAGE_SIZE * 2)
         .limit(1);
-    });
-
-    test('should filter by name', async ({ page }) => {
-      const searchBar = page.getByPlaceholder('Search users...');
-
-      await searchBar.fill(name!);
-      await searchBar.press('Enter');
-
-      await expect(page.getByRole('row')).toHaveCount(2);
-
-      const user = page.getByRole('row').nth(1);
-      await expect(user.getByRole('cell').first().locator('p')).toHaveText(name!);
     });
 
     test('should filter by username', async ({ page }) => {

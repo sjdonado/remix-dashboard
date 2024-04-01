@@ -6,7 +6,7 @@ import { UserSessionSchema, type UserSession } from '~/schemas/user';
 import { HOST, SECRET_KEY } from '~/config/env.server';
 
 export const COOKIES_DEFAULTS = {
-  name: '__session',
+  name: '__user_session',
   domain: HOST,
   path: '/',
   sameSite: 'Lax' as const,
@@ -18,7 +18,6 @@ export const COOKIES_DEFAULTS = {
 export const userSessionStorage = createCookieSessionStorage({
   cookie: {
     ...COOKIES_DEFAULTS,
-    name: '__user_session',
   } as SessionData,
 });
 
@@ -43,8 +42,9 @@ export const updateUserSessionData = async (
   const userSession = await userSessionStorage.getSession(request.headers.get('Cookie'));
 
   const data = userSession.get('data') as UserSession;
-
   userSession.set('data', Object.assign(data ?? {}, update));
 
   return userSessionStorage.commitSession(userSession);
 };
+
+export const { getSession, commitSession } = userSessionStorage;

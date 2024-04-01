@@ -10,14 +10,9 @@ import {
   mockUserSession,
 } from './helpers';
 
-const COOKIES_DEFAULTS = {
-  name: '__session',
-  domain: '127.0.0.1',
-  path: '/',
-  sameSite: 'Lax' as const,
-  httpOnly: true,
-  expires: Date.now() / 1000 + 3600,
-};
+import { UserRole } from '~/constants/user';
+
+import { COOKIES_DEFAULTS } from '~/services/session.server';
 
 setup('authenticate as admin', async ({ page, context }) => {
   const mockedSession = await mockUserSession(VALID_ADMIN_USERNAME);
@@ -30,7 +25,7 @@ setup('authenticate as admin', async ({ page, context }) => {
   ]);
 
   await page.goto('/');
-  await expect(page.locator('.dropdown').getByText(VALID_ADMIN_USERNAME)).toBeVisible();
+  await expect(page.locator('.badge').getByText(UserRole.Admin)).toBeVisible();
 
   await page.context().storageState({ path: ADMIN_STORAGE_STATE });
 });
@@ -46,7 +41,7 @@ setup('authenticate as teacher', async ({ page, context }) => {
   ]);
 
   await page.goto('/');
-  await expect(page.locator('.dropdown').getByText(VALID_TEACHER_USERNAME)).toBeVisible();
+  await expect(page.locator('.badge').getByText(UserRole.Teacher)).toBeVisible();
 
   await page.context().storageState({ path: TEACHER_STORAGE_STATE });
 });
@@ -62,7 +57,7 @@ setup('authenticate as student', async ({ page, context }) => {
   ]);
 
   await page.goto('/');
-  await expect(page.locator('.dropdown').getByText(VALID_STUDENT_USERNAME)).toBeVisible();
+  await expect(page.locator('.badge').getByText(UserRole.Student)).toBeVisible();
 
   await page.context().storageState({ path: STUDENT_STORAGE_STATE });
 });
