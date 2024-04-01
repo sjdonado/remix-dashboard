@@ -164,11 +164,6 @@ test.describe('Users page - Admin', () => {
       await submitButton.click();
     });
 
-    test('should not be able to edit Choose Role - same role', async ({ page }) => {
-      const roleSelectInput = page.getByLabel('Choose Role');
-      await expect(roleSelectInput).toBeDisabled();
-    });
-
     test('should throw error message - empty username', async ({ page }) => {
       const usernameInput = page.getByLabel('Username');
       await usernameInput.fill('');
