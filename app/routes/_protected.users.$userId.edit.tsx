@@ -52,7 +52,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       .set({
         username,
         role: role as UserRole,
-        updatedAt: new Date().toISOString(),
+        updatedAt: new Date(),
       })
       .where(eq(usersTable.id, params.userId));
   } catch (error) {

@@ -7,9 +7,10 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   name: string;
   label: string;
   icon?: JSX.Element;
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-export const Select: FC<SelectProps> = ({ name, label, icon, ...rest }) => {
+export const Select: FC<SelectProps> = ({ name, label, icon, onChange, ...rest }) => {
   const { error, getInputProps } = useField(name);
 
   return (
@@ -20,15 +21,15 @@ export const Select: FC<SelectProps> = ({ name, label, icon, ...rest }) => {
       <div className="relative">
         <select
           className={clsx(
-            'peer select select-sm input-bordered rounded-md w-full !h-10 !pl-9',
+            'peer select input-bordered select-sm !h-10 w-full rounded-md !pl-9',
             error && 'input-error'
           )}
           {...rest}
-          {...getInputProps({ id: name })}
+          {...getInputProps({ id: name, onChange })}
         />
         {icon && icon}
       </div>
-      {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
+      {error && <span className="mt-1 text-xs text-red-500">{error}</span>}
     </div>
   );
 };

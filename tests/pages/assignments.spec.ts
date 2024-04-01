@@ -607,9 +607,9 @@ test.describe('Assignments page - Teacher', () => {
           title: assignmentsTable.title,
           content: assignmentsTable.content,
           createdAt: assignmentsTable.createdAt,
+          updatedAt: assignmentsTable.updatedAt,
           author: {
             id: assignmentsTable.authorId,
-            name: usersTable.name,
             username: usersTable.username,
           },
         })

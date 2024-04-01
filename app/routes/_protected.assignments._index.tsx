@@ -108,7 +108,7 @@ export default function AssignmentsPage() {
                   <div className="flex items-center gap-2">
                     <Avatar
                       name={assignment.author.username!}
-                      className="!size-8 min-w-8"
+                      className="!size-7 min-w-7"
                     />
                     <p className="text-sm text-gray-500">{assignment.author.username}</p>
                   </div>
@@ -131,7 +131,16 @@ export default function AssignmentsPage() {
           ))}
         </MobileTable>
         <ResponsiveTable
-          headers={['Title', 'Type', 'Author', 'Content', 'Created At', 'Updated At']}
+          headers={[
+            'Title',
+            'Type',
+            'Author',
+            'Content',
+            'Points',
+            'Due At',
+            'Created At',
+            'Updated At',
+          ]}
         >
           {assignments?.map(assignment => (
             <tr
@@ -150,13 +159,19 @@ export default function AssignmentsPage() {
                 <div className="flex items-center gap-2">
                   <Avatar
                     name={assignment.author.username!}
-                    className="!size-8 min-w-8"
+                    className="!size-7 min-w-7"
                   />
                   <p className="text-sm">{assignment.author.username}</p>
                 </div>
               </td>
               <td className="flex-1">
                 <p className="line-clamp-2 max-w-sm">{assignment.content}</p>
+              </td>
+              <td className="flex-1">
+                <p>{assignment.points}</p>
+              </td>
+              <td className="whitespace-nowrap p-3">
+                {formatDateToLocal(assignment.dueAt)}
               </td>
               <td className="whitespace-nowrap p-3">
                 {formatDateToLocal(assignment.createdAt)}

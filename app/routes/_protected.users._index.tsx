@@ -49,6 +49,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         username: sq.username,
         role: sq.role,
         createdAt: sq.createdAt,
+        updatedAt: sq.updatedAt,
       })
       .from(sq)
       .orderBy(desc(sq.createdAt), asc(sq.id))
@@ -85,7 +86,7 @@ export default function UsersPage() {
               <div className="flex flex-col items-start gap-4">
                 <div className="flex w-full items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <Avatar name={user.username} className="!size-8 min-w-8" />
+                    <Avatar name={user.username} className="!size-7 min-w-7" />
                     <p className="text-sm text-gray-500">{user.username}</p>
                   </div>
                   <UserRoleBadge role={user.role} />
@@ -108,7 +109,7 @@ export default function UsersPage() {
             </div>
           ))}
         </MobileTable>
-        <ResponsiveTable headers={['Username', 'Role', 'Created At']}>
+        <ResponsiveTable headers={['Username', 'Role', 'Created At', 'Updated At']}>
           {users?.map(user => (
             <tr
               key={user.id}
@@ -116,7 +117,7 @@ export default function UsersPage() {
             >
               <td className="whitespace-nowrap py-3 pl-6 pr-3">
                 <div className="flex items-center gap-2">
-                  <Avatar name={user.username} className="!size-8 min-w-8" />
+                  <Avatar name={user.username} className="!size-7 min-w-7" />
                   <p className="text-sm">{user.username}</p>
                 </div>
               </td>
@@ -125,6 +126,9 @@ export default function UsersPage() {
               </td>
               <td className="whitespace-nowrap p-3">
                 {formatDateToLocal(user.createdAt)}
+              </td>
+              <td className="whitespace-nowrap p-3">
+                {formatDateToLocal(user.updatedAt)}
               </td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex justify-end gap-3">

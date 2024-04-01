@@ -40,10 +40,10 @@ export const UserSessionSchema = UserSchema.pick({
 
 export const UserSerializedSchema = UserSchema.pick({
   id: true,
-  name: true,
   username: true,
   role: true,
   createdAt: true,
+  updatedAt: true,
 });
 
 export type User = z.infer<typeof UserSchema>;

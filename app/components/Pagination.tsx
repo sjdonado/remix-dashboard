@@ -22,7 +22,7 @@ export default function Pagination({ totalPages, currentPage }: PaginationProps)
   const allPages = generatePagination(currentPage, totalPages);
 
   return (
-    <div className="inline-flex mb-4 mx-4">
+    <div className="mx-4 mb-4 inline-flex">
       <PaginationArrow
         id="pagination-previous"
         direction="left"
@@ -70,7 +70,7 @@ function PaginationNumber({
   position?: 'first' | 'last' | 'middle' | 'single';
   isActive: boolean;
 }) {
-  const className = clsx('flex h-8 w-10 items-center justify-center text-sm border', {
+  const className = clsx('flex h-8 w-10 items-center justify-center border text-sm', {
     'rounded-l-lg': position === 'first' || position === 'single',
     'rounded-r-lg': position === 'last' || position === 'single',
     'bg-primary border-primary text-white': isActive,

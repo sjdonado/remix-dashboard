@@ -9,10 +9,12 @@ export default function AssignmentTypeSelect({
   name,
   defaultValue = AssignmentType.Quiz,
   disabled,
+  onChange,
 }: {
   name: string;
   defaultValue?: string;
   disabled?: boolean;
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }) {
   return (
     <Select
@@ -21,6 +23,7 @@ export default function AssignmentTypeSelect({
       defaultValue={defaultValue}
       icon={<ChevronUpDownIcon className="form-input-icon" />}
       disabled={disabled}
+      onChange={onChange}
     >
       <option value="" disabled>
         -- Select --

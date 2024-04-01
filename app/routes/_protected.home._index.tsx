@@ -40,6 +40,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         points: assignmentsTable.points,
         dueAt: assignmentsTable.dueAt,
         createdAt: assignmentsTable.createdAt,
+        updatedAt: assignmentsTable.updatedAt,
         author: {
           id: assignmentsTable.authorId,
           username: usersTable.username,

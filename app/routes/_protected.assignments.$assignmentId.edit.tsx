@@ -1,7 +1,14 @@
 import { and, eq } from 'drizzle-orm';
 import invariant from 'tiny-invariant';
 import { redirectWithToast } from 'remix-toast';
+import {
+  CalculatorIcon,
+  CalendarIcon,
+  DocumentIcon,
+  DocumentTextIcon,
+} from '@heroicons/react/24/solid';
 
+import { useState } from 'react';
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
 
@@ -14,10 +21,12 @@ import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema, AssignmentUpdateSchema } from '~/schemas/assignment';
 
 import { UserRole } from '~/constants/user';
+import type { AssignmentType } from '~/constants/assignment';
 import { MOCKED_ASSIGNMENT_BY_TYPE } from '~/constants/assignment';
 
 import { isAuthorized } from '~/services/auth.server';
 
+import { Input } from '~/components/forms/Input';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
 import { Breadcrumb } from '~/components/Breadcrumbs';
@@ -105,10 +114,56 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function EditAssignmentPage() {
   const { assignment } = useLoaderData<typeof loader>();
 
+  const [assignmentType, setAssignmentType] = useState<AssignmentType>(assignment.type);
+
+  const selectedAssignment = assignmentType
+    ? MOCKED_ASSIGNMENT_BY_TYPE[assignmentType]
+    : undefined;
+
   return (
     <ValidatedForm validator={validator} method="post">
       <div className="rounded-lg border border-base-300 bg-base-200/50 p-4 md:p-6">
-        <AssignmentTypeSelect name="type" defaultValue={assignment.type} />
+        <AssignmentTypeSelect
+          name="type"
+          defaultValue={assignment.type}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            setAssignmentType(e.target.value as AssignmentType)
+          }
+        />
+        <Input
+          name="title"
+          label="Title"
+          type="text"
+          icon={<DocumentIcon className="form-input-icon" />}
+          defaultValue={selectedAssignment?.title}
+          disabled
+        />
+        <Input
+          name="content"
+          label="Content"
+          type="text"
+          icon={<DocumentTextIcon className="form-input-icon" />}
+          defaultValue={selectedAssignment?.content}
+          disabled
+        />
+        <div className="flex flex-wrap gap-4 [&>div]:flex-1">
+          <Input
+            name="points"
+            label="Points"
+            type="number"
+            icon={<CalculatorIcon className="form-input-icon" />}
+            defaultValue={selectedAssignment?.points}
+            disabled
+          />
+          <Input
+            name="dueAt"
+            label="Due At"
+            type="datetime-local"
+            icon={<CalendarIcon className="form-input-icon" />}
+            defaultValue={selectedAssignment?.dueAt.toISOString().substring(0, 16)}
+            disabled
+          />
+        </div>
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <BackButton message="Cancel" />
