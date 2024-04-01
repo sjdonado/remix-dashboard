@@ -173,7 +173,7 @@ export default function AssignmentsPage() {
                 <div className="flex items-center gap-2">
                   <Avatar
                     name={assignment.author.username!}
-                    className="!size-7 min-w-7"
+                    className="!size-8 min-w-8"
                   />
                   <p className="text-sm">{assignment.author.username}</p>
                 </div>

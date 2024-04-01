@@ -111,7 +111,7 @@ export default function EditUserPage() {
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <BackButton message="Cancel" />
-        <SubmitButton message="Edit User" />
+        <SubmitButton message="Save" />
       </div>
     </ValidatedForm>
   );

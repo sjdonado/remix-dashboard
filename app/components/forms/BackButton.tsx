@@ -1,10 +1,11 @@
-import { useNavigate } from '@remix-run/react';
+import { useNavigate, useNavigation } from '@remix-run/react';
 
 interface BackButtonProps {
   message: string;
 }
 
 export default function BackButton({ message }: BackButtonProps) {
+  const navigation = useNavigation();
   const navigate = useNavigate();
 
   const handleOnClick = () => {
@@ -13,9 +14,10 @@ export default function BackButton({ message }: BackButtonProps) {
 
   return (
     <button
-      className="btn btn-base btn-sm rounded-lg font-normal h-10"
-      onClick={handleOnClick}
       type="button"
+      className="btn btn-sm h-10 w-[90px] rounded-lg font-normal"
+      onClick={handleOnClick}
+      disabled={navigation.state !== 'idle'}
     >
       {message}
     </button>

@@ -1,4 +1,4 @@
-import { IdentificationIcon, KeyIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { IdentificationIcon } from '@heroicons/react/24/outline';
 import { redirectWithToast } from 'remix-toast';
 import type { SqliteError } from 'better-sqlite3';
 
@@ -12,15 +12,14 @@ import { usersTable } from '~/db/schema';
 import { UserCreateSchema } from '~/schemas/user';
 
 import type { UserRole } from '~/constants/user';
-import { ALL_USER_ROLES } from '~/constants/user';
 
 import { duplicateUsernameError } from '~/errors/form.server';
 
 import { Breadcrumb } from '~/components/Breadcrumbs';
 import { Input } from '~/components/forms/Input';
-import { Select } from '~/components/select/Select';
 import BackButton from '~/components/forms/BackButton';
 import SubmitButton from '~/components/forms/SubmitButton';
+import UserRoleSelect from '~/components/select/UserRoleSelect';
 
 const validator = withZod(UserCreateSchema);
 
@@ -52,7 +51,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 };
 
-export default function CreateUserPage() {
+export default function NewUserPage() {
   return (
     <ValidatedForm validator={validator} method="post">
       <div className="rounded-lg border border-base-300 bg-base-200/30 p-4 md:p-6">
@@ -63,28 +62,7 @@ export default function CreateUserPage() {
           placeholder="Username"
           icon={<IdentificationIcon className="form-input-icon" />}
         />
-        <Select
-          id="role"
-          name="role"
-          label="Choose role"
-          icon={<UserGroupIcon className="form-input-icon" />}
-        >
-          <option value="" disabled>
-            Select a role
-          </option>
-          {ALL_USER_ROLES.map(role => (
-            <option key={role} value={role}>
-              {role}
-            </option>
-          ))}
-        </Select>
-        <Input
-          name="password"
-          label="Password"
-          type="password"
-          placeholder="Password"
-          icon={<KeyIcon className="form-input-icon" />}
-        />
+        <UserRoleSelect name="role" />
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <BackButton message="Cancel" />

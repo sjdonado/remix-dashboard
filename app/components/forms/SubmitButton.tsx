@@ -1,17 +1,19 @@
 import { useNavigation } from '@remix-run/react';
+import { useIsValid } from 'remix-validated-form';
 
 interface SubmitButtonProps {
   message: string;
 }
 
 export default function SubmitButton({ message }: SubmitButtonProps) {
+  const isValid = useIsValid();
   const navigation = useNavigation();
 
   return (
     <button
-      className="btn btn-primary btn-sm rounded-lg font-normal text-base-100 h-10"
+      className="btn btn-primary btn-sm h-10 w-[90px] rounded-lg font-normal text-base-100"
       type="submit"
-      disabled={navigation.state === 'submitting'}
+      disabled={navigation.state !== 'idle' || !isValid}
     >
       {message}
     </button>

@@ -51,7 +51,7 @@ const AssignmentUpdateStatusDialog = forwardRef(function AssignmentUpdateStatusD
         <div className="modal-action">
           <button
             type="button"
-            className="btn btn-primary btn-sm h-10 w-[90px] rounded-lg"
+            className="btn btn-primary btn-sm h-10 w-[90px] rounded-lg text-white"
             disabled={navigation.state !== 'idle'}
             onClick={() => submitForm()}
           >

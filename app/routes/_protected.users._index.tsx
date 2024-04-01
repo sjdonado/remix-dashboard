@@ -77,7 +77,7 @@ export default function UsersPage() {
     <div className="flex flex-col gap-4">
       <div className="mt-4 flex items-center justify-between gap-2">
         <Search placeholder="Search users..." />
-        <CreateBtnLink to="create" title="Create User" />
+        <CreateBtnLink to="new" title="New User" />
       </div>
       <TableContainer totalPages={totalPages} currentPage={currentPage}>
         <MobileTable>
@@ -86,7 +86,7 @@ export default function UsersPage() {
               <div className="flex flex-col items-start gap-4">
                 <div className="flex w-full items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <Avatar name={user.username} className="!size-7 min-w-7" />
+                    <Avatar name={user.username} className="!size-8 min-w-8" />
                     <p className="text-sm text-gray-500">{user.username}</p>
                   </div>
                   <UserRoleBadge role={user.role} />
@@ -117,7 +117,7 @@ export default function UsersPage() {
             >
               <td className="whitespace-nowrap py-3 pl-6 pr-3">
                 <div className="flex items-center gap-2">
-                  <Avatar name={user.username} className="!size-7 min-w-7" />
+                  <Avatar name={user.username} className="!size-8 min-w-8" />
                   <p className="text-sm">{user.username}</p>
                 </div>
               </td>
