@@ -40,7 +40,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   await db.insert(usersTable).values({ username, role }).onConflictDoNothing();
 
   const [user] = await db
-    .select()
+    .select({
+      id: usersTable.id,
+      username: usersTable.username,
+      role: usersTable.role,
+    })
     .from(usersTable)
     .where(eq(usersTable.username, username))
     .limit(1);

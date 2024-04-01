@@ -6,7 +6,7 @@ import { ALL_ASSIGNMENT_STATUSES, ALL_ASSIGNMENT_TYPES } from '~/constants/assig
 export const AssignmentSchema = z.object({
   id: z.string(),
   authorId: z.string().min(1, { message: 'Author is required' }),
-  type: z.enum(ALL_ASSIGNMENT_TYPES),
+  type: z.enum(ALL_ASSIGNMENT_TYPES, { required_error: 'Type is required' }),
   status: z.enum(ALL_ASSIGNMENT_STATUSES),
   title: z.string().min(1, { message: 'Title is required' }),
   content: z.string().min(1, { message: 'Content is required' }),

@@ -15,7 +15,7 @@ export const handle = {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await isAuthorized(request, [UserRole.Admin, UserRole.Teacher]);
+  await isAuthorized(request, [UserRole.Admin, UserRole.Teacher, UserRole.Student]);
 
   return null;
 };

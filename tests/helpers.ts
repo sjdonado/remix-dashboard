@@ -32,7 +32,7 @@ export const mockUserSession = async (username: string) => {
     .where(eq(usersTable.username, username))
     .limit(1);
 
-  session.set('data', {
+  session.set('user', {
     id: user.id,
     username: user.username,
     role: user.role,
@@ -51,5 +51,5 @@ export const getUserSession = async (cookies: Cookie[]) => {
     `__user_session=${cookies.find(cookie => cookie.name === '__user_session')?.value}`
   );
 
-  return session.data.user as UserSession;
+  return session.get('user') as UserSession;
 };

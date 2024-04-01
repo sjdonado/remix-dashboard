@@ -17,8 +17,10 @@ import { usersTable } from '~/db/schema';
 import type { UserSession } from '~/schemas/user';
 import { UserUpdateSchema } from '~/schemas/user';
 
-import { type UserRole } from '~/constants/user';
+import { UserRole } from '~/constants/user';
 import { duplicateUsernameError } from '~/errors/form.server';
+
+import { isAuthorized } from '~/services/auth.server';
 
 import { useRouteData } from '~/root';
 
@@ -36,6 +38,8 @@ export const handle = {
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.userId, 'Missing userId param');
+  await isAuthorized(request, [UserRole.Admin]);
+
   const { searchParams } = new URL(request.url);
 
   const fieldValues = await validator.validate(await request.formData());

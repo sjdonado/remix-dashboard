@@ -4,19 +4,18 @@ import {
   ADMIN_STORAGE_STATE,
   STUDENT_STORAGE_STATE,
   TEACHER_STORAGE_STATE,
-  getAppSession,
+  getUserSession,
 } from '../helpers';
-
-import type { AppSession } from '~/schemas/session';
+import type { UserSession } from '~/schemas/user';
 
 test.describe('Me page - Admin', () => {
   test.use({ storageState: ADMIN_STORAGE_STATE });
 
-  let appSession: AppSession;
+  let userSession: UserSession;
 
   test.beforeEach(async ({ page, context }) => {
     const cookies = await context.cookies();
-    appSession = await getAppSession(cookies);
+    userSession = await getUserSession(cookies);
 
     await page.goto('/me');
   });
@@ -29,12 +28,10 @@ test.describe('Me page - Admin', () => {
   });
 
   test('should have profile details', async ({ page }) => {
-    const name = page.getByPlaceholder('Your name');
     const username = page.getByPlaceholder('Your username');
-    const role = page.getByText(appSession.user.role);
+    const role = page.getByText(userSession.role);
 
-    await expect(name).toHaveValue(appSession.user.name);
-    await expect(username).toHaveValue(appSession.user.username);
+    await expect(username).toHaveValue(userSession.username);
     await expect(role).toBeVisible();
   });
 
@@ -50,7 +47,7 @@ test.describe('Me page - Admin', () => {
     await expect(nameInput).toHaveValue(newUsername);
 
     // restore previous name
-    await nameInput.fill(appSession.user.name);
+    await nameInput.fill(userSession.username);
     await submitButton.click();
   });
 
@@ -66,7 +63,7 @@ test.describe('Me page - Admin', () => {
     await expect(nameInput).toHaveValue(newUsername);
 
     // restore previous username
-    await nameInput.fill(appSession.user.username);
+    await nameInput.fill(userSession.username);
     await submitButton.click();
   });
 
@@ -101,11 +98,11 @@ test.describe('Me page - Admin', () => {
 test.describe('Me page - Teacher', () => {
   test.use({ storageState: TEACHER_STORAGE_STATE });
 
-  let appSession: AppSession;
+  let userSession: UserSession;
 
   test.beforeEach(async ({ page, context }) => {
     const cookies = await context.cookies();
-    appSession = await getAppSession(cookies);
+    userSession = await getUserSession(cookies);
 
     await page.goto('/me');
   });
@@ -118,12 +115,10 @@ test.describe('Me page - Teacher', () => {
   });
 
   test('should have profile details', async ({ page }) => {
-    const name = page.getByPlaceholder('Your name');
     const username = page.getByPlaceholder('Your username');
-    const role = page.getByText(appSession.user.role);
+    const role = page.getByText(userSession.role);
 
-    await expect(name).toHaveValue(appSession.user.name);
-    await expect(username).toHaveValue(appSession.user.username);
+    await expect(username).toHaveValue(userSession.username);
     await expect(role).toBeVisible();
   });
 });
@@ -131,11 +126,11 @@ test.describe('Me page - Teacher', () => {
 test.describe('Me page - Student', () => {
   test.use({ storageState: STUDENT_STORAGE_STATE });
 
-  let appSession: AppSession;
+  let userSession: UserSession;
 
   test.beforeEach(async ({ page, context }) => {
     const cookies = await context.cookies();
-    appSession = await getAppSession(cookies);
+    userSession = await getUserSession(cookies);
 
     await page.goto('/me');
   });
@@ -148,12 +143,10 @@ test.describe('Me page - Student', () => {
   });
 
   test('should have profile details', async ({ page }) => {
-    const name = page.getByPlaceholder('Your name');
     const username = page.getByPlaceholder('Your username');
-    const role = page.getByText(appSession.user.role);
+    const role = page.getByText(userSession.role);
 
-    await expect(name).toHaveValue(appSession.user.name);
-    await expect(username).toHaveValue(appSession.user.username);
+    await expect(username).toHaveValue(userSession.username);
     await expect(role).toBeVisible();
   });
 });

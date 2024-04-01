@@ -8,15 +8,16 @@ import {
   ADMIN_STORAGE_STATE,
   STUDENT_STORAGE_STATE,
   TEACHER_STORAGE_STATE,
-  getAppSession,
+  getUserSession,
 } from '../helpers';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
-import type { AppSession } from '~/schemas/session';
 import type { AssignmentSerialized } from '~/schemas/assignment';
 
 import { PAGE_SIZE } from '~/constants/search.server';
+import type { UserSession } from '~/schemas/user';
+import { AssignmentType, MOCKED_ASSIGNMENT_BY_TYPE } from '~/constants/assignment';
 
 test.describe('Assignments page - Admin', () => {
   test.use({ storageState: ADMIN_STORAGE_STATE });
@@ -51,7 +52,7 @@ test.describe('Assignments page - Admin', () => {
         .getByRole('row')
         .nth(1)
         .getByRole('cell')
-        .first()
+        .nth(6)
         .textContent();
 
       await expect(page.locator('a[href*="/assignments?page=2"]').first()).toBeVisible();
@@ -69,14 +70,14 @@ test.describe('Assignments page - Admin', () => {
   test.describe('Search Assignments', () => {
     let title: string | null;
     let content: string | null;
-    let authorName: string | null;
+    let authorUsername: string | null;
 
     test.beforeAll(async () => {
-      [{ title, content, authorName }] = await db
+      [{ title, content, authorUsername }] = await db
         .select({
           title: assignmentsTable.title,
           content: assignmentsTable.content,
-          authorName: usersTable.name,
+          authorUsername: usersTable.username,
         })
         .from(assignmentsTable)
         .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
@@ -90,7 +91,7 @@ test.describe('Assignments page - Admin', () => {
       await searchBar.fill(title!);
       await searchBar.press('Enter');
 
-      await expect(page.getByRole('row')).toHaveCount(2);
+      await expect(page.getByRole('row')).toHaveCount(PAGE_SIZE + 1);
 
       const assignment = page.getByRole('row').nth(1);
       await expect(assignment.getByRole('cell').first()).toHaveText(title!);
@@ -102,9 +103,9 @@ test.describe('Assignments page - Admin', () => {
       await searchBar.fill(content!.slice(0, 20));
       await searchBar.press('Enter');
 
-      await expect(page.getByRole('row')).toHaveCount(2);
+      await expect(page.getByRole('row')).toHaveCount(PAGE_SIZE + 1);
       const assignment = page.getByRole('row').nth(1);
-      await expect(assignment.getByRole('cell').nth(2).locator('p')).toHaveText(
+      await expect(assignment.getByRole('cell').nth(4).locator('p')).toHaveText(
         new RegExp(`${content!.slice(0, 20)}`)
       );
     });
@@ -112,13 +113,13 @@ test.describe('Assignments page - Admin', () => {
     test('should filter by authorName', async ({ page }) => {
       const searchBar = page.getByPlaceholder('Search assignments...');
 
-      await searchBar.fill(authorName!);
+      await searchBar.fill(authorUsername!);
       await searchBar.press('Enter');
 
       await expect(page.getByRole('row')).toHaveCount(PAGE_SIZE + 1);
       const assignment = page.getByRole('row').nth(1);
-      await expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(
-        authorName!
+      await expect(assignment.getByRole('cell').nth(3).locator('p')).toHaveText(
+        new RegExp(`${authorUsername}`)
       );
     });
   });
@@ -129,76 +130,67 @@ test.describe('Assignments page - Admin', () => {
       const showAssignmentButton = assignment.locator('a').first();
 
       const assignmentTitle = await assignment.getByRole('cell').first().textContent();
-      const assignmentAuthor = await assignment.getByRole('cell').nth(1).textContent();
-      const assignmentCreatedAt = await assignment.getByRole('cell').nth(3).textContent();
+      const assignmentContent = await assignment.getByRole('cell').nth(4).textContent();
+      const assignmentDueAt = await assignment.getByRole('cell').nth(6).textContent();
+      const assignmentCreatedAt = await assignment.getByRole('cell').nth(7).textContent();
       const showAssignmentUrl = await showAssignmentButton.getAttribute('href');
 
       await showAssignmentButton.click();
 
       await expect(page).toHaveURL(showAssignmentUrl!);
       await expect(page.locator('h1')).toHaveText(assignmentTitle!);
-      await expect(page.getByText(assignmentAuthor!)).toBeVisible();
+      await expect(page.getByText(assignmentContent!)).toBeVisible();
+      await expect(page.getByText(assignmentDueAt!)).toBeVisible();
       await expect(page.getByText(assignmentCreatedAt!)).toBeVisible();
     });
   });
 
   test.describe('Create Assignment', () => {
-    let appSession: AppSession;
+    let userSession: UserSession;
 
     test.beforeEach(async ({ page, context }) => {
       const cookies = await context.cookies();
-      appSession = await getAppSession(cookies);
+      userSession = await getUserSession(cookies);
 
       const newAssignmentButton = page.getByRole('link', { name: 'New Assignment' });
       await newAssignmentButton.click();
     });
 
     test('should create a new assignment', async ({ page }) => {
-      const assignmentTitle = faker.lorem.words();
-      const assignmentContent = faker.lorem.paragraph();
+      const assignmentType = AssignmentType.Project;
 
-      const titleInput = page.getByLabel('Title');
-      const contentInput = page.getByLabel('Content');
+      const { title } = MOCKED_ASSIGNMENT_BY_TYPE[assignmentType];
+
+      const typeSelect = page.getByLabel('Choose type');
+      await typeSelect.selectOption(assignmentType);
+
       const submitButton = page.getByRole('button', { name: 'Save' });
-
-      await titleInput.fill(assignmentTitle);
-      await contentInput.fill(assignmentContent);
 
       await submitButton.click();
 
       await expect(page).toHaveURL('/assignments');
 
       const assignment = page.getByRole('row').nth(1);
-      await expect(assignment.getByRole('cell').first()).toHaveText(assignmentTitle);
+      await expect(assignment.getByRole('cell').first()).toHaveText(title);
       await expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(
-        appSession.user.name
+        userSession.username
       );
     });
 
-    test('should throw error message - empty title', async ({ page }) => {
-      const titleInput = page.getByPlaceholder('Title');
-      await titleInput.fill('');
+    test('should throw error message - empty type', async ({ page }) => {
+      const typeSelect = page.getByLabel('Choose type');
+      await typeSelect.selectOption('');
 
       const submitButton = page.getByRole('button', { name: 'Save' });
       await submitButton.click();
 
-      await expect(page.getByText('Title is required')).toBeVisible();
-    });
-
-    test('should throw error message - empty content', async ({ page }) => {
-      const contentInput = page.getByPlaceholder('Content');
-      await contentInput.fill('');
-
-      const submitButton = page.getByRole('button', { name: 'Save' });
-      await submitButton.click();
-
-      await expect(page.getByText('Content is required')).toBeVisible();
+      await expect(page.getByText('Type is required')).toBeVisible();
     });
   });
 
   test.describe('Edit Assignment', () => {
     let assignmentTitle: string | null;
-    let assignmentAuthor: string | null;
+    let assignmentType: string | null;
     let editAssignmentUrl: string | null;
 
     test.describe.configure({ mode: 'serial' });
@@ -208,10 +200,10 @@ test.describe('Assignments page - Admin', () => {
       const editAssignmentButton = assignment.locator('a').nth(1);
 
       assignmentTitle = await assignment.getByRole('cell').first().textContent();
-      assignmentAuthor = await assignment
+      assignmentType = await assignment
         .getByRole('cell')
-        .nth(1)
-        .locator('p')
+        .nth(2)
+        .locator('span')
         .textContent();
 
       editAssignmentUrl = await editAssignmentButton.getAttribute('href');
@@ -219,17 +211,23 @@ test.describe('Assignments page - Admin', () => {
       await editAssignmentButton.click();
 
       const titleInput = page.getByLabel('Title');
-      const authorInput = page.getByLabel('Author');
+      const typeSelect = page.getByLabel('Choose type');
 
       await expect(titleInput).toHaveValue(assignmentTitle!);
-      await expect(authorInput).toHaveValue(assignmentAuthor!);
+      expect(await typeSelect.textContent()).toEqual(assignmentType!);
     });
 
-    test('should edit Title', async ({ page }) => {
-      const newTitle = 'New Title';
+    test('should edit type', async ({ page }) => {
+      const newAssignmentType = [
+        AssignmentType.Project,
+        AssignmentType.Quiz,
+        AssignmentType.Homework,
+      ].find(a => a !== assignmentType);
 
-      const titleInput = page.getByLabel('Title');
-      await titleInput.fill(newTitle);
+      const { title } = MOCKED_ASSIGNMENT_BY_TYPE[newAssignmentType!];
+
+      const typeSelect = page.getByLabel('Choose type');
+      await typeSelect.selectOption(newAssignmentType!);
 
       const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
       await submitButton.click();
@@ -238,56 +236,22 @@ test.describe('Assignments page - Admin', () => {
       await page.waitForLoadState('networkidle');
 
       const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
-      await expect(assignment.getByRole('cell').first()).toHaveText(newTitle);
+      await expect(assignment.getByRole('cell').first()).toHaveText(title);
 
       // restore previous title
       await page.goto(editAssignmentUrl!);
-      await titleInput.fill(assignmentTitle!);
+      await typeSelect.selectOption(assignmentType);
       await submitButton.click();
     });
 
-    test('should edit Content', async ({ page }) => {
-      const newContent = 'New Content';
+    test('should throw error message - empty type', async ({ page }) => {
+      const typeSelect = page.getByLabel('Choose type');
+      await typeSelect.selectOption('');
 
-      const contentInput = page.getByPlaceholder('Content');
-      await contentInput.fill(newContent);
-
-      const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
+      const submitButton = page.getByRole('button', { name: 'Save' });
       await submitButton.click();
 
-      await expect(page).toHaveURL('/assignments');
-      const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
-      await expect(assignment.getByRole('cell').nth(2)).toHaveText(newContent);
-
-      // restore previous content
-      await page.goto(editAssignmentUrl!);
-      await contentInput.fill(assignmentAuthor!);
-      await submitButton.click();
-    });
-
-    test('should not be able to edit Author', async ({ page }) => {
-      const assignmentAuthorSelectInput = page.getByLabel('Author');
-      await expect(assignmentAuthorSelectInput).toBeDisabled();
-    });
-
-    test('should throw error message - empty title', async ({ page }) => {
-      const titleInput = page.getByPlaceholder('Title');
-      await titleInput.fill('');
-
-      const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
-      await submitButton.click();
-
-      await expect(page.getByText('Title is required')).toBeVisible();
-    });
-
-    test('should throw error message - empty content', async ({ page }) => {
-      const contentInput = page.getByPlaceholder('Content');
-      await contentInput.fill('');
-
-      const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
-      await submitButton.click();
-
-      await expect(page.getByText('Content is required')).toBeVisible();
+      await expect(page.getByText('Type is required')).toBeVisible();
     });
   });
 
@@ -301,7 +265,6 @@ test.describe('Assignments page - Admin', () => {
 
     test('should successfully delete assignment', async ({ page }) => {
       const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
-      const assignmentTitle = await assignment.getByRole('cell').first().textContent();
       const deleteAssignmentButton = assignment.getByRole('button');
 
       await deleteAssignmentButton.click();
@@ -313,12 +276,10 @@ test.describe('Assignments page - Admin', () => {
       await deleteButton.click();
 
       await expect(page).toHaveURL('/assignments?page=2');
-      await expect(page.getByText(assignmentTitle!).nth(1)).not.toBeVisible();
     });
 
     test('should go back from delete confirmation modal', async ({ page }) => {
       const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
-      const assignmentTitle = await assignment.getByRole('cell').first().textContent();
       const deleteAssignmentButton = assignment.getByRole('button');
 
       await deleteAssignmentButton.click();
@@ -330,7 +291,6 @@ test.describe('Assignments page - Admin', () => {
       await cancelButton.click();
 
       await expect(page).toHaveURL('/assignments?page=2');
-      await expect(page.getByText(assignmentTitle!).nth(1)).toBeVisible();
     });
   });
 });
@@ -363,11 +323,11 @@ test.describe('Assignments page - Teacher', () => {
   });
 
   test.describe('Show Assignment', () => {
-    let appSession: AppSession;
+    let userSession: UserSession;
 
     test.beforeEach(async ({ context }) => {
       const cookies = await context.cookies();
-      appSession = await getAppSession(cookies);
+      userSession = await getUserSession(cookies);
     });
 
     test('should go to show assignment page', async ({ page }) => {
@@ -395,7 +355,7 @@ test.describe('Assignments page - Teacher', () => {
           .slice(1)
           .map((assignment: Locator) =>
             expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(
-              appSession.user.name
+              userSession.username
             )
           )
       );
@@ -403,11 +363,11 @@ test.describe('Assignments page - Teacher', () => {
   });
 
   test.describe('Create Assignment', () => {
-    let appSession: AppSession;
+    let userSession: UserSession;
 
     test.beforeEach(async ({ page, context }) => {
       const cookies = await context.cookies();
-      appSession = await getAppSession(cookies);
+      userSession = await getUserSession(cookies);
 
       const newAssignmentButton = page.getByRole('link', { name: 'New Assignment' });
       await newAssignmentButton.click();
@@ -431,7 +391,7 @@ test.describe('Assignments page - Teacher', () => {
       const assignment = page.getByRole('row').nth(1);
       await expect(assignment.getByRole('cell').first()).toHaveText(assignmentTitle);
       await expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(
-        appSession.user.name
+        userSession.username
       );
     });
 
@@ -599,7 +559,7 @@ test.describe('Assignments page - Teacher', () => {
 
     test.beforeEach(async ({ context }) => {
       const cookies = await context.cookies();
-      const appSession = await getAppSession(cookies);
+      const userSession = await getUserSession(cookies);
 
       const [row] = await db
         .select({
@@ -614,7 +574,7 @@ test.describe('Assignments page - Teacher', () => {
           },
         })
         .from(assignmentsTable)
-        .where(ne(assignmentsTable.authorId, appSession.user.id))
+        .where(ne(assignmentsTable.authorId, userSession.id))
         .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
         .limit(1);
 

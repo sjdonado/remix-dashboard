@@ -24,13 +24,13 @@ export const userSessionStorage = createCookieSessionStorage({
 export const getUserSessionData = async (request: Request) => {
   const userSession = await userSessionStorage.getSession(request.headers.get('Cookie'));
 
-  const data = userSession.get('data');
+  const user = userSession.get('user');
 
-  if (!data) {
+  if (!user) {
     return;
   }
 
-  const serializedSession = await UserSessionSchema.parseAsync(data);
+  const serializedSession = await UserSessionSchema.parseAsync(user);
 
   return serializedSession;
 };
@@ -41,8 +41,8 @@ export const updateUserSessionData = async (
 ) => {
   const userSession = await userSessionStorage.getSession(request.headers.get('Cookie'));
 
-  const data = userSession.get('data') as UserSession;
-  userSession.set('data', Object.assign(data ?? {}, update));
+  const user = userSession.get('user') as UserSession;
+  userSession.set('user', Object.assign(user ?? {}, update));
 
   return userSessionStorage.commitSession(userSession);
 };
