@@ -13,7 +13,6 @@ import {
 import type { UserSession } from '~/schemas/user';
 import { UserRole } from '~/constants/user';
 
-import AppLogo from './AppLogo';
 import Avatar from './Avatar';
 import { UserRoleBadge } from './badge/UserRoleBadge';
 import { DialogModalButton } from './dialog/ConfirmationDialog';
@@ -34,9 +33,6 @@ export default function Sidebar({ userSession, children }: SidebarProps) {
           className="drawer-overlay"
         ></label>
         <div className="flex min-h-full w-60 flex-col gap-2 border-r p-2 text-base-content sm:w-64">
-          <div className="m-auto rounded-lg">
-            <AppLogo />
-          </div>
           <ul className="flex flex-1 flex-col gap-2 p-4">
             <li>
               <div className="flex flex-wrap items-center justify-start gap-2 p-3">

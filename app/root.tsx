@@ -55,7 +55,10 @@ export default function App() {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Dashboard</title>
-        <meta name="description" content="Dashboard Remix App" />
+        <meta
+          name="description"
+          content="MVP of a Learning Management System built with remix + vite, drizzle + better-sqlite3, and tailwindcss + daisyui"
+        />
         <Meta />
         <Links />
       </head>
