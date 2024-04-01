@@ -8,13 +8,17 @@ import { asc, desc, sql, eq } from 'drizzle-orm';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
-import { AssignmentSerializedSchema } from '~/schemas/assignment';
+import {
+  AssignmentSerializedCardSchema,
+  AssignmentSerializedSchema,
+} from '~/schemas/assignment';
 
 import { PAGE_SIZE } from '~/constants/search.server';
 import { formatDateToLocal } from '~/utils/date';
 
 import Pagination from '~/components/Pagination';
 import Avatar from '~/components/Avatar';
+import AssignmentCard from '~/components/AssignmentCard';
 
 const canUseDOM = !!(
   typeof window !== 'undefined' &&
@@ -29,7 +33,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const pageNumber = Number(url.searchParams.get('page') ?? 1);
 
-  const sq = db.$with('sq').as(
+  const [[{ count }], assignments] = await Promise.all([
+    db.select({ count: sql`count(*)` }).from(assignmentsTable),
     db
       .select({
         id: assignmentsTable.id,
@@ -48,18 +53,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       })
       .from(assignmentsTable)
       .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
-  );
-
-  const [[{ count }], assignments] = await Promise.all([
-    db
-      .with(sq)
-      .select({ count: sql`count(*)` })
-      .from(sq),
-    db
-      .with(sq)
-      .select()
-      .from(sq)
-      .orderBy(desc(sq.createdAt), asc(sq.id))
+      .orderBy(desc(assignmentsTable.createdAt), asc(assignmentsTable.id))
       .offset((pageNumber - 1) * PAGE_SIZE)
       .limit(PAGE_SIZE),
   ]);
@@ -89,28 +83,7 @@ export default function HomePage() {
     <div id="assignments" className="flex h-[92vh] flex-col gap-4 overflow-y-auto">
       <div className="flex flex-col gap-2">
         {assignments?.map(assignment => (
-          <div
-            key={assignment.id}
-            className="w-full rounded-lg border border-base-300 bg-base-100 p-4"
-          >
-            <div className="flex items-start justify-start gap-2 pb-4">
-              <Avatar
-                className="!h-10 !w-10 [&>span]:text-sm"
-                name={assignment.author.username!}
-              />
-              <div className="flex flex-col items-start gap-1">
-                <Link to={`/home/${assignment.id}/show`} className="link">
-                  {assignment.title}
-                </Link>
-                <span className="min-w-fit text-xs">
-                  {formatDateToLocal(assignment.createdAt)}
-                </span>
-              </div>
-            </div>
-            <div className="flex w-full items-center justify-between pt-1">
-              <p className="line-clamp-3 text-sm">{assignment.content}</p>
-            </div>
-          </div>
+          <AssignmentCard key={assignment.id} assignment={assignment} />
         ))}
       </div>
       <div className="flex flex-1 justify-center">

@@ -12,8 +12,8 @@ import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
 import { isAuthenticated } from '~/services/auth.server';
 
-import Assignment from '~/components/Assignment';
 import { Breadcrumb } from '~/components/Breadcrumbs';
+import AssignmentCard from '~/components/AssignmentCard';
 
 export const handle = {
   breadcrumb: (match: UIMatch) => <Breadcrumb pathname={match.pathname} label="Show" />,
@@ -26,9 +26,14 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const [row] = await db
     .select({
       id: assignmentsTable.id,
+      status: assignmentsTable.status,
+      type: assignmentsTable.type,
       title: assignmentsTable.title,
       content: assignmentsTable.content,
+      points: assignmentsTable.points,
+      dueAt: assignmentsTable.dueAt,
       createdAt: assignmentsTable.createdAt,
+      updatedAt: assignmentsTable.updatedAt,
       author: {
         id: assignmentsTable.authorId,
         username: usersTable.username,
@@ -59,5 +64,5 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 export default function ShowAssignmentPage() {
   const { assignment } = useLoaderData<typeof loader>();
 
-  return <Assignment assignment={assignment} />;
+  return <AssignmentCard assignment={assignment} expanded />;
 }

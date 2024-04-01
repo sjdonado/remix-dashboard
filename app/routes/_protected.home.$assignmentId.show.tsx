@@ -11,7 +11,7 @@ import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
 import { Breadcrumb } from '~/components/Breadcrumbs';
-import Assignment from '~/components/Assignment';
+import AssignmentCard from '~/components/AssignmentCard';
 
 export const handle = {
   breadcrumb: (match: UIMatch) => (
@@ -25,9 +25,14 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const [row] = await db
     .select({
       id: assignmentsTable.id,
+      status: assignmentsTable.status,
+      type: assignmentsTable.type,
       title: assignmentsTable.title,
       content: assignmentsTable.content,
+      points: assignmentsTable.points,
+      dueAt: assignmentsTable.dueAt,
       createdAt: assignmentsTable.createdAt,
+      updatedAt: assignmentsTable.updatedAt,
       author: {
         id: assignmentsTable.authorId,
         username: usersTable.username,
@@ -53,5 +58,5 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function HomeShowAssignmentPage() {
   const { assignment } = useLoaderData<typeof loader>();
 
-  return <Assignment assignment={assignment} />;
+  return <AssignmentCard assignment={assignment} expanded />;
 }

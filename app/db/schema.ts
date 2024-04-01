@@ -1,5 +1,5 @@
-import { randomUUID } from 'crypto';
 import { sql } from 'drizzle-orm';
+import { randomUUID } from 'crypto';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 import { AssignmentStatus, AssignmentType } from '~/constants/assignment';
@@ -48,3 +48,25 @@ export const assignmentsTable = sqliteTable('assignments', {
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
 });
+
+// not supported yet by drizzle https://orm.drizzle.team/docs/views
+// export const assignmentView = sqliteView('assignmentView').as(qb =>
+//   qb
+//     .select({
+//       id: assignmentsTable.id,
+//       status: assignmentsTable.status,
+//       type: assignmentsTable.type,
+//       title: assignmentsTable.title,
+//       content: assignmentsTable.content,
+//       points: assignmentsTable.points,
+//       dueAt: assignmentsTable.dueAt,
+//       createdAt: assignmentsTable.createdAt,
+//       updatedAt: assignmentsTable.updatedAt,
+//       author: {
+//         id: assignmentsTable.authorId,
+//         username: usersTable.username,
+//       },
+//     })
+//     .from(assignmentsTable)
+//     .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
+// );

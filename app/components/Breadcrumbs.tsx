@@ -31,7 +31,7 @@ export function Breadcrumb({ pathname, label }: { pathname: string; label: strin
     <Link
       to={pathname}
       aria-current={active}
-      className={clsx('font-medium', !active && 'text-gray-500')}
+      className={clsx(!active && 'text-gray-500')}
     >
       {label}
     </Link>
