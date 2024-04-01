@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker';
 import { eq, ne } from 'drizzle-orm';
 
 import type { Locator } from '@playwright/test';
@@ -172,7 +171,7 @@ test.describe('Assignments page - Admin', () => {
 
       const assignment = page.getByRole('row').nth(1);
       await expect(assignment.getByRole('cell').first()).toHaveText(title);
-      await expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(
+      await expect(assignment.getByRole('cell').nth(3).locator('p')).toHaveText(
         userSession.username
       );
     });
@@ -214,7 +213,7 @@ test.describe('Assignments page - Admin', () => {
       const typeSelect = page.getByLabel('Choose type');
 
       await expect(titleInput).toHaveValue(assignmentTitle!);
-      expect(await typeSelect.textContent()).toEqual(assignmentType!);
+      await expect(typeSelect).toHaveValue(assignmentType!.toUpperCase());
     });
 
     test('should edit type', async ({ page }) => {
@@ -222,18 +221,19 @@ test.describe('Assignments page - Admin', () => {
         AssignmentType.Project,
         AssignmentType.Quiz,
         AssignmentType.Homework,
-      ].find(a => a !== assignmentType);
+      ].find(a => a.toUpperCase() !== assignmentType?.toUpperCase());
 
       const { title } = MOCKED_ASSIGNMENT_BY_TYPE[newAssignmentType!];
 
       const typeSelect = page.getByLabel('Choose type');
       await typeSelect.selectOption(newAssignmentType!);
 
-      const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
+      const submitButton = page.getByRole('button', { name: 'Save' });
       await submitButton.click();
 
       await expect(page).toHaveURL('/assignments');
       await page.waitForLoadState('networkidle');
+      await page.reload();
 
       const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
       await expect(assignment.getByRole('cell').first()).toHaveText(title);
@@ -265,7 +265,7 @@ test.describe('Assignments page - Admin', () => {
 
     test('should successfully delete assignment', async ({ page }) => {
       const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
-      const deleteAssignmentButton = assignment.getByRole('button');
+      const deleteAssignmentButton = assignment.getByRole('button').nth(1);
 
       await deleteAssignmentButton.click();
 
@@ -280,7 +280,7 @@ test.describe('Assignments page - Admin', () => {
 
     test('should go back from delete confirmation modal', async ({ page }) => {
       const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
-      const deleteAssignmentButton = assignment.getByRole('button');
+      const deleteAssignmentButton = assignment.getByRole('button').nth(1);
 
       await deleteAssignmentButton.click();
 
@@ -298,7 +298,7 @@ test.describe('Assignments page - Admin', () => {
 test.describe('Assignments page - Teacher', () => {
   test.use({ storageState: TEACHER_STORAGE_STATE });
 
-  const ASSIGNMENT_ROW = 1;
+  const ASSIGNMENT_ROW = 2;
   const TABLE_ROWS_LENGTH = PAGE_SIZE + 1;
 
   test.beforeEach(async ({ page }) => {
@@ -335,15 +335,17 @@ test.describe('Assignments page - Teacher', () => {
       const showAssignmentButton = assignment.locator('a').first();
 
       const assignmentTitle = await assignment.getByRole('cell').first().textContent();
-      const assignmentAuthor = await assignment.getByRole('cell').nth(1).textContent();
-      const assignmentCreatedAt = await assignment.getByRole('cell').nth(3).textContent();
+      const assignmentContent = await assignment.getByRole('cell').nth(4).textContent();
+      const assignmentDueAt = await assignment.getByRole('cell').nth(6).textContent();
+      const assignmentCreatedAt = await assignment.getByRole('cell').nth(7).textContent();
       const showAssignmentUrl = await showAssignmentButton.getAttribute('href');
 
       await showAssignmentButton.click();
 
       await expect(page).toHaveURL(showAssignmentUrl!);
       await expect(page.locator('h1')).toHaveText(assignmentTitle!);
-      await expect(page.getByText(assignmentAuthor!)).toBeVisible();
+      await expect(page.getByText(assignmentContent!)).toBeVisible();
+      await expect(page.getByText(assignmentDueAt!)).toBeVisible();
       await expect(page.getByText(assignmentCreatedAt!)).toBeVisible();
     });
 
@@ -354,7 +356,7 @@ test.describe('Assignments page - Teacher', () => {
         assignments
           .slice(1)
           .map((assignment: Locator) =>
-            expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(
+            expect(assignment.getByRole('cell').nth(3).locator('p')).toHaveText(
               userSession.username
             )
           )
@@ -374,51 +376,40 @@ test.describe('Assignments page - Teacher', () => {
     });
 
     test('should create a new assignment', async ({ page }) => {
-      const assignmentTitle = faker.lorem.words();
-      const assignmentContent = faker.lorem.paragraph();
+      const assignmentType = AssignmentType.Project;
 
-      const titleInput = page.getByLabel('Title');
-      const contentInput = page.getByLabel('Content');
+      const { title } = MOCKED_ASSIGNMENT_BY_TYPE[assignmentType];
+
+      const typeSelect = page.getByLabel('Choose type');
+      await typeSelect.selectOption(assignmentType);
+
       const submitButton = page.getByRole('button', { name: 'Save' });
-
-      await titleInput.fill(assignmentTitle);
-      await contentInput.fill(assignmentContent);
 
       await submitButton.click();
 
       await expect(page).toHaveURL('/assignments');
 
       const assignment = page.getByRole('row').nth(1);
-      await expect(assignment.getByRole('cell').first()).toHaveText(assignmentTitle);
-      await expect(assignment.getByRole('cell').nth(1).locator('p')).toHaveText(
+      await expect(assignment.getByRole('cell').first()).toHaveText(title);
+      await expect(assignment.getByRole('cell').nth(3).locator('p')).toHaveText(
         userSession.username
       );
     });
 
-    test('should throw error message - empty title', async ({ page }) => {
-      const titleInput = page.getByPlaceholder('Title');
-      await titleInput.fill('');
+    test('should throw error message - empty type', async ({ page }) => {
+      const typeSelect = page.getByLabel('Choose type');
+      await typeSelect.selectOption('');
 
       const submitButton = page.getByRole('button', { name: 'Save' });
       await submitButton.click();
 
-      await expect(page.getByText('Title is required')).toBeVisible();
-    });
-
-    test('should throw error message - empty content', async ({ page }) => {
-      const contentInput = page.getByPlaceholder('Content');
-      await contentInput.fill('');
-
-      const submitButton = page.getByRole('button', { name: 'Save' });
-      await submitButton.click();
-
-      await expect(page.getByText('Content is required')).toBeVisible();
+      await expect(page.getByText('Type is required')).toBeVisible();
     });
   });
 
   test.describe('Edit Assignment', () => {
     let assignmentTitle: string | null;
-    let assignmentAuthor: string | null;
+    let assignmentType: string | null;
     let editAssignmentUrl: string | null;
 
     test.describe.configure({ mode: 'serial' });
@@ -428,86 +419,59 @@ test.describe('Assignments page - Teacher', () => {
       const editAssignmentButton = assignment.locator('a').nth(1);
 
       assignmentTitle = await assignment.getByRole('cell').first().textContent();
-      assignmentAuthor = await assignment
+      assignmentType = await assignment
         .getByRole('cell')
-        .nth(1)
-        .locator('p')
+        .nth(2)
+        .locator('span')
         .textContent();
+
       editAssignmentUrl = await editAssignmentButton.getAttribute('href');
 
       await editAssignmentButton.click();
 
       const titleInput = page.getByLabel('Title');
-      const authorInput = page.getByLabel('Author');
+      const typeSelect = page.getByLabel('Choose type');
 
       await expect(titleInput).toHaveValue(assignmentTitle!);
-      await expect(authorInput).toHaveValue(assignmentAuthor!);
+      await expect(typeSelect).toHaveValue(assignmentType!.toUpperCase());
     });
 
-    test('should edit Title', async ({ page }) => {
-      const newTitle = 'New Title';
+    test('should edit type', async ({ page }) => {
+      const newAssignmentType = [
+        AssignmentType.Project,
+        AssignmentType.Quiz,
+        AssignmentType.Homework,
+      ].find(a => a.toUpperCase() !== assignmentType?.toUpperCase());
 
-      const titleInput = page.getByPlaceholder('Title');
-      await titleInput.fill(newTitle);
+      const { title } = MOCKED_ASSIGNMENT_BY_TYPE[newAssignmentType!];
 
-      const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
+      const typeSelect = page.getByLabel('Choose type');
+      await typeSelect.selectOption(newAssignmentType!);
+
+      const submitButton = page.getByRole('button', { name: 'Save' });
       await submitButton.click();
 
       await expect(page).toHaveURL('/assignments');
       await page.waitForLoadState('networkidle');
+      await page.reload();
 
       const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
-      await expect(assignment.getByRole('cell').first()).toHaveText(newTitle);
+      await expect(assignment.getByRole('cell').first()).toHaveText(title);
 
       // restore previous title
       await page.goto(editAssignmentUrl!);
-      await titleInput.fill(assignmentTitle!);
+      await typeSelect.selectOption(assignmentType);
       await submitButton.click();
     });
 
-    test('should edit Content', async ({ page }) => {
-      const newContent = 'New Content';
+    test('should throw error message - empty type', async ({ page }) => {
+      const typeSelect = page.getByLabel('Choose type');
+      await typeSelect.selectOption('');
 
-      const contentInput = page.getByPlaceholder('Content');
-      await contentInput.fill(newContent);
-
-      const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
+      const submitButton = page.getByRole('button', { name: 'Save' });
       await submitButton.click();
 
-      await expect(page).toHaveURL('/assignments');
-      await expect(
-        page.getByRole('row').nth(ASSIGNMENT_ROW).getByRole('cell').nth(2)
-      ).toHaveText(newContent);
-
-      // restore previous content
-      await page.goto(editAssignmentUrl!);
-      await contentInput.fill(assignmentAuthor!);
-      await submitButton.click();
-    });
-
-    test('should not be able to edit Author', async ({ page }) => {
-      const assignmentAuthorSelectInput = page.getByLabel('Author');
-      await expect(assignmentAuthorSelectInput).toBeDisabled();
-    });
-
-    test('should throw error message - empty title', async ({ page }) => {
-      const titleInput = page.getByPlaceholder('Title');
-      await titleInput.fill('');
-
-      const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
-      await submitButton.click();
-
-      await expect(page.getByText('Title is required')).toBeVisible();
-    });
-
-    test('should throw error message - empty content', async ({ page }) => {
-      const contentInput = page.getByPlaceholder('Content');
-      await contentInput.fill('');
-
-      const submitButton = page.getByRole('button', { name: 'Edit Assignment' });
-      await submitButton.click();
-
-      await expect(page.getByText('Content is required')).toBeVisible();
+      await expect(page.getByText('Type is required')).toBeVisible();
     });
   });
 
@@ -521,8 +485,8 @@ test.describe('Assignments page - Teacher', () => {
 
     test('should successfully delete assignment', async ({ page }) => {
       const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
-      const assignmentTitle = await assignment.getByRole('cell').first().textContent();
-      const deleteAssignmentButton = assignment.getByRole('button');
+      const assignmentDueAt = await assignment.getByRole('cell').nth(6).textContent();
+      const deleteAssignmentButton = assignment.getByRole('button').nth(1);
 
       await deleteAssignmentButton.click();
 
@@ -533,13 +497,13 @@ test.describe('Assignments page - Teacher', () => {
       await deleteButton.click();
 
       await expect(page).toHaveURL('/assignments?page=2');
-      await expect(page.getByText(assignmentTitle!).nth(1)).not.toBeVisible();
+      await expect(page.getByText(assignmentDueAt!)).not.toBeVisible();
     });
 
     test('should go back from delete confirmation modal', async ({ page }) => {
       const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
-      const assignmentTitle = await assignment.getByRole('cell').first().textContent();
-      const deleteAssignmentButton = assignment.getByRole('button');
+      const assignmentDueAt = await assignment.getByRole('cell').nth(6).textContent();
+      const deleteAssignmentButton = assignment.getByRole('button').nth(1);
 
       await deleteAssignmentButton.click();
 
@@ -550,7 +514,7 @@ test.describe('Assignments page - Teacher', () => {
       await cancelButton.click();
 
       await expect(page).toHaveURL('/assignments?page=2');
-      await expect(page.getByText(assignmentTitle!).nth(1)).toBeVisible();
+      await expect(page.getByText(assignmentDueAt!)).toBeVisible();
     });
   });
 

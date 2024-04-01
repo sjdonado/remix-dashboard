@@ -28,5 +28,5 @@ export default function UsersLayout() {
 }
 
 export function ErrorBoundary() {
-  return <CustomErrorBoundary className="w-full h-[90vh]" />;
+  return <CustomErrorBoundary className="h-[90vh] w-full" />;
 }

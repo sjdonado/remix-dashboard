@@ -49,21 +49,21 @@ export const seedAssignments = async (db: BetterSQLite3Database) => {
 
   for (const user of users) {
     for (let i = 0; i < 12; i++) {
-      const mockedAssignment =
-        MOCKED_ASSIGNMENT_BY_TYPE[
-          faker.helpers.arrayElement([
-            AssignmentType.Homework,
-            AssignmentType.Quiz,
-            AssignmentType.Project,
-          ])
-        ];
+      const assignmentType = faker.helpers.arrayElement([
+        AssignmentType.Homework,
+        AssignmentType.Quiz,
+        AssignmentType.Project,
+      ]);
+
+      const { title, content, points, dueAt } = MOCKED_ASSIGNMENT_BY_TYPE[assignmentType];
 
       data.push({
         authorId: user.id,
-        title: mockedAssignment.title,
-        content: mockedAssignment.content,
-        points: mockedAssignment.points,
-        dueAt: mockedAssignment.dueAt,
+        type: assignmentType,
+        title,
+        content,
+        points,
+        dueAt,
       });
     }
   }

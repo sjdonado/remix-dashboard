@@ -29,26 +29,10 @@ test.describe('Me page - Admin', () => {
 
   test('should have profile details', async ({ page }) => {
     const username = page.getByPlaceholder('Your username');
-    const role = page.getByText(userSession.role);
+    const role = page.getByLabel('Choose role');
 
     await expect(username).toHaveValue(userSession.username);
     await expect(role).toBeVisible();
-  });
-
-  test('should update profile - name', async ({ page }) => {
-    const newUsername = 'John';
-
-    const nameInput = page.getByPlaceholder('Your name');
-    await nameInput.fill(newUsername);
-
-    const submitButton = page.getByRole('button', { name: 'Save' });
-    await submitButton.click();
-
-    await expect(nameInput).toHaveValue(newUsername);
-
-    // restore previous name
-    await nameInput.fill(userSession.username);
-    await submitButton.click();
   });
 
   test('should update profile - username', async ({ page }) => {
@@ -72,16 +56,6 @@ test.describe('Me page - Admin', () => {
     await backButton.click();
 
     await expect(page).toHaveURL('/home');
-  });
-
-  test('should show error message - empty name', async ({ page }) => {
-    const nameInput = page.getByPlaceholder('Your name');
-    await nameInput.fill('');
-
-    const submitButton = page.getByRole('button', { name: 'Save' });
-    await submitButton.click();
-
-    await expect(page.getByText('Name is required')).toBeVisible();
   });
 
   test('should show error message - empty username', async ({ page }) => {
@@ -116,7 +90,7 @@ test.describe('Me page - Teacher', () => {
 
   test('should have profile details', async ({ page }) => {
     const username = page.getByPlaceholder('Your username');
-    const role = page.getByText(userSession.role);
+    const role = page.getByLabel('Choose role');
 
     await expect(username).toHaveValue(userSession.username);
     await expect(role).toBeVisible();
@@ -144,7 +118,7 @@ test.describe('Me page - Student', () => {
 
   test('should have profile details', async ({ page }) => {
     const username = page.getByPlaceholder('Your username');
-    const role = page.getByText(userSession.role);
+    const role = page.getByLabel('Choose role');
 
     await expect(username).toHaveValue(userSession.username);
     await expect(role).toBeVisible();

@@ -11,7 +11,7 @@ import { AssignmentSerializedSchema } from '~/schemas/assignment';
 import { formatDateToLocal } from '~/utils/date';
 import { PAGE_SIZE } from '~/constants/search.server';
 
-import { isAuthenticated } from '~/services/auth.server';
+import { isAuthorized } from '~/services/auth.server';
 
 import {
   CreateBtnLink,
@@ -25,9 +25,14 @@ import Search from '~/components/Search';
 import Avatar from '~/components/Avatar';
 import { AssignmentTypeBadge } from '~/components/badge/AssignmentTypeBadge';
 import { AssignmentUpdateStatusDialogButton } from '~/components/dialog/AssignmentUpdateStatusDialog';
+import { UserRole } from '~/constants/user';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userSession = await isAuthenticated(request);
+  const userSession = await isAuthorized(
+    request,
+    [UserRole.Admin, UserRole.Teacher],
+    '/'
+  );
 
   const url = new URL(request.url);
 

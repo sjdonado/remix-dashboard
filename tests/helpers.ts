@@ -13,8 +13,6 @@ export const VALID_ADMIN_USERNAME = 'admin1';
 export const VALID_TEACHER_USERNAME = 'teacher2';
 export const VALID_STUDENT_USERNAME = 'student1';
 
-export const VALID_PASSWORD = '123456';
-
 export const ADMIN_STORAGE_STATE = 'tests/.auth/admin.json';
 export const TEACHER_STORAGE_STATE = 'tests/.auth/teacher.json';
 export const STUDENT_STORAGE_STATE = 'tests/.auth/student.json';

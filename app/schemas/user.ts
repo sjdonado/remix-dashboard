@@ -25,7 +25,8 @@ export const UserCreateSchema = UserSchema.omit({
 
 export const UserUpdateSchema = UserSchema.pick({
   username: true,
-  role: true,
+}).extend({
+  role: z.enum(ALL_USER_ROLES).optional(),
 });
 
 export const UserSessionSchema = UserSchema.pick({
