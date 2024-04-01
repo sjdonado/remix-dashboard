@@ -17,7 +17,9 @@ export function TableContainer({ totalPages, currentPage, children }: TableProps
   return (
     <div className="flex flex-col gap-4">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-base-200/50 p-2 md:pt-0">{children}</div>
+        <div className="rounded-lg border border-base-300 bg-base-200/50 p-2 md:pt-0">
+          {children}
+        </div>
       </div>
       <div className="flex flex-1 justify-center">
         <Pagination totalPages={totalPages} currentPage={currentPage} />

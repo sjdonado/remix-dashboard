@@ -105,19 +105,26 @@ export default function AssignmentsPage() {
           {assignments?.map(assignment => (
             <div key={assignment.id} className="w-full border-b bg-base-100 p-4">
               <div className="flex flex-col items-start gap-4">
-                <div className="flex w-full items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
+                <div className="flex w-full items-center gap-2">
+                  <div className="flex flex-1 items-center gap-1">
                     <Avatar
                       name={assignment.author.username!}
-                      className="!size-7 min-w-7"
+                      className="!size-6 !min-w-6"
                     />
                     <p className="text-sm text-gray-500">{assignment.author.username}</p>
                   </div>
+                  <AssignmentUpdateStatusDialogButton
+                    assignmentId={assignment.id}
+                    status={assignment.status}
+                  />
+                  <AssignmentTypeBadge type={assignment.type} />
+                </div>
+                <div className="flex flex-1 flex-col gap-1">
                   <span className="min-w-fit text-xs">
                     {formatDateToLocal(assignment.createdAt)}
                   </span>
+                  <h1 className="text-xl">{assignment.title}</h1>
                 </div>
-                <p>{assignment.title}</p>
                 <p className="line-clamp-3 text-sm">{assignment.content}</p>
               </div>
               <div className="flex items-center justify-end gap-2 pt-4">

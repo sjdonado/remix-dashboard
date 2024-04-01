@@ -27,7 +27,7 @@ export default function AssignmentCard({
             expanded && 'card-left-arrow'
           )}
         >
-          <div className={clsx('flex flex-col gap-2')}>
+          <div className={clsx('flex flex-col gap-2', expanded && '!gap-4')}>
             <div className="flex gap-2">
               <div className="flex flex-1 flex-col gap-2">
                 <p className="text-xs text-gray-500">

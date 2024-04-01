@@ -135,7 +135,7 @@ export function AssignmentUpdateStatusDialogButton({
             )}
           <button
             type="button"
-            className="cursor-pointer"
+            className="cursor-pointer leading-none"
             onClick={() => setIsAttached(true)}
           >
             <AssignmentStatusBadge status={status} />
