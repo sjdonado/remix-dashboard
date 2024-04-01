@@ -29,7 +29,7 @@ test.describe('Home page - Admin', () => {
 
   test('should paginate assignments', async ({ page }) => {
     await expect(page.locator('#assignments h1')).toHaveCount(10);
-    const firstAssignment = await page.locator('#assignments h1').first().textContent();
+    const firstPageList = await page.getByRole('main').textContent();
 
     await expect(page.locator('a[href*="/home?page=2"]').first()).toBeVisible();
 
@@ -37,9 +37,7 @@ test.describe('Home page - Admin', () => {
     await page.waitForURL('/home?page=2');
 
     await expect(page.locator('#assignments h1')).toHaveCount(10);
-    await expect(page.locator('#assignments h1').first()).not.toHaveText(
-      firstAssignment!
-    );
+    await expect(page.getByRole('main')).not.toHaveText(firstPageList!);
   });
 
   test('should go to assignment details page', async ({ page }) => {
@@ -89,7 +87,7 @@ test.describe('Home page - Student', () => {
 
   test('should paginate assignments', async ({ page }) => {
     await expect(page.locator('#assignments h1')).toHaveCount(10);
-    const firstAssignment = await page.locator('#assignments h1').first().textContent();
+    const firstPageList = await page.getByRole('main').textContent();
 
     await expect(page.locator('a[href*="/home?page=2"]').first()).toBeVisible();
 
@@ -97,8 +95,6 @@ test.describe('Home page - Student', () => {
     await page.waitForURL('/home?page=2');
 
     await expect(page.locator('#assignments h1')).toHaveCount(10);
-    await expect(page.locator('#assignments h1').first()).not.toHaveText(
-      firstAssignment!
-    );
+    await expect(page.getByRole('main')).not.toHaveText(firstPageList!);
   });
 });

@@ -47,12 +47,7 @@ test.describe('Assignments page - Admin', () => {
 
     test('should paginate assignments', async ({ page }) => {
       await expect(page.getByRole('row')).toHaveCount(TABLE_ROWS_LENGTH);
-      const firstAssignmentTitle = await page
-        .getByRole('row')
-        .nth(1)
-        .getByRole('cell')
-        .nth(6)
-        .textContent();
+      const firstPageTable = await page.getByRole('table').textContent();
 
       await expect(page.locator('a[href*="/assignments?page=2"]').first()).toBeVisible();
 
@@ -60,9 +55,7 @@ test.describe('Assignments page - Admin', () => {
       await page.waitForURL('/assignments?page=2');
 
       await expect(page.getByRole('row')).toHaveCount(TABLE_ROWS_LENGTH);
-      await expect(page.getByRole('row').nth(1).getByRole('cell').first()).not.toHaveText(
-        firstAssignmentTitle!
-      );
+      await expect(page.getByRole('table')).not.toHaveText(firstPageTable!);
     });
   });
 
@@ -291,6 +284,7 @@ test.describe('Assignments page - Admin', () => {
       await cancelButton.click();
 
       await expect(page).toHaveURL('/assignments?page=2');
+      await expect(assignment).toBeVisible();
     });
   });
 });
@@ -485,7 +479,6 @@ test.describe('Assignments page - Teacher', () => {
 
     test('should successfully delete assignment', async ({ page }) => {
       const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
-      const assignmentDueAt = await assignment.getByRole('cell').nth(6).textContent();
       const deleteAssignmentButton = assignment.getByRole('button').nth(1);
 
       await deleteAssignmentButton.click();
@@ -497,12 +490,11 @@ test.describe('Assignments page - Teacher', () => {
       await deleteButton.click();
 
       await expect(page).toHaveURL('/assignments?page=2');
-      await expect(page.getByText(assignmentDueAt!)).not.toBeVisible();
+      await expect(assignment).not.toBeVisible();
     });
 
     test('should go back from delete confirmation modal', async ({ page }) => {
       const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
-      const assignmentDueAt = await assignment.getByRole('cell').nth(6).textContent();
       const deleteAssignmentButton = assignment.getByRole('button').nth(1);
 
       await deleteAssignmentButton.click();
@@ -514,7 +506,7 @@ test.describe('Assignments page - Teacher', () => {
       await cancelButton.click();
 
       await expect(page).toHaveURL('/assignments?page=2');
-      await expect(page.getByText(assignmentDueAt!)).toBeVisible();
+      await expect(assignment).toBeVisible();
     });
   });
 

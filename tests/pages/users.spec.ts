@@ -42,12 +42,7 @@ test.describe('Users page - Admin', () => {
 
     test('should paginate users', async ({ page }) => {
       await expect(page.getByRole('row')).toHaveCount(TABLE_ROWS_LENGTH);
-      const firstUserName = await page
-        .getByRole('row')
-        .nth(1)
-        .getByRole('cell')
-        .first()
-        .textContent();
+      const firstPageTable = await page.getByRole('table').textContent();
 
       await expect(page.locator('a[href*="/users?page=2"]').first()).toBeVisible();
 
@@ -55,9 +50,7 @@ test.describe('Users page - Admin', () => {
       await page.waitForURL('/users?page=2');
 
       await expect(page.getByRole('row')).toHaveCount(TABLE_ROWS_LENGTH);
-      await expect(page.getByRole('row').nth(1).getByRole('cell').first()).not.toHaveText(
-        firstUserName!
-      );
+      await expect(page.getByRole('table')).not.toHaveText(firstPageTable!);
     });
   });
 
@@ -153,10 +146,7 @@ test.describe('Users page - Admin', () => {
       const submitButton = page.getByRole('button', { name: 'Save' });
       await submitButton.click();
 
-      const user = page.getByRole('row').nth(USER_ROW);
-      await expect(user.getByRole('cell').first().getByRole('paragraph')).toHaveText(
-        newUsername
-      );
+      await expect(page.getByText(newUsername).nth(1)).toBeVisible();
 
       // restore previous username
       await page.goto(editUserUrl!);

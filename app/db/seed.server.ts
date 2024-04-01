@@ -55,7 +55,7 @@ export const seedAssignments = async (db: BetterSQLite3Database) => {
         AssignmentType.Project,
       ]);
 
-      const { title, content, points, dueAt } = MOCKED_ASSIGNMENT_BY_TYPE[assignmentType];
+      const { title, content, points } = MOCKED_ASSIGNMENT_BY_TYPE[assignmentType];
 
       data.push({
         authorId: user.id,
@@ -63,7 +63,7 @@ export const seedAssignments = async (db: BetterSQLite3Database) => {
         title,
         content,
         points,
-        dueAt,
+        dueAt: faker.date.future(),
       });
     }
   }
