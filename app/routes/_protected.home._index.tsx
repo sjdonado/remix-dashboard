@@ -75,8 +75,8 @@ export default function HomePage() {
   }, [searchParams]);
 
   return (
-    <div id="assignments" className="flex h-[92vh] flex-col gap-4 overflow-y-auto">
-      <div className="flex flex-col gap-2">
+    <div id="assignments" className="flex flex-col gap-4 ">
+      <div className="flex h-[80vh] flex-col gap-2 overflow-y-auto">
         {assignments?.map(assignment => (
           <AssignmentCard
             key={assignment.id}
