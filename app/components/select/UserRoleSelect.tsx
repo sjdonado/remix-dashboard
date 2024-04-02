@@ -7,7 +7,7 @@ import { userRoleToLabel } from '../badge/UserRoleBadge';
 
 export default function UserRoleSelect({
   name,
-  defaultValue = UserRole.Student,
+  defaultValue = UserRole.Admin,
   disabled,
 }: {
   name: string;

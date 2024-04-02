@@ -8,6 +8,7 @@ import { useLoaderData } from '@remix-run/react';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
+import type { AssignmentSerialized } from '~/schemas/assignment';
 import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
 import { isAuthenticated } from '~/services/auth.server';
@@ -16,7 +17,10 @@ import { Breadcrumb } from '~/components/Breadcrumbs';
 import AssignmentCard from '~/components/AssignmentCard';
 
 export const handle = {
-  breadcrumb: (match: UIMatch) => <Breadcrumb pathname={match.pathname} label="Show" />,
+  breadcrumb: (match: UIMatch) => {
+    const { assignment } = (match.data as { assignment: AssignmentSerialized }) ?? {};
+    return <Breadcrumb pathname={match.pathname} label={assignment?.title} />;
+  },
 };
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {

@@ -6,24 +6,4 @@
   .form-input-icon {
     @apply pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2;
   }
-
-  .card-left-arrow::before {
-    content: '';
-    position: absolute;
-    top: 0.6rem;
-    left: -1.03rem;
-    border-width: 0.5rem;
-    border-color: #e5e7eb transparent transparent transparent;
-    transform: rotate(90deg);
-  }
-
-  .card-left-arrow::after {
-    content: '';
-    position: absolute;
-    top: 0.5rem;
-    left: -1.02rem;
-    border-width: 0.6rem;
-    border-color: white transparent transparent transparent;
-    transform: rotate(90deg);
-  }
 }
