@@ -48,7 +48,14 @@ test.describe('Home page - Admin', () => {
     await assignmentLink.click();
 
     await expect(page).toHaveURL(assignmentUrl!);
-    await expect(page.locator('h1')).toHaveText(assignmentTitle);
+
+    const showASsignmentTitle = await page
+      .getByLabel('Breadcrumb')
+      .getByRole('link')
+      .nth(1)
+      .textContent();
+
+    expect(showASsignmentTitle).toBe(assignmentTitle);
   });
 });
 

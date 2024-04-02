@@ -119,18 +119,24 @@ test.describe('Assignments page - Admin', () => {
   test.describe('Show Assignment', () => {
     test('should go to show assignment page', async ({ page }) => {
       const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
-      const showAssignmentButton = assignment.locator('a').first();
+      const showAssignmentLink = assignment.locator('a').first();
 
       const assignmentTitle = await assignment.getByRole('cell').first().textContent();
       const assignmentContent = await assignment.getByRole('cell').nth(4).textContent();
       const assignmentDueAt = await assignment.getByRole('cell').nth(6).textContent();
       const assignmentCreatedAt = await assignment.getByRole('cell').nth(7).textContent();
-      const showAssignmentUrl = await showAssignmentButton.getAttribute('href');
+      const showAssignmentUrl = await showAssignmentLink.getAttribute('href');
 
-      await showAssignmentButton.click();
+      await showAssignmentLink.click();
+
+      const showASsignmentTitle = await page
+        .getByLabel('Breadcrumb')
+        .getByRole('link')
+        .nth(1)
+        .textContent();
 
       await expect(page).toHaveURL(showAssignmentUrl!);
-      await expect(page.locator('h1')).toHaveText(assignmentTitle!);
+      expect(showASsignmentTitle).toBe(assignmentTitle!);
       await expect(page.getByText(assignmentContent!)).toBeVisible();
       await expect(page.getByText(assignmentDueAt!)).toBeVisible();
       await expect(page.getByText(assignmentCreatedAt!)).toBeVisible();
@@ -231,7 +237,14 @@ test.describe('Assignments page - Admin', () => {
       await page.waitForLoadState('networkidle');
 
       await page.goto(showAssignmentUrl!);
-      await expect(page.locator('h1')).toHaveText(title);
+
+      const showASsignmentTitle = await page
+        .getByLabel('Breadcrumb')
+        .getByRole('link')
+        .nth(1)
+        .textContent();
+
+      expect(showASsignmentTitle).toBe(title);
 
       // restore previous title
       await page.goto(editAssignmentUrl!);
@@ -340,18 +353,24 @@ test.describe('Assignments page - Teacher', () => {
 
     test('should go to show assignment page', async ({ page }) => {
       const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
-      const showAssignmentButton = assignment.locator('a').first();
+      const showAssignmentLink = assignment.locator('a').first();
 
       const assignmentTitle = await assignment.getByRole('cell').first().textContent();
       const assignmentContent = await assignment.getByRole('cell').nth(4).textContent();
       const assignmentDueAt = await assignment.getByRole('cell').nth(6).textContent();
       const assignmentCreatedAt = await assignment.getByRole('cell').nth(7).textContent();
-      const showAssignmentUrl = await showAssignmentButton.getAttribute('href');
+      const showAssignmentUrl = await showAssignmentLink.getAttribute('href');
 
-      await showAssignmentButton.click();
+      await showAssignmentLink.click();
+
+      const showASsignmentTitle = await page
+        .getByLabel('Breadcrumb')
+        .getByRole('link')
+        .nth(1)
+        .textContent();
 
       await expect(page).toHaveURL(showAssignmentUrl!);
-      await expect(page.locator('h1')).toHaveText(assignmentTitle!);
+      expect(showASsignmentTitle).toBe(assignmentTitle!);
       await expect(page.getByText(assignmentContent!)).toBeVisible();
       await expect(page.getByText(assignmentDueAt!)).toBeVisible();
       await expect(page.getByText(assignmentCreatedAt!)).toBeVisible();
@@ -466,7 +485,14 @@ test.describe('Assignments page - Teacher', () => {
       await page.waitForLoadState('networkidle');
 
       await page.goto(showAssignmentUrl!);
-      await expect(page.locator('h1')).toHaveText(title);
+
+      const showASsignmentTitle = await page
+        .getByLabel('Breadcrumb')
+        .getByRole('link')
+        .nth(1)
+        .textContent();
+
+      expect(showASsignmentTitle).toBe(title);
 
       // restore previous title
       await page.goto(editAssignmentUrl!);
