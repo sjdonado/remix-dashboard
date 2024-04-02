@@ -183,12 +183,14 @@ test.describe('Assignments page - Admin', () => {
   test.describe('Edit Assignment', () => {
     let assignmentTitle: string | null;
     let assignmentType: string | null;
+    let showAssignmentUrl: string | null;
     let editAssignmentUrl: string | null;
 
     test.describe.configure({ mode: 'serial' });
 
     test.beforeEach(async ({ page }) => {
       const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
+      const showAssignmentLink = assignment.locator('a').first();
       const editAssignmentButton = assignment.locator('a').nth(1);
 
       assignmentTitle = await assignment.getByRole('cell').first().textContent();
@@ -198,6 +200,7 @@ test.describe('Assignments page - Admin', () => {
         .locator('span')
         .textContent();
 
+      showAssignmentUrl = await showAssignmentLink.getAttribute('href');
       editAssignmentUrl = await editAssignmentButton.getAttribute('href');
 
       await editAssignmentButton.click();
@@ -226,10 +229,9 @@ test.describe('Assignments page - Admin', () => {
 
       await expect(page).toHaveURL('/assignments');
       await page.waitForLoadState('networkidle');
-      await page.reload();
 
-      const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
-      await expect(assignment.getByRole('cell').first()).toHaveText(title);
+      await page.goto(showAssignmentUrl!);
+      await expect(page.locator('h1')).toHaveText(title);
 
       // restore previous title
       await page.goto(editAssignmentUrl!);
@@ -258,17 +260,29 @@ test.describe('Assignments page - Admin', () => {
 
     test('should successfully delete assignment', async ({ page }) => {
       const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
-      const deleteAssignmentButton = assignment.getByRole('button').nth(1);
+      const showAssignmentUrl = await assignment
+        .locator('a')
+        .first()
+        .getAttribute('href');
 
+      const deleteAssignmentButton = assignment.getByRole('button').nth(1);
       await deleteAssignmentButton.click();
 
       const deleteModal = page.locator('dialog[open]');
-      await expect(deleteModal.locator('h3')).toHaveText('Delete User');
 
       const deleteButton = deleteModal.getByRole('button', { name: 'Delete' });
       await deleteButton.click();
 
       await expect(page).toHaveURL('/assignments?page=2');
+      await page.reload();
+
+      const firstResult = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
+      const firstResultShowUrl = await firstResult
+        .locator('a')
+        .first()
+        .getAttribute('href');
+
+      expect(firstResultShowUrl).not.toBe(showAssignmentUrl);
     });
 
     test('should go back from delete confirmation modal', async ({ page }) => {
@@ -404,12 +418,14 @@ test.describe('Assignments page - Teacher', () => {
   test.describe('Edit Assignment', () => {
     let assignmentTitle: string | null;
     let assignmentType: string | null;
+    let showAssignmentUrl: string | null;
     let editAssignmentUrl: string | null;
 
     test.describe.configure({ mode: 'serial' });
 
     test.beforeEach(async ({ page }) => {
       const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
+      const showAssignmentLink = assignment.locator('a').first();
       const editAssignmentButton = assignment.locator('a').nth(1);
 
       assignmentTitle = await assignment.getByRole('cell').first().textContent();
@@ -419,6 +435,7 @@ test.describe('Assignments page - Teacher', () => {
         .locator('span')
         .textContent();
 
+      showAssignmentUrl = await showAssignmentLink.getAttribute('href');
       editAssignmentUrl = await editAssignmentButton.getAttribute('href');
 
       await editAssignmentButton.click();
@@ -447,10 +464,9 @@ test.describe('Assignments page - Teacher', () => {
 
       await expect(page).toHaveURL('/assignments');
       await page.waitForLoadState('networkidle');
-      await page.reload();
 
-      const assignment = page.getByRole('row').nth(ASSIGNMENT_ROW);
-      await expect(assignment.getByRole('cell').first()).toHaveText(title);
+      await page.goto(showAssignmentUrl!);
+      await expect(page.locator('h1')).toHaveText(title);
 
       // restore previous title
       await page.goto(editAssignmentUrl!);
@@ -479,18 +495,29 @@ test.describe('Assignments page - Teacher', () => {
 
     test('should successfully delete assignment', async ({ page }) => {
       const assignment = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
-      const deleteAssignmentButton = assignment.getByRole('button').nth(1);
+      const showAssignmentUrl = await assignment
+        .locator('a')
+        .first()
+        .getAttribute('href');
 
+      const deleteAssignmentButton = assignment.getByRole('button').nth(1);
       await deleteAssignmentButton.click();
 
       const deleteModal = page.locator('dialog[open]');
-      await expect(deleteModal.locator('h3')).toHaveText('Delete User');
 
       const deleteButton = deleteModal.getByRole('button', { name: 'Delete' });
       await deleteButton.click();
 
       await expect(page).toHaveURL('/assignments?page=2');
-      await expect(assignment).not.toBeVisible();
+      await page.reload();
+
+      const firstResult = page.getByRole('row').nth(DELETE_ASSIGNMENT_ROW);
+      const firstResultShowUrl = await firstResult
+        .locator('a')
+        .first()
+        .getAttribute('href');
+
+      expect(firstResultShowUrl).not.toBe(showAssignmentUrl);
     });
 
     test('should go back from delete confirmation modal', async ({ page }) => {

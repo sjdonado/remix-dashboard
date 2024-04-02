@@ -19,8 +19,10 @@ export const handle = {
   ),
 };
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   invariant(params.assignmentId, 'Missing assignmentId param');
+
+  const { searchParams } = new URL(request.url);
 
   const [row] = await db
     .select({
@@ -44,7 +46,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     .limit(1);
 
   if (!row) {
-    return redirectWithToast('/assignments', {
+    return redirectWithToast(`/assignments?${searchParams.toString()}`, {
       message: 'Assignment not found',
       type: 'error',
     });

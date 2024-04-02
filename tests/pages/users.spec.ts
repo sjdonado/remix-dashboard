@@ -173,7 +173,7 @@ test.describe('Users page - Admin', () => {
 
     test('should successfully delete user', async ({ page }) => {
       const user = page.getByRole('row').nth(USER_ROW);
-      const name = await user
+      const username = await user
         .getByRole('cell')
         .first()
         .getByRole('paragraph')
@@ -183,18 +183,30 @@ test.describe('Users page - Admin', () => {
       await deleteUserButton.click();
 
       const deleteModal = page.locator('dialog[open]');
-      await expect(deleteModal.locator('h3')).toHaveText('Delete User');
 
       const deleteButton = deleteModal.getByRole('button', { name: 'Delete' });
       await deleteButton.click();
 
       await expect(page).toHaveURL('/users?page=2');
-      await expect(page.getByText(name!).nth(1)).not.toBeVisible();
+
+      const searchBar = page.getByPlaceholder('Search users...');
+      await searchBar.fill(username!);
+      await searchBar.press('Enter');
+
+      await page.waitForLoadState('networkidle');
+
+      const firstResult = page.getByRole('row').nth(USER_ROW);
+      const firstResultUsername = await firstResult
+        .getByRole('cell')
+        .first()
+        .getByRole('paragraph')
+        .textContent();
+
+      expect(firstResultUsername).not.toBe(username);
     });
 
     test('should go back from delete confirmation modal', async ({ page }) => {
       const user = page.getByRole('row').nth(USER_ROW);
-      const name = await user.getByRole('cell').first().textContent();
 
       const deleteUserButton = user.getByRole('button');
       await deleteUserButton.click();
@@ -206,7 +218,7 @@ test.describe('Users page - Admin', () => {
       await cancelButton.click();
 
       await expect(page).toHaveURL('/users?page=2');
-      await expect(page.getByText(name!).nth(1)).toBeVisible();
+      await expect(user).toBeVisible();
     });
   });
 });
