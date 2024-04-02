@@ -1,5 +1,4 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { asc, count, desc, sql } from 'drizzle-orm';
@@ -60,10 +59,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     users.map(user => UserSerializedSchema.parseAsync(user))
   );
 
-  return json({
+  return {
     totalPages: Math.ceil(Number(totalRows) / PAGE_SIZE),
     users: serializedUsers,
-  });
+  };
 };
 
 export default function UsersPage() {

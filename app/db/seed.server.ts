@@ -79,7 +79,6 @@ export const seedAssignments = async (db: BetterSQLite3Database) => {
 
 const main = async () => {
   const client = connectToDatabase();
-
   const db = drizzle(client);
 
   const args = process.argv.slice(2);

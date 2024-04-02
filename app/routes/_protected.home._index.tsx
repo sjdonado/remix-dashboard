@@ -1,7 +1,6 @@
 import React from 'react';
 
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { asc, desc, sql, eq } from 'drizzle-orm';
@@ -57,10 +56,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     assignments.map(assignment => AssignmentSerializedSchema.parseAsync(assignment))
   );
 
-  return json({
+  return {
     totalPages: Math.ceil(Number(count) / PAGE_SIZE),
     assignments: serializedAssignments,
-  });
+  };
 };
 
 export default function HomePage() {

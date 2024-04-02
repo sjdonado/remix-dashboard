@@ -8,7 +8,6 @@ import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
 
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { json } from '@remix-run/node';
 import type { UIMatch } from '@remix-run/react';
 import { useLoaderData } from '@remix-run/react';
 
@@ -89,7 +88,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     throw new Response('Not Found', { status: 404 });
   }
 
-  return json({ user });
+  return { user };
 };
 
 export default function EditUserPage() {
