@@ -33,7 +33,7 @@ export default function FetcherFormProvider({
   const [formData, setFormData] = useState<FormData>();
 
   useEffect(() => {
-    const response = fetcher.data as { error: string; message: string } | undefined;
+    const response = fetcher.data as { error: string } | undefined;
 
     if (isSubmitted || error) return;
 

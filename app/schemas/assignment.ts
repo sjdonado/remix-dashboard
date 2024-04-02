@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
-import { UserSerializedSchema } from './user';
+import { UserSchema } from './user';
 import { ALL_ASSIGNMENT_STATUSES, ALL_ASSIGNMENT_TYPES } from '~/constants/assignment';
+import { formatDateToLocal } from '~/utils/date';
 
 export const AssignmentSchema = z.object({
   id: z.string(),
@@ -30,22 +31,35 @@ export const AssignmentUpdateStatusSchema = AssignmentSchema.pick({
 
 export const AssignmentSerializedSchema = AssignmentSchema.omit({
   authorId: true,
-}).extend({
-  author: UserSerializedSchema.pick({
-    id: true,
-  }).extend({
-    username: z.string().nullable(),
-  }),
-});
+})
+  .extend({
+    author: UserSchema.pick({
+      id: true,
+    }).extend({
+      username: z.string().nullable(),
+    }),
+  })
+  .transform(data => ({
+    ...data,
+    dueAt: formatDateToLocal(data.dueAt),
+    createdAt: formatDateToLocal(data.createdAt),
+    updatedAt: formatDateToLocal(data.updatedAt),
+  }));
 
-export const AssignmentSerializedCardSchema = AssignmentSerializedSchema.omit({
+export const AssignmentSerializedCardSchema = AssignmentSchema.omit({
   authorId: true,
   duateAt: true,
   createdAt: true,
   updatedAt: true,
 }).extend({
+  author: UserSchema.pick({
+    id: true,
+  }).extend({
+    username: z.string().nullable(),
+  }),
   dueAt: z.string(),
   createdAt: z.string(),
+  updatedAt: z.string(),
 });
 
 export type Assignment = z.infer<typeof AssignmentSchema>;

@@ -8,7 +8,6 @@ import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
 import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
-import { formatDateToLocal } from '~/utils/date';
 import { PAGE_SIZE } from '~/constants/search.server';
 
 import { isAuthorized } from '~/services/auth.server';
@@ -125,9 +124,7 @@ export default function AssignmentsPage() {
                   <AssignmentTypeBadge type={assignment.type} />
                 </div>
                 <div className="flex flex-1 flex-col gap-1">
-                  <span className="min-w-fit text-xs">
-                    {formatDateToLocal(assignment.createdAt)}
-                  </span>
+                  <span className="min-w-fit text-xs">{assignment.createdAt}</span>
                   <Link to={`${assignment.id}/show`} className="link">
                     <p className="line-clamp-1">{assignment.title}</p>
                   </Link>
@@ -191,12 +188,8 @@ export default function AssignmentsPage() {
               <td>
                 <p>{assignment.points}</p>
               </td>
-              <td className="whitespace-nowrap p-3">
-                {formatDateToLocal(assignment.dueAt)}
-              </td>
-              <td className="whitespace-nowrap p-3">
-                {formatDateToLocal(assignment.createdAt)}
-              </td>
+              <td className="whitespace-nowrap p-3">{assignment.dueAt}</td>
+              <td className="whitespace-nowrap p-3">{assignment.createdAt}</td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex justify-end gap-2">
                   <UpdateBtnLink to={`${assignment.id}/edit`} />

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { ALL_USER_ROLES } from '~/constants/user';
+import { formatDateToLocal } from '~/utils/date';
 
 export const UserSchema = z.object({
   id: z.string(),
@@ -45,7 +46,11 @@ export const UserSerializedSchema = UserSchema.pick({
   role: true,
   createdAt: true,
   updatedAt: true,
-});
+}).transform(data => ({
+  ...data,
+  createdAt: formatDateToLocal(data.createdAt),
+  updatedAt: formatDateToLocal(data.updatedAt),
+}));
 
 export type User = z.infer<typeof UserSchema>;
 export type UserLogin = z.infer<typeof UserLoginSchema>;

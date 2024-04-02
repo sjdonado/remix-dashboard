@@ -2,7 +2,6 @@ import clsx from 'clsx';
 import { Link } from '@remix-run/react';
 
 import type { AssignmentSerializedCard } from '~/schemas/assignment';
-import { formatDateToLocal } from '~/utils/date';
 
 import BackButton from './forms/BackButton';
 import Avatar from './Avatar';
@@ -33,9 +32,7 @@ export default function AssignmentCard({
                     <p>{author.username}</p>
                   </div>
                 )}
-                <p className="min-w-24 text-xs text-gray-500">
-                  {formatDateToLocal(assignment.createdAt)}
-                </p>
+                <p className="min-w-24 text-xs text-gray-500">{assignment.createdAt}</p>
               </div>
               {!expanded && (
                 <h1 className="text-xl">
@@ -58,7 +55,7 @@ export default function AssignmentCard({
               </li>
               <li className="flex items-center gap-2">
                 <label className="font-medium">Due At:</label>
-                <p>{formatDateToLocal(assignment.dueAt)}</p>
+                <p>{assignment.dueAt}</p>
               </li>
             </ul>
           )}

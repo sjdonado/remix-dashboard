@@ -87,7 +87,7 @@ const AssignmentUpdateStatusForm = ({
         defaultValue={defaultStatus}
         error={error}
         onChange={e => {
-          formData.append('status', e.target.value);
+          formData.set('status', e.target.value);
           onChange(formData);
         }}
       />

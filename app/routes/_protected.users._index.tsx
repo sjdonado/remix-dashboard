@@ -8,7 +8,6 @@ import { usersTable } from '~/db/schema';
 import { UserSerializedSchema } from '~/schemas/user';
 
 import { PAGE_SIZE } from '~/constants/search.server';
-import { formatDateToLocal } from '~/utils/date';
 
 import {
   CreateBtnLink,
@@ -94,9 +93,7 @@ export default function UsersPage() {
               </div>
               <div className="flex flex-col py-2">
                 <label className="text-sm text-gray-500">Created At</label>
-                <span className="min-w-fit text-xs">
-                  {formatDateToLocal(user.createdAt)}
-                </span>
+                <span className="min-w-fit text-xs">{user.createdAt}</span>
               </div>
               <div className="flex items-center justify-end gap-2 pt-4">
                 <UpdateBtnLink to={`${user.id}/edit`} />
@@ -124,12 +121,8 @@ export default function UsersPage() {
               <td className="flex-1 whitespace-nowrap">
                 <UserRoleBadge role={user.role} />
               </td>
-              <td className="whitespace-nowrap p-3">
-                {formatDateToLocal(user.createdAt)}
-              </td>
-              <td className="whitespace-nowrap p-3">
-                {formatDateToLocal(user.updatedAt)}
-              </td>
+              <td className="whitespace-nowrap p-3">{user.createdAt}</td>
+              <td className="whitespace-nowrap p-3">{user.updatedAt}</td>
               <td className="flex-1 whitespace-nowrap">
                 <div className="flex justify-end gap-3">
                   <UpdateBtnLink to={`${user.id}/edit`} />
