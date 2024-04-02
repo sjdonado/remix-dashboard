@@ -45,7 +45,7 @@ export default function Sidebar({ userSession, children }: SidebarProps) {
             </SidebarMenuLink>
             <span className="divider" />
             {[UserRole.Admin, UserRole.Student].includes(userSession.role) && (
-              <SidebarMenuLink to="/">
+              <SidebarMenuLink to="/home">
                 <HomeIcon />
                 <span>Home</span>
               </SidebarMenuLink>

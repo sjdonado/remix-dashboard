@@ -10,9 +10,11 @@ import { AssignmentTypeBadge } from './badge/AssignmentTypeBadge';
 import { AssignmentStatusBadge } from './badge/AssignmentStatusBadge';
 
 export default function AssignmentCard({
+  showUrl,
   assignment,
   expanded,
 }: {
+  showUrl: string;
   assignment: AssignmentSerializedCard;
   expanded?: boolean;
 }) {
@@ -37,7 +39,7 @@ export default function AssignmentCard({
               </div>
               {!expanded && (
                 <h1 className="text-xl">
-                  <Link to={`/assignments/${assignment.id}/show`} className="link">
+                  <Link to={showUrl} className="link">
                     {assignment.title}
                   </Link>
                 </h1>

@@ -2,22 +2,17 @@ import React from 'react';
 
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
-import { Link, useLoaderData, useSearchParams } from '@remix-run/react';
+import { useLoaderData, useSearchParams } from '@remix-run/react';
 
 import { asc, desc, sql, eq } from 'drizzle-orm';
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
-import {
-  AssignmentSerializedCardSchema,
-  AssignmentSerializedSchema,
-} from '~/schemas/assignment';
+import { AssignmentSerializedSchema } from '~/schemas/assignment';
 
 import { PAGE_SIZE } from '~/constants/search.server';
-import { formatDateToLocal } from '~/utils/date';
 
 import Pagination from '~/components/Pagination';
-import Avatar from '~/components/Avatar';
 import AssignmentCard from '~/components/AssignmentCard';
 
 const canUseDOM = !!(
@@ -83,7 +78,11 @@ export default function HomePage() {
     <div id="assignments" className="flex h-[92vh] flex-col gap-4 overflow-y-auto">
       <div className="flex flex-col gap-2">
         {assignments?.map(assignment => (
-          <AssignmentCard key={assignment.id} assignment={assignment} />
+          <AssignmentCard
+            key={assignment.id}
+            assignment={assignment}
+            showUrl={`/home/${assignment.id}/show`}
+          />
         ))}
       </div>
       <div className="flex flex-1 justify-center">

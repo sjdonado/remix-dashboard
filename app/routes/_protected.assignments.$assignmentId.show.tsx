@@ -68,5 +68,11 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 export default function ShowAssignmentPage() {
   const { assignment } = useLoaderData<typeof loader>();
 
-  return <AssignmentCard assignment={assignment} expanded />;
+  return (
+    <AssignmentCard
+      assignment={assignment}
+      showUrl={`/assignments/${assignment.id}/show`}
+      expanded
+    />
+  );
 }
