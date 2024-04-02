@@ -29,7 +29,7 @@ export default function Sidebar({ userSession, children }: SidebarProps) {
       <input id="header" type="checkbox" className="drawer-toggle" />
       <div className="drawer-side z-10">
         <label htmlFor="header" aria-label="close sidebar" className="drawer-overlay" />
-        <div className="flex min-h-full w-60 flex-col gap-2 border-r bg-white p-2 text-base-content sm:w-64">
+        <div className="flex min-h-full w-60 flex-col gap-2 border-r border-base-300 bg-base-200 p-2 text-base-content sm:w-64">
           <ul className="flex flex-1 flex-col gap-2 p-4">
             <li>
               <div className="flex flex-wrap items-center justify-start gap-2 p-3">

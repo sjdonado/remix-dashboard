@@ -28,13 +28,13 @@ export const DialogModal = forwardRef(function ConfirmationDialog(
         <p className="whitespace-pre-wrap py-4">{description}</p>
         <div className="modal-action">
           <button
-            className="btn btn-sm h-10 w-[90px] rounded-lg"
+            className="btn btn-sm h-10 w-[90px] rounded-lg font-normal"
             onClick={() => setIsAttached(false)}
           >
             Cancel
           </button>
           <Form action={action} {...{ method }}>
-            <button className="btn btn-error btn-sm h-10 w-[90px] rounded-lg text-base-100">
+            <button className="btn btn-error btn-sm h-10 w-[90px] rounded-lg font-normal text-base-100">
               {button}
             </button>
           </Form>

@@ -70,13 +70,16 @@ function PaginationNumber({
   position?: 'first' | 'last' | 'middle' | 'single';
   isActive: boolean;
 }) {
-  const className = clsx('flex h-8 w-10 items-center justify-center border text-sm', {
-    'rounded-l-lg': position === 'first' || position === 'single',
-    'rounded-r-lg': position === 'last' || position === 'single',
-    'bg-primary border-primary text-white': isActive,
-    'hover:bg-base-200': !isActive && position !== 'middle',
-    'text-gray-500': position === 'middle',
-  });
+  const className = clsx(
+    'flex h-8 w-10 items-center justify-center border border-base-300 text-sm',
+    {
+      'rounded-l-lg': position === 'first' || position === 'single',
+      'rounded-r-lg': position === 'last' || position === 'single',
+      'bg-primary border-primary text-white': isActive,
+      'hover:bg-base-200': !isActive && position !== 'middle',
+      'text-gray-500': position === 'middle',
+    }
+  );
 
   return isActive || position === 'middle' ? (
     <div className={className}>{page}</div>
@@ -98,12 +101,15 @@ function PaginationArrow({
   direction: 'left' | 'right';
   isDisabled?: boolean;
 }) {
-  const className = clsx('flex h-8 w-10 items-center justify-center rounded-lg border', {
-    'pointer-events-none text-gray-500': isDisabled,
-    'hover:bg-base-200': !isDisabled,
-    'mr-2 md:mr-2': direction === 'left',
-    'ml-2 md:ml-2': direction === 'right',
-  });
+  const className = clsx(
+    'flex h-8 w-10 items-center justify-center rounded-lg border border-base-300',
+    {
+      'pointer-events-none text-gray-500': isDisabled,
+      'hover:bg-base-200': !isDisabled,
+      'mr-2 md:mr-2': direction === 'left',
+      'ml-2 md:ml-2': direction === 'right',
+    }
+  );
 
   const icon =
     direction === 'left' ? (

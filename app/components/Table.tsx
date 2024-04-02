@@ -89,7 +89,7 @@ export function UpdateBtnLink({ to }: { to: string }) {
   return (
     <Link
       to={`${to}?${searchParams.toString()}`}
-      className="rounded-lg border p-2 hover:bg-base-200"
+      className="rounded-lg border border-base-300 p-2 hover:bg-base-200"
     >
       <PencilIcon className="w-5" />
     </Link>
@@ -114,7 +114,7 @@ export function DeleteBtnLink({
       button="Delete"
       method="post"
       action={`${to}?${searchParams.toString()}`}
-      className="rounded-lg border p-2 hover:bg-base-200"
+      className="rounded-lg border border-base-300 p-2 hover:bg-base-200"
     >
       <span className="sr-only">{title}</span>
       <TrashIcon className="w-5" />
