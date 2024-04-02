@@ -2,6 +2,7 @@ import { Outlet } from '@remix-run/react';
 
 import AppLogo from '~/components/AppLogo';
 import { CustomErrorBoundary } from '~/components/CustomErrorBoundary';
+import Footer from '~/components/Footer';
 
 export default function Login() {
   return (
@@ -12,6 +13,7 @@ export default function Login() {
       <div className="card m-4 w-full rounded-md bg-base-100 shadow-xl sm:w-96">
         <Outlet />
       </div>
+      <Footer />
     </div>
   );
 }

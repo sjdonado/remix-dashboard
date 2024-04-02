@@ -16,6 +16,7 @@ import { UserRole } from '~/constants/user';
 import Avatar from './Avatar';
 import { UserRoleBadge } from './badge/UserRoleBadge';
 import { DialogModalButton } from './dialog/ConfirmationDialog';
+import Footer from './Footer';
 
 interface SidebarProps {
   userSession: UserSession;
@@ -76,18 +77,8 @@ export default function Sidebar({ userSession, children }: SidebarProps) {
                 <span className="text-sm font-medium">Logout</span>
               </DialogModalButton>
             </li>
-            <li className="mt-4 text-center text-xs">
-              Source code available at{' '}
-              <a
-                className="link"
-                href="https://github.com/sjdonado/remix-dashboard"
-                target="_blank"
-                rel="noreferrer"
-              >
-                GitHub
-              </a>
-            </li>
           </ul>
+          <Footer />
         </div>
       </div>
       <div className="drawer-content">{children}</div>
