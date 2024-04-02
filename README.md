@@ -1,11 +1,13 @@
 # Remix Dashboard
+
 > MVP of a Learning Management System built with remix + vite, drizzle + better-sqlite3, and tailwindcss + daisyui.
 
-| Admin | Teacher | Student |
-|------------|--------------|--------------|
+| Admin                                                                                                                                                             | Teacher                                                                                                                                                           | Student                                                                                                                                                           |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | <img width="1840" alt="Screenshot 2024-04-01 at 22 21 55" src="https://github.com/sjdonado/remix-dashboard/assets/27580836/099a8a3e-8ec7-43e3-8789-737f61796aba"> | <img width="1840" alt="Screenshot 2024-04-01 at 22 23 20" src="https://github.com/sjdonado/remix-dashboard/assets/27580836/6c44363f-eaa5-4f49-87f8-c80924153967"> | <img width="1840" alt="Screenshot 2024-04-01 at 22 24 04" src="https://github.com/sjdonado/remix-dashboard/assets/27580836/b5513b02-fe8d-4594-8736-0c39d6f24793"> |
 
 ### Requirements
+
 - Assignments have status (`OPEN`, `CLOSED`) and type (`HOMEWORK`, `QUIZ`, `PROJECT`)
 - Users have roles (`ADMIN`, `TEACHER`, `STUDENT`)
 - User login with multiple roles
@@ -15,6 +17,7 @@
 - Admin, Teacher, Student should be able to view and edit their profiles
 
 ### Non-functional requirements
+
 - primary keys with randomUUID + on delete cascade
 - Session storage (cookies)
 - Authentication + Authorization (RBAC) middleware
@@ -28,13 +31,31 @@
 - Optimistic UI (update assignment status)
 - Dark mode
 
-## Comming soon (v2.0)
-- [ ] Assignments like button
-- [ ] Assignments comments thread: create/read by any role, udpate/delete by their owner
-- [ ] Statistics page: display total number of user and assignments, and comments
+## Roadmap
+
+v1.1
+
+- [ ] Courses: Teachers and Admins can perform CRUD operations on courses and create assignments for each course.
+- [ ] Courses: Teachers and Admins can assign users to courses.
+- [ ] Courses: Students can only see assignments in their assigned courses.
+- [ ] Courses: Students can belong to multiple courses.
+
+v1.2
+
+- [ ] Assignment Submissions: Students can submit assignments.
+- [ ] Assignment Submissions: Students can filter assignments (submitted, open).
+- [ ] Assignment Submissions: Students can view the history of their submissions (by assignment).
+- [ ] Assignment Submissions: Teachers can grade submissions.
+- [ ] Assignment Submissions: Students can see their submission grades.
+
+v1.3
+
+- [ ] Statistics page: Display the total number of users, courses, assignments, and assignment submissions.
 
 ## Self hosted
+
 Deploy with dokku
+
 ```bash
 dokku apps:create remix-dashboard
 dokku domains:set remix-dashboard remix-dashboard.preview.donado.co
