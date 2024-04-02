@@ -128,7 +128,9 @@ export default function AssignmentsPage() {
                   <span className="min-w-fit text-xs">
                     {formatDateToLocal(assignment.createdAt)}
                   </span>
-                  <h1 className="text-xl">{assignment.title}</h1>
+                  <Link to={`${assignment.id}/show`} className="link">
+                    <p className="line-clamp-1">{assignment.title}</p>
+                  </Link>
                 </div>
                 <p className="line-clamp-3 text-sm">{assignment.content}</p>
               </div>

@@ -96,6 +96,13 @@ export default function Sidebar({ userSession, children }: SidebarProps) {
 }
 
 function SidebarMenuLink({ to, children }: { to: string; children: React.ReactNode }) {
+  const handleClick = () => {
+    const drawerToggle = document.getElementById('header') as HTMLInputElement;
+    if (drawerToggle) {
+      drawerToggle.checked = false;
+    }
+  };
+
   return (
     <li
       className="flex items-center rounded-lg"
@@ -103,6 +110,7 @@ function SidebarMenuLink({ to, children }: { to: string; children: React.ReactNo
     >
       <NavLink
         to={to}
+        onClick={handleClick}
         className={({ isActive, isPending }) =>
           clsx(
             'btn btn-ghost btn-sm flex w-full justify-start rounded-lg',
