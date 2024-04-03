@@ -6,7 +6,7 @@ import {
   DocumentTextIcon,
 } from '@heroicons/react/24/solid';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ValidatedForm, validationError } from 'remix-validated-form';
 import { withZod } from '@remix-validated-form/with-zod';
 
@@ -62,9 +62,10 @@ export default function NewAssignmentPage() {
     AssignmentType.Quiz
   );
 
-  const assignment = assignmentType
-    ? MOCKED_ASSIGNMENT_BY_TYPE[assignmentType]
-    : undefined;
+  const assignment = useCallback(
+    () => (assignmentType ? MOCKED_ASSIGNMENT_BY_TYPE[assignmentType] : undefined),
+    [assignmentType]
+  );
 
   return (
     <ValidatedForm validator={validator} method="post">
@@ -80,7 +81,7 @@ export default function NewAssignmentPage() {
           label="Title"
           type="text"
           icon={<DocumentIcon className="form-input-icon" />}
-          defaultValue={assignment?.title}
+          defaultValue={assignment()?.title}
           disabled
         />
         <Input
@@ -88,7 +89,7 @@ export default function NewAssignmentPage() {
           label="Content"
           type="text"
           icon={<DocumentTextIcon className="form-input-icon" />}
-          defaultValue={assignment?.content}
+          defaultValue={assignment()?.content}
           disabled
         />
         <div className="flex flex-wrap gap-4 [&>div]:flex-1">
@@ -97,7 +98,7 @@ export default function NewAssignmentPage() {
             label="Points"
             type="number"
             icon={<CalculatorIcon className="form-input-icon" />}
-            defaultValue={assignment?.points}
+            defaultValue={assignment()?.points}
             disabled
           />
           <Input
@@ -105,7 +106,7 @@ export default function NewAssignmentPage() {
             label="Due At"
             type="datetime-local"
             icon={<CalendarIcon className="form-input-icon" />}
-            defaultValue={assignment?.dueAt.toISOString().substring(0, 16)}
+            defaultValue={assignment()?.dueAt.toISOString().substring(0, 16)}
             disabled
           />
         </div>

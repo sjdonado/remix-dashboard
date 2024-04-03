@@ -29,7 +29,7 @@ export default function Sidebar({ userSession, children }: SidebarProps) {
       <input id="header" type="checkbox" className="drawer-toggle" />
       <div className="drawer-side z-10">
         <label htmlFor="header" aria-label="close sidebar" className="drawer-overlay" />
-        <div className="flex min-h-full w-60 flex-col gap-2 border-r border-base-300 bg-base-200 p-2 text-base-content sm:w-64">
+        <div className="flex min-h-full w-60 flex-col gap-2 border-r border-base-300 bg-base-100 p-2 text-base-content sm:w-64">
           <ul className="flex flex-1 flex-col gap-2 p-4">
             <li>
               <div className="flex flex-wrap items-center justify-start gap-2 p-3">
@@ -104,7 +104,7 @@ function SidebarMenuLink({ to, children }: { to: string; children: React.ReactNo
         onClick={handleClick}
         className={({ isActive, isPending }) =>
           clsx(
-            'btn btn-ghost btn-sm flex w-full justify-start rounded-lg',
+            'btn btn-ghost btn-sm flex w-full justify-start rounded-lg hover:bg-base-200',
             '[&>span]:text-sm [&>span]:font-medium [&>svg]:mr-2 [&>svg]:size-5',
             {
               'active bg-base-200 [&>span]:font-medium [&>span]:text-medium': isActive,

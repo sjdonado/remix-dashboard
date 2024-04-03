@@ -102,8 +102,8 @@ export function AssignmentUpdateStatusDialogButton({
   assignmentId: string;
   status: AssignmentStatus;
 }) {
-  const [isAttached, setIsAttached] = useState(false);
   const dialog = useRef<HTMLDialogElement>();
+  const [isAttached, setIsAttached] = useState(false);
 
   useEffect(() => {
     if (isAttached) {
