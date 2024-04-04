@@ -6,17 +6,7 @@
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | <img width="1840" alt="Screenshot 2024-04-01 at 22 21 55" src="https://github.com/sjdonado/remix-dashboard/assets/27580836/099a8a3e-8ec7-43e3-8789-737f61796aba"> | <img width="1840" alt="Screenshot 2024-04-01 at 22 23 20" src="https://github.com/sjdonado/remix-dashboard/assets/27580836/6c44363f-eaa5-4f49-87f8-c80924153967"> | <img width="1840" alt="Screenshot 2024-04-01 at 22 24 04" src="https://github.com/sjdonado/remix-dashboard/assets/27580836/b5513b02-fe8d-4594-8736-0c39d6f24793"> |
 
-### Requirements
-
-- Assignments have status (`OPEN`, `CLOSED`) and type (`HOMEWORK`, `QUIZ`, `PROJECT`)
-- Users have roles (`ADMIN`, `TEACHER`, `STUDENT`)
-- User login with multiple roles
-- Admin role should CRUD users and assignments
-- Teacher role should CRUD only their own assignments
-- Student role should list all assignments
-- Admin, Teacher, Student should be able to view and edit their profiles
-
-### Non-functional requirements
+## Design
 
 - primary keys with randomUUID + on delete cascade
 - Session storage (cookies)
@@ -32,6 +22,16 @@
 - Dark mode
 
 ## Roadmap
+
+v1.0
+
+- [x] Assignments have status (`OPEN`, `CLOSED`) and type (`HOMEWORK`, `QUIZ`, `PROJECT`)
+- [x] Users have roles (`ADMIN`, `TEACHER`, `STUDENT`)
+- [x] User login with multiple roles
+- [x] Admin role should CRUD users and assignments
+- [x] Teacher role should CRUD only their own assignments
+- [x] Student role should list all assignments
+- [x] Admin, Teacher, Student should be able to view and edit their profiles
 
 v1.1
 
@@ -58,8 +58,6 @@ Deploy with dokku
 
 ```bash
 dokku apps:create remix-dashboard
-dokku domains:set remix-dashboard remix-dashboard.preview.donado.co
-dokku letsencrypt:enable remix-dashboard
 
 dokku storage:ensure-directory remix-dashboard-sqlite
 dokku storage:mount remix-dashboard /var/lib/dokku/data/storage/remix-dashboard-sqlite:/usr/src/app/sqlite/
