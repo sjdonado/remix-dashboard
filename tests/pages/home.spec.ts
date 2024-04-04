@@ -49,13 +49,13 @@ test.describe('Home page - Admin', () => {
 
     await expect(page).toHaveURL(assignmentUrl!);
 
-    const showASsignmentTitle = await page
+    const showAssignmentTitle = await page
       .getByLabel('Breadcrumb')
       .getByRole('link')
       .nth(1)
       .textContent();
 
-    expect(showASsignmentTitle).toBe(assignmentTitle);
+    expect(showAssignmentTitle).toBe(assignmentTitle);
   });
 });
 

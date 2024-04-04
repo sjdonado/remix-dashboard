@@ -12,7 +12,10 @@ import {
 
 import { db } from '~/db/config.server';
 import { assignmentsTable, usersTable } from '~/db/schema';
-import type { AssignmentSerialized } from '~/schemas/assignment';
+import {
+  AssignmentSerializedSchema,
+  type AssignmentSerialized,
+} from '~/schemas/assignment';
 
 import { PAGE_SIZE } from '~/constants/search.server';
 import type { UserSession } from '~/schemas/user';
@@ -129,14 +132,14 @@ test.describe('Assignments page - Admin', () => {
 
       await showAssignmentLink.click();
 
-      const showASsignmentTitle = await page
+      const showAssignmentTitle = await page
         .getByLabel('Breadcrumb')
         .getByRole('link')
         .nth(1)
         .textContent();
 
       await expect(page).toHaveURL(showAssignmentUrl!);
-      expect(showASsignmentTitle).toBe(assignmentTitle!);
+      expect(showAssignmentTitle).toBe(assignmentTitle!);
       await expect(page.getByText(assignmentContent!)).toBeVisible();
       await expect(page.getByText(assignmentDueAt!)).toBeVisible();
       await expect(page.getByText(assignmentCreatedAt!)).toBeVisible();
@@ -238,13 +241,13 @@ test.describe('Assignments page - Admin', () => {
 
       await page.goto(showAssignmentUrl!);
 
-      const showASsignmentTitle = await page
+      const showAssignmentTitle = await page
         .getByLabel('Breadcrumb')
         .getByRole('link')
         .nth(1)
         .textContent();
 
-      expect(showASsignmentTitle).toBe(title);
+      expect(showAssignmentTitle).toBe(title);
 
       // restore previous title
       await page.goto(editAssignmentUrl!);
@@ -363,14 +366,14 @@ test.describe('Assignments page - Teacher', () => {
 
       await showAssignmentLink.click();
 
-      const showASsignmentTitle = await page
+      const showAssignmentTitle = await page
         .getByLabel('Breadcrumb')
         .getByRole('link')
         .nth(1)
         .textContent();
 
       await expect(page).toHaveURL(showAssignmentUrl!);
-      expect(showASsignmentTitle).toBe(assignmentTitle!);
+      expect(showAssignmentTitle).toBe(assignmentTitle!);
       await expect(page.getByText(assignmentContent!)).toBeVisible();
       await expect(page.getByText(assignmentDueAt!)).toBeVisible();
       await expect(page.getByText(assignmentCreatedAt!)).toBeVisible();
@@ -486,13 +489,13 @@ test.describe('Assignments page - Teacher', () => {
 
       await page.goto(showAssignmentUrl!);
 
-      const showASsignmentTitle = await page
+      const showAssignmentTitle = await page
         .getByLabel('Breadcrumb')
         .getByRole('link')
         .nth(1)
         .textContent();
 
-      expect(showASsignmentTitle).toBe(title);
+      expect(showAssignmentTitle).toBe(title);
 
       // restore previous title
       await page.goto(editAssignmentUrl!);
@@ -573,8 +576,12 @@ test.describe('Assignments page - Teacher', () => {
       const [row] = await db
         .select({
           id: assignmentsTable.id,
+          status: assignmentsTable.status,
+          type: assignmentsTable.type,
           title: assignmentsTable.title,
           content: assignmentsTable.content,
+          points: assignmentsTable.points,
+          dueAt: assignmentsTable.dueAt,
           createdAt: assignmentsTable.createdAt,
           updatedAt: assignmentsTable.updatedAt,
           author: {
@@ -587,7 +594,7 @@ test.describe('Assignments page - Teacher', () => {
         .leftJoin(usersTable, eq(assignmentsTable.authorId, usersTable.id))
         .limit(1);
 
-      assignment = row as AssignmentSerialized;
+      assignment = AssignmentSerializedSchema.parse(row);
     });
 
     test('should not be visible', async ({ page }) => {
