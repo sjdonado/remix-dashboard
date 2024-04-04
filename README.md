@@ -61,14 +61,14 @@ dokku apps:create remix-dashboard
 dokku domains:set remix-dashboard remix-dashboard.preview.donado.co
 dokku letsencrypt:enable remix-dashboard
 
-dokku config:set remix-dashboard DATABASE_URL=./sqlite/db.sqlite SECRET_KEY={YOUR_SECRET}
-
-dokku ports:add remix-dashboard http:80:3000
-dokku ports:add remix-dashboard https:443:3000
-
 dokku storage:ensure-directory remix-dashboard-sqlite
 dokku storage:mount remix-dashboard /var/lib/dokku/data/storage/remix-dashboard-sqlite:/usr/src/app/sqlite/
 
-dokku run remix-dashboard db:push
-dokku run remix-dashboard db:seed all
+dokku config:set remix-dashboard DATABASE_URL=./sqlite/db.sqlite SECRET_KEY={YOUR_SECRET}
+
+dokku ports:add remix-dashboard http:80:3333
+dokku ports:add remix-dashboard https:443:3333
+
+dokku run remix-dashboard bun run db:push
+dokku run remix-dashboard bun run db:seed all
 ```

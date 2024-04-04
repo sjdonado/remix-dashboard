@@ -3,6 +3,5 @@
 .cache/
 node_modules/
 build
-public/build
 
 **/*.sqlite*
