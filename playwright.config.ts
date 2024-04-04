@@ -1,7 +1,11 @@
+import dotenv from 'dotenv';
+
 import { defineConfig, devices } from '@playwright/test';
 
 const host = process.env.HOST || '127.0.0.1';
 const port = process.env.PORT || 3333;
+
+dotenv.config({ path: '.env.test' });
 
 export default defineConfig({
   testDir: './tests',
@@ -27,7 +31,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run dev',
+    command: 'NODE_ENV=test bun run dev',
     port: Number(port),
     reuseExistingServer: !process.env.CI,
   },

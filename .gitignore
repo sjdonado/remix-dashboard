@@ -5,7 +5,7 @@ node_modules
 /public/build
 .env
 
-/sqlite/db.sqlite*
+/sqlite/*
 todo.md
 
 /test-results/
