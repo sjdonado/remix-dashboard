@@ -18,6 +18,7 @@ import { json } from '@remix-run/node';
 import '~/index.css';
 
 import LoadingBar from './components/LoadingBar';
+import { CustomErrorBoundary } from './components/CustomErrorBoundary';
 
 export function useRouteData<T>(routeId: string): T {
   const matches = useMatches();
@@ -66,6 +67,24 @@ export default function App() {
         <LoadingBar />
         <Outlet />
         <Toaster closeButton />
+
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
+export function ErrorBoundary() {
+  return (
+    <html>
+      <head>
+        <title>Oops!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <CustomErrorBoundary className="h-screen w-full" />
 
         <ScrollRestoration />
         <Scripts />

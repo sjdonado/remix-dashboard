@@ -6,7 +6,7 @@ RUN apk update && apk add python3 nodejs
 
 FROM base as install
 COPY package.json bun.lockb .
-RUN bun install --verbose
+RUN bun install
 
 FROM install AS prerelease
 ENV NODE_ENV=production
