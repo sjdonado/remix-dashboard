@@ -11,7 +11,7 @@
     "typecheck": "tsc",
     "test": "NODE_ENV=test playwright test --retries=1",
     "test:ui": "NODE_ENV=test DEBUG=pw:webserver playwright test --ui",
-    "db:drop": "rm -rf db.sqlite*",
+    "db:drop": "rm -rf ./sqlite/*",
     "db:check": "drizzle-kit check:sqlite",
     "db:migrate": "drizzle-kit generate:sqlite",
     "db:push": "drizzle-kit push:sqlite",
