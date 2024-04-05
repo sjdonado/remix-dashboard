@@ -5,10 +5,11 @@ export function AssignmentTypeBadge({ type }: { type: AssignmentType }) {
   return (
     <div
       className={clsx('badge w-20 rounded-lg', {
-        'bg-sky-100 text-sky-600 border-sky-300': type === AssignmentType.Quiz,
-        'bg-orange-100 text-orange-600 border-orange-300':
+        'bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-400 border-sky-300 dark:border-sky-700':
+          type === AssignmentType.Quiz,
+        'bg-orange-100 dark:bg-orange-900 text-orange-600 dark:text-orange-400 border-orange-300 dark:border-orange-700':
           type === AssignmentType.Homework,
-        'bg-purple-100 text-purple-600 border-purple-300':
+        'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400 border-purple-300 dark:border-purple-700':
           type === AssignmentType.Project,
       })}
     >
