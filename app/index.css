@@ -6,4 +6,8 @@
   .form-input-icon {
     @apply pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2;
   }
+
+  .border-base-custom {
+    @apply border-base-content/20;
+  }
 }

@@ -2,7 +2,7 @@ import { UserRole } from '~/constants/user';
 
 export function UserRoleBadge({ role }: { role: UserRole }) {
   return (
-    <div className="badge h-5 rounded-md border-base-300 bg-base-200/30">
+    <div className="border-base-custom badge h-5 rounded-md bg-base-200/30">
       <span className="text-xs font-semibold">{userRoleToLabel(role)}</span>
     </div>
   );

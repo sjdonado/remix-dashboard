@@ -17,7 +17,7 @@ export function TableContainer({ totalPages, currentPage, children }: TableProps
   return (
     <div className="flex flex-col gap-4">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg border border-base-300 bg-base-200/50 p-2 md:pt-0">
+        <div className="border-base-custom rounded-lg border bg-base-200/50 p-2 md:pt-0">
           {children}
         </div>
       </div>
@@ -89,7 +89,7 @@ export function UpdateBtnLink({ to }: { to: string }) {
   return (
     <Link
       to={`${to}?${searchParams.toString()}`}
-      className="rounded-lg border border-base-300 p-2 hover:bg-base-200"
+      className="border-base-custom rounded-lg border p-2 hover:bg-base-200"
     >
       <PencilIcon className="w-5" />
     </Link>
@@ -114,7 +114,7 @@ export function DeleteBtnLink({
       button="Delete"
       method="post"
       action={`${to}?${searchParams.toString()}`}
-      className="rounded-lg border border-base-300 p-2 hover:bg-base-200"
+      className="border-base-custom rounded-lg border p-2 hover:bg-base-200"
     >
       <span className="sr-only">{title}</span>
       <TrashIcon className="w-5" />

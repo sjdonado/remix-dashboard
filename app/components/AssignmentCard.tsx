@@ -21,7 +21,7 @@ export default function AssignmentCard({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className={clsx('relative w-full rounded-lg border border-base-300 p-4')}>
+      <div className={clsx('border-base-custom relative w-full rounded-lg border p-4')}>
         <div className={clsx('flex flex-col gap-2', expanded && '!gap-4')}>
           <div className="flex flex-wrap items-center justify-end gap-2">
             <div className="flex flex-1 flex-col gap-2">
