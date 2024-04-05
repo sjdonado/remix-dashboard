@@ -11,7 +11,7 @@ export default function SubmitButton({ message }: SubmitButtonProps) {
 
   return (
     <button
-      className="btn btn-primary btn-sm h-10 w-[90px] rounded-lg font-normal text-base-100"
+      className="btn btn-primary btn-sm !h-10 w-[90px] rounded-lg font-normal"
       type="submit"
       disabled={navigation.state !== 'idle' || !isValid}
     >

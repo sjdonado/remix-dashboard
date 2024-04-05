@@ -15,7 +15,7 @@ export default function BackButton({ message }: BackButtonProps) {
   return (
     <button
       type="button"
-      className="btn btn-sm h-10 w-[90px] rounded-lg font-normal"
+      className="btn btn-sm !h-10 w-[90px] rounded-lg font-normal"
       onClick={handleOnClick}
       disabled={navigation.state !== 'idle'}
     >

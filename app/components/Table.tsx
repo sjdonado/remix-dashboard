@@ -75,7 +75,7 @@ export function CreateBtnLink({ to, title }: { to: string; title: string }) {
   return (
     <Link
       to={to}
-      className="flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-white"
+      className="flex h-10 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-content"
     >
       <PlusIcon className="size-5" />
       <span className="hidden md:block">{title}</span>
