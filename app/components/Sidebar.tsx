@@ -71,7 +71,7 @@ export default function Sidebar({ userSession, children }: SidebarProps) {
                 description="Are you sure you want to log out? You will be redirected to the login page."
                 button="Logout"
                 action="/logout"
-                className="btn btn-ghost btn-sm flex w-full justify-start rounded-lg"
+                className="btn btn-ghost btn-sm flex w-full justify-start rounded-lg transition-none"
               >
                 <ArrowLeftOnRectangleIcon className="mr-2 size-5" />
                 <span className="text-sm font-medium">Logout</span>
@@ -104,7 +104,7 @@ function SidebarMenuLink({ to, children }: { to: string; children: React.ReactNo
         onClick={handleClick}
         className={({ isActive, isPending }) =>
           clsx(
-            'btn btn-ghost btn-sm flex w-full justify-start rounded-lg hover:bg-base-200',
+            'btn btn-ghost btn-sm flex w-full justify-start rounded-lg transition-none hover:bg-base-200',
             '[&>span]:text-sm [&>span]:font-medium [&>svg]:mr-2 [&>svg]:size-5',
             {
               'active bg-base-200 [&>span]:font-medium [&>span]:text-medium': isActive,
